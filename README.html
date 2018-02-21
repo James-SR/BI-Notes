@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:title:end-->
+<!--bookdown:title:start-->
+<p>Personal study notes built with <a href="https://bookdown.org/home/about.html">bookdown</a> book. Thanks to <a href="http://seankross.com/2016/11/17/How-to-Start-a-Bookdown-Book.html">Sean Kross</a> for the bookdown setup guidance.</p>
+<p>Steps to change this template in to a ready to use bookdown book:</p>
+<ol start="0" style="list-style-type: decimal">
+<li>install bookdown - install.packageS(“bookdown”)</li>
+<li>edit _output.yml with a relevant title (currently set to ‘Study Notes Template’)</li>
+<li>edit _bookdown.yml there are a few parts to note:
+<ul>
+<li>book_filename: what the PDF and epubs will be called</li>
+<li>chapter_name: What gets appended to the start of each chapter heading, if any</li>
+<li>repo: Github repo associated [OPTIONAL]</li>
+<li>output_dir: if not set, this will default to book. Github will render a folder called /docs as a website</li>
+<li>rmd_files: what files and their sequence to be rendered in to the book. If not set, all files in root will be included [OPTIONAL]</li>
+<li>new_session: if set to yes, each .Rmd is rendered in its own R session, otherwise all Rmd files in your book are rednered in the same R session</li>
+</ul></li>
+<li>edit Index.Rmd, particuarly the title, author, date, github-repo, url, and description. If desired, you can add a field called cover-image for the book, with a link to a .png</li>
+</ol>
+<p>To build the book, you can use either the ‘Build book’. icon in R studio or <code>bookdown::render_book(&quot;index.Rmd&quot;)</code></p>
+<p>The files/book will be rendered either</p>
+<ol style="list-style-type: decimal">
+<li><p>by chapter title e.g. 01-Name, 02-Name, which is you wish to order your chapters in this way name the files 0N-,</p></li>
+<li><p>sequence them by the order of the files in the _bookdown.yml rmd_files field, which allows re-ordering.</p></li>
+</ol>
+<p><em>View as a website</em></p>
+<p><strong>Travis CI - automated build</strong></p>
+<p>If desired, it is possible to build the book remotley using Travis Continous Integration (or CI for short). 3 files are needed, 2 of which can be left as is in most cases - .Rbuildignore and travis.yml - the third needs to include any packages needed/used to build the book i.e. they are used within your Rmd files for graphics, analytics or any other purposes. This is the DESCRIPTION file and the import or remotes should list those packages.</p>
+<p>These files are already setup in the folder, however it is neccessary to setup Travis to link and build this repo.</p>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
