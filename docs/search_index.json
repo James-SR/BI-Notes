@@ -1,4 +1,3 @@
 [
-["index.html", "BI Notes Preface", " BI Notes James Solomon-Rounce 2018-02-21 Preface The following notes were taken by me for educational, non-commercial, purposes. If you find the information useful, buy the material/take the course. "],
-["chapter-title.html", "1 Chapter Title 1.1 Subtitle", " 1 Chapter Title Intro text 1.1 Subtitle "]
+["querying-data-with-transact-sql.html", "1 Querying Data with Transact-SQL 1.1 Introduction to Transact-SQL", " 1 Querying Data with Transact-SQL Notes taken during/inspired by the edX course ‘Querying Data with Transact-SQL - Microsoft: DAT201x’ by Graeme Malcolm and Geoff Allix. Course Handouts Course Syllabus Getting Started Guide Including Install Adventure Works Entity Relationship Diagram 1.1 Introduction to Transact-SQL "]
 ]
