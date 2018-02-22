@@ -7,7 +7,23 @@ Notes taken during/inspired by the edX course 'Querying Data with Transact-SQL -
 * [Course Syllabus](../files/TSQL/Syllabus.PDF)
 * [Getting Started Guide Including Install](../files/TSQL/DAT201x.PDF)
 * [Adventure Works Entity Relationship Diagram](../files/TSQL/AW_ER.pdf)
+* [Adevemture Works db install script](../files/TSQL/AW-oltp-install-script)  
+NOTE: Remember to ensure read only access for everyone to the folder containing the .SQL and other files
+* [GitHib Repo for course including course materials, slids, labs etc](https://microsoftlearning.github.io/QueryingT-SQL/)
+* [A copy of the above materials should they be changed or removed](../files/TSQL/TSQLCourseFiles.zip)
 
+**_Other useful links_**
+* [Transact-SQL Refrence](https://docs.microsoft.com/en-gb/sql/t-sql/language-reference)
 
 ## Introduction to Transact-SQL
+
+SQL or Structured Query Language was first developed in the 1970s by IBM as a way of interacting with databases. Other vendors have specfic versions of SQL for instance Oracle is PL/SQL, Microsoft's implentation is TSQL or Transact SQL.  Both SQL Server (on prem) and Azure SQL Databases (cloud) use the same query language, however Azure is a subset of full TSQL since it some commands relate to local files and data functions within .NET that relate only to SQL Server.  However, as new features are added to Azure, some new commands are being added to Azure. 
+
+SQL is a declarative language - you express what it is that you want, the results - rather than specifying the steps taken to acheive that - it is not prodecural like other programming languages, it is set theory based.  It is possible to write proceedural elements or steps within TSQL, however if this is ocurring a lot, it is perhaps better done in another language, which may also perform or run better.  
+
+In databases, we typically talk about entities - one type of thing - which is contained in each table.  
+* Entities are represented as relations (tables) 
+* And entity attributes as domains (columns)
+
+Most relationships are normalized, with relationships between primary and foreign keys.  This helps to reduce duplication, however there are instances where de-normalised data is desired.  (9:00)
 
