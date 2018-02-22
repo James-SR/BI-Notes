@@ -25,5 +25,34 @@ In databases, we typically talk about entities - one type of thing - which is co
 * Entities are represented as relations (tables) 
 * And entity attributes as domains (columns)
 
-Most relationships are normalized, with relationships between primary and foreign keys.  This helps to reduce duplication, however there are instances where de-normalised data is desired.  (9:00)
+Most relationships are normalized, with relationships between primary and foreign keys.  This helps to reduce duplication, however there are instances where de-normalised data is desired.  
 
+Schemas are namespaces for database objects - is shows a logical layout for all or part of a relational database, _"As part of a data dictionary, a database schema indicates how the entities that make up the database relate to one another, including tables, views, stored procedures, and more."_(see [Lucid Chart on Database Schemas](https://www.lucidchart.com/pages/database-diagram/database-schema)).  The process of creating a database schema is called data modelling.  
+
+When referring to objects in a database, we could use a fully qualified name, such as:
+
+* [server_name.][database_name.][schema_name.]object_name
+
+This is only really relevant for SQL Server, since Azure will only work with one database at a time.  Most of the time we typically just use
+
+* schema_name.object_name
+
+The schema name somwtimes be discarded, but it is considered best practice to include this, since there is sometimes some ambiguity about tables e.g. if we have two tables - Product.Order and Customer.Order  - which order table is being referred to, that in the customer or product schema?
+
+SQL has a number of SQL Statement Types:
+
+DML or Data Manipulation Language - SELECT, INSERT, UPDATE, DELETE
+DDL or Data Definition Language - CREATE, ALTER, DROP
+DCL or Data Control Language - GRANT, REVOKE, DENY
+
+The course focuses on DML which is typically for working with data.  
+
+**SELECT** statement has a number of possible sub-components:
+
+* FROM <table>
+* WHERE <condition for filtering rows>
+* GROUP BY <arranges rows by groups>
+* HAVING <condition for filtering groups>
+* ORDER BY <sorts the output>
+
+Whilst a SQL statement can look like English, it doesn't neccessarily run from top to bottom in terms of the sequence of elements that are run in a query.  For instance, the FROM is the first thing that will be run, then the WHERE filter will be run, then we GROUP BY, then  SELECT the columns we are interested in and finally ORDER the results.  This can be important when running some queries, which will be explored later in the course.  When we run a query, it is not an actual table in a database that is return but a set of rows or record set or subset.
