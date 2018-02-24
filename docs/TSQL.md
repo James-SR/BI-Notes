@@ -30,7 +30,7 @@ library(DBI)
 con <- DBI::dbConnect(odbc::odbc(), 
                       Driver = "SQL Server", 
                       Server = "localhost\\SQLEXPRESS", 
-                      Database = "AdventureWorks", 
+                      Database = "AdventureWorksLT", 
                       Trusted_Connection = "True")
 
 # Sets knitr to use this connection as the default so we don't need to specify it for every chunk
@@ -84,7 +84,7 @@ Whilst a SQL statement can look like English, it doesn't neccessarily run from t
 There are a number of different data types in T-SQL as shown below, which are grouped in to a number of different types.  
 
 <div class="figure">
-<img src="images/TSQL/TSQLDataTypes.png" alt="Transact-SQL Data Types" width="1483" />
+<img src="images/TSQL/TSQLDataTypes.png" alt="Transact-SQL Data Types" width="742" />
 <p class="caption">(\#fig:Data Types)Transact-SQL Data Types</p>
 </div>
 
@@ -129,12 +129,39 @@ SELECT name,
   FROM SalesLT.Product; 
 ```
 
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-1)Displaying records 1 - 10
+
+name                         PRODUCT 
+---------------------------  --------
+HL Road Frame - Black, 58    58      
+HL Road Frame - Red, 58      58      
+Sport-100 Helmet, Red        N/A     
+Sport-100 Helmet, Black      N/A     
+Mountain Bike Socks, M       MEDIUM  
+Mountain Bike Socks, L       LARGE   
+Sport-100 Helmet, Blue       N/A     
+AWC Logo Cap                 N/A     
+Long-Sleeve Logo Jersey, S   SMALL   
+Long-Sleeve Logo Jersey, M   MEDIUM  
+
+</div>
+
 ### Lab Exercises
+
+AdventureWorks Cycles is a company that sells directly to retailers, who then sell products to consumers. Each retailer that is an AdventureWorks customer has provided a named contact for all communication from AdventureWorks.
+
+The sales manager at AdventureWorks has asked you to generate some reports containing details of the company's customers to support a direct sales campaign. Let's start with some basic exploration.
+
+First we display the sales person, the customer's title, surname and telephone number
 
 
 ```sql
-SELECT TOP(10) BusinessEntityID, Name
-FROM Sales.Store;
+SELECT SalesPerson, Title + ' ' + LastName AS CustomerName, Phone
+FROM SalesLT.Customer;
 ```
 
 
@@ -143,19 +170,45 @@ FROM Sales.Store;
 
 Table: (\#tab:unnamed-chunk-2)Displaying records 1 - 10
 
- BusinessEntityID  Name                           
------------------  -------------------------------
-              292  Next-Door Bike Store           
-              294  Professional Sales and Service 
-              296  Riders Company                 
-              298  The Bike Mechanics             
-              300  Nationwide Supply              
-              302  Area Bike Accessories          
-              304  Bicycle Accessories and Kits   
-              306  Clamps & Brackets Co.          
-              308  Valley Bicycle Specialists     
-              310  New Bikes Company              
+SalesPerson                CustomerName     Phone        
+-------------------------  ---------------  -------------
+adventure-works\pamela0    Mr. Gee          245-555-0173 
+adventure-works\david8     Mr. Harris       170-555-0127 
+adventure-works\jillian0   Ms. Carreras     279-555-0130 
+adventure-works\jillian0   Ms. Gates        710-555-0173 
+adventure-works\shu0       Mr. Harrington   828-555-0186 
+adventure-works\linda3     Ms. Carroll      244-555-0112 
+adventure-works\shu0       Mr. Gash         192-555-0173 
+adventure-works\josé1      Ms. Garza        150-555-0127 
+adventure-works\josé1      Ms. Harding      926-555-0159 
+adventure-works\garrett1   Mr. Caprio       112-555-0191 
 
 </div>
 
+Next we cast the CustomerID column to a VARCHAR and concatenate with the CompanyName column
+
+
+```sql
+SELECT CAST(CustomerID AS VARCHAR) + ': ' + CompanyName AS CustomerCompany
+FROM SalesLT.Customer;
+```
+
+
+<div class="knitsql-table">
+
+
+|CustomerCompany               |
+|:-----------------------------|
+|1: A Bike Store               |
+|2: Progressive Sports         |
+|3: Advanced Bike Components   |
+|4: Modular Cycle Systems      |
+|5: Metropolitan Sports Supply |
+|6: Aerobic Exercise Company   |
+|7: Associated Bikes           |
+|10: Rural Cycle Emporium      |
+|11: Sharp Bikes               |
+|12: Bikes and Motorbikes      |
+
+</div>
 

@@ -153,7 +153,7 @@ NOTE: Remember to ensure read only access for everyone to the folder containing 
 con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), 
                       <span class="dt">Driver =</span> <span class="st">&quot;SQL Server&quot;</span>, 
                       <span class="dt">Server =</span> <span class="st">&quot;localhost</span><span class="ch">\\</span><span class="st">SQLEXPRESS&quot;</span>, 
-                      <span class="dt">Database =</span> <span class="st">&quot;AdventureWorks&quot;</span>, 
+                      <span class="dt">Database =</span> <span class="st">&quot;AdventureWorksLT&quot;</span>, 
                       <span class="dt">Trusted_Connection =</span> <span class="st">&quot;True&quot;</span>)
 
 <span class="co"># Sets knitr to use this connection as the default so we don&#39;t need to specify it for every chunk</span>
@@ -233,60 +233,171 @@ FROM SalesLT.Product;</p>
       <span class="kw">ELSE</span> ISNULL(<span class="kw">Size</span>, <span class="st">&#39;N/A&#39;</span>)  
     <span class="kw">END</span> <span class="kw">AS</span> PRODUCT  
   <span class="kw">FROM</span> SalesLT.Product; </code></pre></div>
-</div>
-<div id="lab-exercises" class="section level3">
-<h3><span class="header-section-number">1.1.3</span> Lab Exercises</h3>
-<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> TOP(<span class="dv">10</span>) BusinessEntityID, Name
-<span class="kw">FROM</span> Sales.Store;</code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-2">Table 1.1: </span>Displaying records 1 - 10</caption>
+<caption><span id="tab:unnamed-chunk-1">Table 1.1: </span>Displaying records 1 - 10</caption>
 <thead>
 <tr class="header">
-<th align="right">BusinessEntityID</th>
-<th align="left">Name</th>
+<th align="left">name</th>
+<th align="left">PRODUCT</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">292</td>
-<td align="left">Next-Door Bike Store</td>
+<td align="left">HL Road Frame - Black, 58</td>
+<td align="left">58</td>
 </tr>
 <tr class="even">
-<td align="right">294</td>
-<td align="left">Professional Sales and Service</td>
+<td align="left">HL Road Frame - Red, 58</td>
+<td align="left">58</td>
 </tr>
 <tr class="odd">
-<td align="right">296</td>
-<td align="left">Riders Company</td>
+<td align="left">Sport-100 Helmet, Red</td>
+<td align="left">N/A</td>
 </tr>
 <tr class="even">
-<td align="right">298</td>
-<td align="left">The Bike Mechanics</td>
+<td align="left">Sport-100 Helmet, Black</td>
+<td align="left">N/A</td>
 </tr>
 <tr class="odd">
-<td align="right">300</td>
-<td align="left">Nationwide Supply</td>
+<td align="left">Mountain Bike Socks, M</td>
+<td align="left">MEDIUM</td>
 </tr>
 <tr class="even">
-<td align="right">302</td>
-<td align="left">Area Bike Accessories</td>
+<td align="left">Mountain Bike Socks, L</td>
+<td align="left">LARGE</td>
 </tr>
 <tr class="odd">
-<td align="right">304</td>
-<td align="left">Bicycle Accessories and Kits</td>
+<td align="left">Sport-100 Helmet, Blue</td>
+<td align="left">N/A</td>
 </tr>
 <tr class="even">
-<td align="right">306</td>
-<td align="left">Clamps &amp; Brackets Co.</td>
+<td align="left">AWC Logo Cap</td>
+<td align="left">N/A</td>
 </tr>
 <tr class="odd">
-<td align="right">308</td>
-<td align="left">Valley Bicycle Specialists</td>
+<td align="left">Long-Sleeve Logo Jersey, S</td>
+<td align="left">SMALL</td>
 </tr>
 <tr class="even">
-<td align="right">310</td>
-<td align="left">New Bikes Company</td>
+<td align="left">Long-Sleeve Logo Jersey, M</td>
+<td align="left">MEDIUM</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="lab-exercises" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> Lab Exercises</h3>
+<p>AdventureWorks Cycles is a company that sells directly to retailers, who then sell products to consumers. Each retailer that is an AdventureWorks customer has provided a named contact for all communication from AdventureWorks.</p>
+<p>The sales manager at AdventureWorks has asked you to generate some reports containing details of the company’s customers to support a direct sales campaign. Let’s start with some basic exploration.</p>
+<p>First we display the sales person, the customer’s title, surname and telephone number</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> SalesPerson, Title + <span class="st">&#39; &#39;</span> + LastName <span class="kw">AS</span> CustomerName, Phone
+<span class="kw">FROM</span> SalesLT.Customer;</code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1.2: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">SalesPerson</th>
+<th align="left">CustomerName</th>
+<th align="left">Phone</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">adventure-works0</td>
+<td align="left">Mr. Gee</td>
+<td align="left">245-555-0173</td>
+</tr>
+<tr class="even">
+<td align="left">adventure-works8</td>
+<td align="left">Mr. Harris</td>
+<td align="left">170-555-0127</td>
+</tr>
+<tr class="odd">
+<td align="left">adventure-works0</td>
+<td align="left">Ms. Carreras</td>
+<td align="left">279-555-0130</td>
+</tr>
+<tr class="even">
+<td align="left">adventure-works0</td>
+<td align="left">Ms. Gates</td>
+<td align="left">710-555-0173</td>
+</tr>
+<tr class="odd">
+<td align="left">adventure-works0</td>
+<td align="left">Mr. Harrington</td>
+<td align="left">828-555-0186</td>
+</tr>
+<tr class="even">
+<td align="left">adventure-works3</td>
+<td align="left">Ms. Carroll</td>
+<td align="left">244-555-0112</td>
+</tr>
+<tr class="odd">
+<td align="left">adventure-works0</td>
+<td align="left">Mr. Gash</td>
+<td align="left">192-555-0173</td>
+</tr>
+<tr class="even">
+<td align="left">adventure-works1</td>
+<td align="left">Ms. Garza</td>
+<td align="left">150-555-0127</td>
+</tr>
+<tr class="odd">
+<td align="left">adventure-works1</td>
+<td align="left">Ms. Harding</td>
+<td align="left">926-555-0159</td>
+</tr>
+<tr class="even">
+<td align="left">adventure-works1</td>
+<td align="left">Mr. Caprio</td>
+<td align="left">112-555-0191</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Next we cast the CustomerID column to a VARCHAR and concatenate with the CompanyName column</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">CAST</span>(CustomerID <span class="kw">AS</span> <span class="dt">VARCHAR</span>) + <span class="st">&#39;: &#39;</span> + CompanyName <span class="kw">AS</span> CustomerCompany
+<span class="kw">FROM</span> SalesLT.Customer;</code></pre></div>
+<div class="knitsql-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">CustomerCompany</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1: A Bike Store</td>
+</tr>
+<tr class="even">
+<td align="left">2: Progressive Sports</td>
+</tr>
+<tr class="odd">
+<td align="left">3: Advanced Bike Components</td>
+</tr>
+<tr class="even">
+<td align="left">4: Modular Cycle Systems</td>
+</tr>
+<tr class="odd">
+<td align="left">5: Metropolitan Sports Supply</td>
+</tr>
+<tr class="even">
+<td align="left">6: Aerobic Exercise Company</td>
+</tr>
+<tr class="odd">
+<td align="left">7: Associated Bikes</td>
+</tr>
+<tr class="even">
+<td align="left">10: Rural Cycle Emporium</td>
+</tr>
+<tr class="odd">
+<td align="left">11: Sharp Bikes</td>
+</tr>
+<tr class="even">
+<td align="left">12: Bikes and Motorbikes</td>
 </tr>
 </tbody>
 </table>
