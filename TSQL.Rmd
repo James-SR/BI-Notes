@@ -7,13 +7,28 @@ Notes taken during/inspired by the edX course 'Querying Data with Transact-SQL -
 * [Course Syllabus](../files/TSQL/Syllabus.PDF)
 * [Getting Started Guide Including Install](../files/TSQL/DAT201x.PDF)
 * [Adventure Works Entity Relationship Diagram](../files/TSQL/AW_ER.pdf)
-* [Adevemture Works db install script](../files/TSQL/AW-oltp-install-script)  
+* [Adeventure Works db install script](../files/TSQL/AW-oltp-install-script)  
 NOTE: Remember to ensure read only access for everyone to the folder containing the .SQL and other files
 * [GitHib Repo for course including course materials, slids, labs etc](https://microsoftlearning.github.io/QueryingT-SQL/)
 * [A copy of the above materials should they be changed or removed](../files/TSQL/TSQLCourseFiles.zip)
 
 **_Other useful links_**
 * [Transact-SQL Refrence](https://docs.microsoft.com/en-gb/sql/t-sql/language-reference)
+
+```{r setup}
+library(DBI)
+
+# creates a connection to the SQL database
+# note that "con" will be used later in each connection to the database
+con <- DBI::dbConnect(odbc::odbc(), 
+                      Driver = "SQL Server", 
+                      Server = "localhost\\SQLEXPRESS", 
+                      Database = "AdventureWorks", 
+                      Trusted_Connection = "True")
+
+# Sets knitr to use this connection as the default so we don't need to specify it for every chunk
+knitr::opts_chunk$set(connection = "con")
+```
 
 ## Introduction to Transact-SQL
 
@@ -41,19 +56,19 @@ The schema name somwtimes be discarded, but it is considered best practice to in
 
 SQL has a number of SQL Statement Types:
 
-DML or Data Manipulation Language - SELECT, INSERT, UPDATE, DELETE
-DDL or Data Definition Language - CREATE, ALTER, DROP
-DCL or Data Control Language - GRANT, REVOKE, DENY
+* DML or Data Manipulation Language - SELECT, INSERT, UPDATE, DELETE
+* DDL or Data Definition Language - CREATE, ALTER, DROP
+* DCL or Data Control Language - GRANT, REVOKE, DENY
 
 The course focuses on DML which is typically for working with data.  
 
 **SELECT** statement has a number of possible sub-components:
 
-* FROM <table>
-* WHERE <condition for filtering rows>
-* GROUP BY <arranges rows by groups>
-* HAVING <condition for filtering groups>
-* ORDER BY <sorts the output>
+* FROM [table]
+* WHERE [condition for filtering rows]
+* GROUP BY [arranges rows by groups]
+* HAVING [condition for filtering groups]
+* ORDER BY [sorts the output]
 
 Whilst a SQL statement can look like English, it doesn't neccessarily run from top to bottom in terms of the sequence of elements that are run in a query.  For instance, the FROM is the first thing that will be run, then the WHERE filter will be run, then we GROUP BY, then  SELECT the columns we are interested in and finally ORDER the results.  This can be important when running some queries, which will be explored later in the course.  When we run a query, it is not an actual table in a database that is return but a set of rows or record set or subset.
 
@@ -73,3 +88,43 @@ Sometimes it is neccessary to convert data from one type to another, there are t
 * Explicit conversion - requires an explicit function e.g. CAST / TRY_CAST, STR, PARSE ? TRY_PARSE, CONVERT / TRY_CONVERT
 
 The TRY options will attempt a conversion and if it does not work, a NULL will be returned rather than an error in the non-TRY version.   
+
+### Working with NULLs
+
+There are recognised standards for treating NULL values - ANSI - which says that anythign involving a NULL should return a NULL.  There are functions that help us handle NULL values:
+
+* ISNULL(column/variable, value) - Returns _value_ (which you can specify) if the column or variable is NULL
+* NULLIF(column/variable, value) - Returns NULL if the column or variable is a value - we are almost recoding a non-null to a null
+* COALESCE (column/variable1, column/variable2, ...) - Returns the value of the first non-NULL column or variable in the list - for instance if contact details, someone might not have an email, so we might want a telephone number, if they don't have that, return an address etc
+
+NULL is used to indicate an unknown or missing value. NULL is **not** equivalent to zero or an empty string.
+
+ISNULL can be used like an IF function in excel, for instance:
+
+> SELECT name, ISNULL(TRY_CAST(size AS Integer), 0) AS NumericSize  
+  FROM SalesLT.Product;
+
+In this instance, if there is a value that will be returned, if not, the NULL value will be returned as a 0.  
+
+We can also use a CASE statement to return a value whilst integrating NULL in to our query, e.g.
+
+```{sql connection=con, eval = FALSE}
+SELECT name,  
+    CASE size  
+      WHEN 'S' THEN 'SMALL'  
+      WHEN 'M' THEN 'MEDIUM'  
+      WHEN 'L' THEN 'LARGE'  
+      WHEN 'XL' THEN 'EXTRA LARGE'  
+      ELSE ISNULL(Size, 'N/A')  
+    END AS PRODUCT  
+  FROM SalesLT.Product; 
+```
+
+### Lab Exercises
+
+```{sql connection=con}
+SELECT TOP(10) BusinessEntityID, Name
+FROM Sales.Store;
+```
+
+
