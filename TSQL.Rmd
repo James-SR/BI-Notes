@@ -195,3 +195,53 @@ FROM SalesLT.SalesOrderHeader;
 
 ## Querying Tables with SELECT
 
+### Removing Duplicates
+
+If we wanted to know what colours our products are, we would run something like the following.
+
+```{sql connection=con}
+SELECT Color
+FROM SalesLT.Product;
+```
+
+Here each product has a row and corresponding colour.  However, if we just want colour, we are typically interested in removing duplicates to just show what colours we are actually producing.  This is achieve using the DISTINCT keyword
+
+```{sql connection=con}
+SELECT DISTINCT Color
+FROM SalesLT.Product;
+```
+
+These results are DISTINCT at the row level, so if we have two combinitions of columns - say size and colour - then it would be DISTINCT colour and size combinations that appear in the database.
+
+```{sql connection=con}
+SELECT DISTINCT Color, Size
+FROM SalesLT.Product;
+```
+
+Here is just the size - here IS NULL will return a 'None' if the Size is missing (NA).
+
+```{sql connection=con}
+SELECT DISTINCT ISNULL(Size, 'None') AS Size
+FROM SalesLT.Product;
+```
+
+
+### Sorting Results
+
+ORDER By is how we sort the results.  Any aliased fields used in the SELECT element are visible by ORDER BY.  You can oder the results using columns that are not selected in the SELECT clause.  You can also ORDER BY multiple columns, either ascending or descending.
+
+We can also just show the top 10 products, e.g. the top 10 most expensive.  This is done using the keywork TOP
+
+```{sql connection=con}
+SELECT TOP (10) ProductCategoryID AS Category, Name, ListPrice
+FROM SalesLT.Product
+ORDER BY ListPrice DESC, Category;
+```
+
+We can also use TOP (N) Percent or TOP (N) WITH TIES.  If we say wanted the bottom 10 items - say those with the lowest price - there is no 'BOTTOM' Keyword, instead we would sort our data so that they are now in the the order we want - with those we are interested at the top - the use TOP again.  
+
+### Paging through results
+
+This is achieved through using the OFFSET-FETCH which is an extension of ORDER BY.  This might be useful if you have a set of web page results and you want to see certain ones.  
+
+You first say how many rows you want to skip using e.g. OFFSET 10 ROWS, then use specify how many rows you are interested in retrieving from the database e.g. FETCH NEXT 10 ROWS ONLY.
