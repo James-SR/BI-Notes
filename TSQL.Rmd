@@ -245,3 +245,45 @@ We can also use TOP (N) Percent or TOP (N) WITH TIES.  If we say wanted the bott
 This is achieved through using the OFFSET-FETCH which is an extension of ORDER BY.  This might be useful if you have a set of web page results and you want to see certain ones.  
 
 You first say how many rows you want to skip using e.g. OFFSET 10 ROWS, then use specify how many rows you are interested in retrieving from the database e.g. FETCH NEXT 10 ROWS ONLY.
+
+### Filtering and Using Predicates
+
+We can use the WHERE clause with a number of coniditions or predicates.  For instance = (equals) <> (not equals), IN, BETWEEN (is an inclusive statement e.g. BETWEEN 100 AND 200 includes 100 and 200), LIKE,  AND, OR and NOT.  IN can be more efficient in coding terms when testing multiple attributes, as you just say color IN (red, blue) rather than colour  = 'red' OR colour = 'blue'.  This becomes more useful when testing multiple conditions e.g. IN (red, blue) AND size = large - this would have more typing with explicit code for each combition.
+
+Like mathematics, SQL works on PEMDAS sequencing - parenthesis, exponents, multiplication, division, addition, subtraction.  
+
+Some examples.
+
+First look for products that start with an FR:
+
+```{sql connection=con}
+SELECT Name, Color, Size, ProductNumber
+FROM SalesLT.Product
+WHERE ProductNumber LIKE 'FR%';
+```
+
+Or we can look for products that end in a 58:
+
+```{sql connection=con}
+SELECT Name, Color, Size, ProductNumber
+FROM SalesLT.Product
+WHERE ProductNumber LIKE '%58';
+```
+
+Or we can use underscores to specify a number of charecters e.g. one _ is one missing charecter.  A wildcard (%) would match any number of chars.  The figures in brackets then are like regex, so if we want a numeric value between 0 and 9 we use [0-9].  Equally we could use a similar query to find things like email addresses in a string, or email addresses that end in a .co.uk.
+
+```{sql connection=con}
+SELECT Name, Color, Size, ProductNumber
+FROM SalesLT.Product
+WHERE ProductNumber LIKE 'BK-_[0-9][0-9]_-[0-9][0-9]';
+```
+
+We can use the BETWEEN clause on things like dates to select all products that were removed from sale in 2016:
+
+```{sql connection=con}
+SELECT Name
+FROM SalesLT.Product 
+WHERE SellEndDate BETWEEN '2006/1/1' AND '2006/12/31';
+```
+
+Note that it is often useful to order results in the order you want, even if it currently appears it the correct order.  Sometimes these queries may change as data or the database does, so it is best to be explicit and use an ORDER BY.  
