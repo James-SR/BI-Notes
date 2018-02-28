@@ -353,3 +353,118 @@ FROM SalesLT.Product
 WHERE ProductNumber LIKE 'BK-[^R]%-[0-9][0-9]';
 ```
 
+## Querying Tables with Joins
+
+We usually join tables based on primary key - foreign key relationships.  We don't run two queries then join, but match at the time of the query.  When we are talking about joins, we typically represent them as Venn diagrams.  
+
+The convention (ANSI SQL-92) is to specify the JOIN operator in the FROM clause:
+
+> SELECT ...
+  FROM Table1 JOIN Table 2
+  ON <on_predicate>;
+  
+There is an older standard (ANSI SQL-89) where the tables are joined using commas in the FROM clause and using a WHERE operator, but this can lead to accidental cartesian (aka cross) products.
+
+### INNER Joins
+
+INNER Joins are typically the most common join type.  It involves a join only where a match is found in both input tables.  You can add multiple joins after each other.
+
+Some examples - first a basic inner join where the schema, table and column are explicitly stated. 
+
+```{sql connection=con}
+SELECT SalesLT.Product.Name AS ProductName, SalesLT.ProductCategory.Name AS Category
+FROM SalesLT.Product
+INNER JOIN SalesLT.ProductCategory
+ON SalesLT.Product.ProductCategoryID = SalesLT.ProductCategory.ProductCategoryID;
+```
+
+Next, we can do the same query but make this less cumbersome by using table aliases.
+
+```{sql connection=con}
+SELECT p.Name AS ProductName, c.Name AS Category
+FROM SalesLT.Product AS p
+INNER JOIN SalesLT.ProductCategory AS c
+on p.ProductCategoryID = c.ProductCategoryID;
+```
+
+Next, we look at joining multiple tables, where we want the sales, including order level details, the products in the order and the product details.  If we don't specify the join type, the assumption is it is a INNER join, as shown below.
+
+```{sql connection=con}
+SELECT oh.OrderDate, oh.SalesOrderNumber, p.Name As ProductName, od.OrderQty, od.UnitPrice, od.LineTotal
+FROM SalesLT.SalesOrderHeader AS oh
+JOIN SalesLT.SalesOrderDetail AS od
+ON od.SalesOrderID = oh.SalesOrderID
+JOIN SalesLT.Product AS p
+ON od.ProductID = p.ProductID
+ORDER BY oh.OrderDate, oh.SalesOrderID, od.SalesOrderDetailID;
+```
+
+It is possible to do joins based on more than one criteria, e.g. we could join based on the productID and where the ListPrice is less than the unitprice i.e. there has been a discount.
+
+```{sql connection=con}
+-- Multiple join predicates
+SELECT oh.OrderDate, oh.SalesOrderNumber, p.Name As ProductName, od.OrderQty, od.UnitPrice, od.LineTotal
+FROM SalesLT.SalesOrderHeader AS oh
+JOIN SalesLT.SalesOrderDetail AS od
+ON od.SalesOrderID = oh.SalesOrderID
+JOIN SalesLT.Product AS p
+ON od.ProductID = p.ProductID AND od.UnitPrice < p.ListPrice --Note multiple predicates
+ORDER BY oh.OrderDate, oh.SalesOrderID, od.SalesOrderDetailID; 
+```
+
+### OUTER Joins
+
+In an outer join we return all the rows from one table, and any matching rows from the second table.  The records in the 'outer' table are preserved, typically we use language such as LEFT, RIGHT and FULL keywords.  We are pulling in records from that OUTER table.  FULL keeps records from both tables, but are typically not seen in practice.  OUTER is OPTIONAL e.g. LEFT JOIN is the same as LEFT OUTER JOIN.  
+
+Now some examples.  First, we bring up a list of customers, with any matching sales records i.e. we have a list of customers who HAVE bought someting and those WHO HAVE NOT.  
+
+```{sql connection=con}
+--Get all customers, with sales orders for those who've bought anything
+SELECT c.FirstName, c.LastName, oh.SalesOrderNumber
+FROM SalesLT.Customer AS c
+LEFT OUTER JOIN SalesLT.SalesOrderHeader AS oh
+ON c.CustomerID = oh.CustomerID
+ORDER BY c.CustomerID;
+```
+
+Next we can look just for those customers who have not purchased anything using IS NULL.
+
+```{sql connection=con}
+--Return only customers who haven't purchased anything
+SELECT c.FirstName, c.LastName, oh.SalesOrderNumber
+FROM SalesLT.Customer AS c
+LEFT OUTER JOIN SalesLT.SalesOrderHeader AS oh
+ON c.CustomerID = oh.CustomerID
+WHERE oh.SalesOrderNumber IS NULL 
+ORDER BY c.CustomerID;
+```
+
+Next we add records from multiple tables.  If we add tables on to the chain of tables, having first decleared a left or right join, you have to keep using LEFT joins.  You could use an INNER Join but you would loose some records e.g. if you used an INNER join on the second table below, you would loose those records (products) that had never been sold.  
+
+Sometimes it is neccessary to go through one table to get to another e.g. to Products -> Orders requires going through order details first. Even if, we are not brining back any tables from the intermediary table.
+
+```{sql connection=con}
+--More than 2 tables
+SELECT p.Name As ProductName, oh.SalesOrderNumber
+FROM SalesLT.Product AS p
+LEFT JOIN SalesLT.SalesOrderDetail AS od
+ON p.ProductID = od.ProductID
+LEFT JOIN SalesLT.SalesOrderHeader AS oh --Additional tables added to the right must also use a left join
+ON od.SalesOrderID = oh.SalesOrderID
+ORDER BY p.ProductID;
+```
+
+Next another example with multiple tables, but this time the order of the tables is different.  We SELECT from the product table, then we LEFT Join the Order details so we can identify products that have never sold, then we LEFT JOIN to the order header table so we can get the order number where we use a left outer join as we are left joining those records to our original table.  Then we INNER Join product category, because we are joining product category back to the first table - Products.  The final table joins back to our original table, before the outer joins.  So whether you need to use an OUTER or INNER join depends on where you wish to place the records based on the current list of tables, however you could reorder the tables to do it differently e.g. do the INNER JOIN first, then then LEFT JOINS.
+
+```{sql connection=con}
+SELECT p.Name As ProductName, c.Name AS Category, oh.SalesOrderNumber
+FROM SalesLT.Product AS p
+LEFT OUTER JOIN SalesLT.SalesOrderDetail AS od
+ON p.ProductID = od.ProductID
+LEFT OUTER JOIN SalesLT.SalesOrderHeader AS oh
+ON od.SalesOrderID = oh.SalesOrderID
+INNER JOIN SalesLT.ProductCategory AS c --Added to the left, so can use inner join
+ON p.ProductCategoryID = c.ProductCategoryID
+ORDER BY p.ProductID;
+```
+
