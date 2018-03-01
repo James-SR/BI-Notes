@@ -468,3 +468,133 @@ ON p.ProductCategoryID = c.ProductCategoryID
 ORDER BY p.ProductID;
 ```
 
+** Key Points** 
+
+* Use a Left Outer Join to include all rows from the first table and values from matched rows in the second table. Columns in the second table for which no matching rows exist are populated with NULLs.
+* Use a Right Outer Join to include all rows from the second table and values from matched rows in the first table. Columns in the first table for which no matching rows exist are populated with NULLs.
+* Use a Full Outer Join to include all rows from the first and second tables. Columns in the either table for which no matching rows exist are populated with NULLs.
+
+### Cross Joins
+
+Cross Joins create caretesian products - they combine each row from the first table with each row from the second table - to give all possible combinations of products.
+
+One example of it being used would be if we have a list of staff with their attributes, we might want to compare them to the attributes required for all jobs to see which they match, perhaps as an internal job search.  Another example is if we have two list of addresses and we calculate the edit distance between the two addresses from the different sources, to try and match those addresses.  We would rank the addresses based on their edit distance, with those scoring highest the closest and most likely to be the same address.  It can be used to generate test data also.  
+
+An example
+
+```{sql connection=con}
+--Call each customer once per product - perhaps not the most realistic example!
+SELECT p.Name, c.FirstName, c.LastName, c.Phone
+FROM SalesLT.Product as p
+CROSS JOIN SalesLT.Customer as c;
+```
+
+### Self Joins
+
+You might want to join data on to itself but in a different sequence.  For instance, we might want to join a person's manager on to their employee(s), but managers are also employees, so this would be a self join.  We would use aliases for the table names as we have the same table twice.  So when defining a self-join, you must specify an alias for at least one instance of the table being joined.
+
+So our original table looks like this:
+
+```{sql connection=con}
+SELECT *
+FROM SalesLT.Employee;
+```
+Then the actual self join query - we use a left join as some people i.e. the CEO, will not have a manager.
+
+```{sql connection=con}
+SELECT e.EmployeeName, m.EmployeeName AS ManagerName
+FROM SalesLT.Employee AS e
+LEFT JOIN SalesLT.Employee AS m
+ON e.ManagerID = m.EmployeeID
+ORDER BY e.ManagerID;
+```
+
+### Lab Session
+
+Write a query that returns the company name from the Sale.Customer table, the sales order ID and total due from the SalesLT.SalesOrderHeader table. 
+
+```{sql connection=con}
+-- select the CompanyName, SalesOrderId, and TotalDue columns from the appropriate tables
+SELECT c.CompanyName, oh.SalesOrderId, oh.TotalDue
+FROM SalesLT.Customer AS c
+JOIN SalesLT.SalesOrderHeader AS oh
+-- join tables based on CustomerID
+ON c.CustomerID = oh.CustomerID;
+```
+
+In order to send out invoices to the customers, we need their addresses.  Extend your customer orders query to include the main office address for each customer, including the full street address, city, state or province, postal code, and country or region. 
+
+```{sql connection=con}
+SELECT c.CompanyName, a.AddressLine1, ISNULL(a.AddressLine2, '') AS AddressLine2, a.City, a.StateProvince, a.PostalCode, a.CountryRegion, oh.SalesOrderID, oh.TotalDue
+FROM SalesLT.Customer AS c
+-- join the SalesOrderHeader table
+JOIN SalesLT.SalesOrderHeader AS oh
+ON oh.CustomerID = c.CustomerID
+-- join the CustomerAddress table
+JOIN SalesLT.CustomerAddress AS ca
+-- filter for where the AddressType is 'Main Office'
+ON c.CustomerID = ca.CustomerID AND AddressType = 'Main Office'
+JOIN SalesLT.Address AS a
+ON ca.AddressID = a.AddressID;
+```
+
+The sales manager wants a list of all customer companies and their contacts (first name and last name), showing the sales order ID and total due for each order they have placed.  Customers who have not placed any orders should be included at the bottom of the list with NULL values for the order ID and total due. 
+
+```{sql connection=con}
+-- select the CompanyName, FirstName, LastName, SalesOrderID and TotalDue columns
+-- from the appropriate tables
+SELECT c.CompanyName, c.FirstName, c.LastName, oh.SalesOrderID, oh.TotalDue
+FROM SalesLT.Customer AS c
+LEFT JOIN SalesLT.SalesOrderHeader AS oh
+-- join based on CustomerID
+ON oh.CustomerID  = c.CustomerID
+-- order the SalesOrderIDs from highest to lowest
+ORDER BY oh.SalesOrderID DESC;
+```
+
+A sales employee has noticed that AdventureWorks does not have address information for all customers.  Write a query that returns a list of customer IDs, company names, contact names (first name and last name), and phone numbers for customers with no address stored in the database. 
+
+```{sql connection=con}
+SELECT c.CompanyName, c.FirstName, c.LastName, c.Phone
+FROM SalesLT.Customer AS c
+LEFT JOIN SalesLT.CustomerAddress AS ca
+-- join based on CustomerID
+ON c.CustomerID = ca.CustomerID
+-- filter for when the AddressID doesn't exist
+WHERE ca.AddressID IS NULL;
+```
+
+Some customers have never placed orders, and some products have never been ordered.
+
+Write a query that returns a column of customer IDs for customers who have never placed an order, and a column of product IDs for products that have never been ordered.
+
+Each row with a customer ID should have a NULL product ID (because the customer has never ordered a product) and each row with a product ID should have a NULL customer ID (because the product has never been ordered by a customer).
+
+```{sql connection=con}
+SELECT c.CustomerID, p.ProductID
+FROM SalesLT.Customer AS c
+FULL JOIN SalesLT.SalesOrderHeader AS oh
+ON c.CustomerID = oh.CustomerID
+FULL JOIN SalesLT.SalesOrderDetail AS od
+-- join based on the SalesOrderID
+ON od.SalesOrderID = oh.SalesOrderID
+FULL JOIN SalesLT.Product AS p
+-- join based on the ProductID
+ON p.ProductID = od.ProductID
+-- filter for nonexistent SalesOrderIDs
+WHERE oh.SalesOrderID IS NULL
+ORDER BY ProductID, CustomerID;
+```
+
+## Using Set Operators
+
+A union query is unlike a join, where as a join adds more columns, a union typically adds more rows. You put all records from one query on to the records at the end of another query.  NOTE that it is a list of distinct (non duplicate) records - this will be checked every single row in one table and then checks if that record exists across every single row in the other table.  Obviously as more tables are added, checking this can become more time consuming and affects performance.
+
+UNION ALL will not undertake this checking, leading to more performance, but some duplicates. John Smith may appear in the employees table but he may also appear in the customers table.  Sometimes this is the desired result.  In such an instance it makes sense to add a new field using an alias at the time of ther query, such as record type,  so we know where this record occurs.
+
+When using Union:
+
+* It is a good idea to use column aliases, so we know which table the column occurs in.  However, only aliases in the first query are recognised, so any aliases should be set against the first table
+* The number of columns must be the same across tables, you can add an additional column but this must be given a specific value or a NULL
+* The data types must be approximatley similar i.e. we can do an implicit or explict conversion so they match
+
