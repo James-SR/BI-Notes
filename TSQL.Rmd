@@ -596,5 +596,81 @@ When using Union:
 
 * It is a good idea to use column aliases, so we know which table the column occurs in.  However, only aliases in the first query are recognised, so any aliases should be set against the first table
 * The number of columns must be the same across tables, you can add an additional column but this must be given a specific value or a NULL
-* The data types must be approximatley similar i.e. we can do an implicit or explict conversion so they match
+* The data types must be approximatley similar i.e. we can do an implicit or explict conversion so they match.
+
+The following example joins the Employees to the customer using Union i.e. removing duplicates.
+
+NOTE: In the following example, views were created (using code provided in the course), before running the queries on the database.  Therefore to reproduce these results, it is neccessary to run that same code (Module 4, Union sql file, in the CourseFiles zip) before the following queries will run on the AdventureWorksLT db.
+
+```{sql connection=con}
+SELECT FirstName, LastName
+FROM SalesLT.Employees
+UNION
+SELECT FirstName, LastName
+FROM SalesLT.Customers
+ORDER BY LastName;
+```
+
+This gives 440 rows, if however we use UNION ALL
+
+```{sql connection=con}
+SELECT FirstName, LastName
+FROM SalesLT.Employees
+UNION ALL
+SELECT FirstName, LastName
+FROM SalesLT.Customers
+ORDER BY LastName;
+```
+
+This results in 441 rows, so there is 1 row which occurs in both - a Donna Carreras appears both in the customer and emplyee table.  This could be the same person or indeed just someone with the same name. 
+
+It might be useful to know which table the record occurs in, which is where we can introduce a Type column.  Not that after the first alias AS Type, subsequent fields e.g. 'Customer' as shown below do not need to be explicitly aliased, however it can make it easier to understand if we do include the AS Type.
+
+```{sql connection=con}
+SELECT FirstName, LastName, 'Employee' AS Type
+FROM SalesLT.Employees
+UNION 
+SELECT FirstName, LastName, 'Customer' AS Type
+FROM SalesLT.Customers
+ORDER BY LastName
+OFFSET 100 ROWS FETCH NEXT 5 ROWS ONLY;
+```
+
+Note that even though we have used UNION rather than UNION ALL, this would result in the same number of rows as UNION ALL (441), because the presence of the type column means this is no longer the same person - it is not a duplicate record but a unique one.  However, it is worth using UNION ALL to limit the number of records that have to be checked for duplicates, so improving peformance.
+
+**By default, UNION eliminates duplicate rows. Specify the ALL option to include duplicates (or to avoid the overhead of checking for duplicates when you know in advance that there are none).**
+
+### INTERSECT and EXCEPT Queries
+
+In INTERSECT we look at only rows that appear in each set - we are looking for the duplicates.  Whereas using a JOIN would append columns to the source table, in set theory, we are looking for rows, so in an INTERSECT we are looking for those rows that appear in both datasets.
+
+IN EXCEPT we are looking for records that appear in one source but not the other.  In such a scenario, the order of the tables matters.
+
+If we now try and identify the person who appears in both our datasets, we can identify the person directly.
+
+```{sql connection=con}
+SELECT FirstName, LastName
+FROM SalesLT.Customers
+INTERSECT
+SELECT FirstName, LastName
+FROM SalesLT.Employees;
+```
+
+Next we want to find the EXCEPT - so let's find customers who are not employees, so we don't try and sel products to employees.  There are 104 customers, so we should get 103 rows, as we remove Donna Carreras.
+
+```{sql connection=con}
+SELECT FirstName, LastName
+FROM SalesLT.Customers
+EXCEPT
+SELECT FirstName, LastName
+FROM SalesLT.Employees;
+```
+
+
+
+
+
+
+
+
 
