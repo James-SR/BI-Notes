@@ -666,11 +666,105 @@ SELECT FirstName, LastName
 FROM SalesLT.Employees;
 ```
 
+### Lab exercises
+
+Customers can have two kinds of address: a main office address and a shipping address. The accounts department wants to ensure that the main office address is always used for billing, and have asked you to write a query that clearly identifies the different types of address for each customer.
+
+```{sql connection=con}
+-- select the CompanyName, AddressLine1 columns
+-- alias as per the instructions
+SELECT CompanyName, AddressLine1, City, 'Billing' AS AddressType
+FROM SalesLT.Customer AS c
+JOIN SalesLT.CustomerAddress AS ca
+-- join based on CustomerID
+ON c.CustomerID = ca.CustomerID
+-- join another table
+JOIN SalesLT.Address AS a
+-- join based on AddressID
+ON ca.AddressID = a.AddressID
+-- filter for where the correct AddressType
+WHERE ca.AddressType = 'Main Office';
+```
+
+Adapt the query to retrieve the company name, first line of the street address, city, and a column named AddressType with the value 'Shipping' for customers where the address type in the SalesLT.CustomerAddress table is 'Shipping'.
+
+```{sql connection=con}
+SELECT c.CompanyName, a.AddressLine1, a.City, 'Shipping' AS AddressType
+FROM SalesLT.Customer AS c
+JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+JOIN SalesLT.Address AS a
+ON ca.AddressID = a.AddressID
+WHERE ca.AddressType = 'Shipping';
+```
+
+Next we can union all these records together to create a list of shipping and billing addresses, using UNION ALL.
+
+```{sql connection=con}
+SELECT c.CompanyName, a.AddressLine1, a.City, 'Billing' AS AddressType
+FROM SalesLT.Customer AS c
+JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+JOIN SalesLT.Address AS a
+ON ca.AddressID = a.AddressID
+WHERE ca.AddressType = 'Main Office'
+-- UNION
+UNION ALL
+SELECT c.CompanyName, a.AddressLine1, a.City, 'Shipping' AS AddressType
+FROM SalesLT.Customer AS c
+JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+JOIN SalesLT.Address AS a
+ON ca.AddressID = a.AddressID
+WHERE ca.AddressType = 'Shipping'
+ORDER BY c.CompanyName
+OFFSET 10 ROWS;
+```
+
+You have created a master list of all customer addresses, but now you have been asked to create filtered lists that show which customers have only a main office address, and which customers have both a main office and a shipping address.
 
 
+```{sql connection=con}
+SELECT c.CompanyName
+FROM SalesLT.Customer AS c
+INNER JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+INNER JOIN SalesLT.Address AS a
+ON a.AddressID = ca.AddressID
+WHERE ca.AddressType = 'Main Office' --Filters out shipping addresses.  This is a table of all Billing addresses.
+EXCEPT
+SELECT c.CompanyName
+FROM SalesLT.Customer AS c
+INNER JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+INNER JOIN SalesLT.Address AS a
+ON a.AddressID = ca.AddressID
+WHERE ca.AddressType = 'Shipping'
+ORDER BY c.CompanyName;
+```
 
+Or the INTERSECT version to identify the company name of each company that appears in a table of customers with a 'Main Office' address, and also in a table of customers with a 'Shipping' address. 
 
+```{sql connection=con}
+SELECT c.CompanyName
+FROM SalesLT.Customer AS c
+INNER JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+INNER JOIN SalesLT.Address AS a
+ON a.AddressID = ca.AddressID
+WHERE ca.AddressType = 'Main Office' --Filters out shipping addresses.  This is a table of all Billing addresses.
+INTERSECT
+SELECT c.CompanyName
+FROM SalesLT.Customer AS c
+INNER JOIN SalesLT.CustomerAddress AS ca
+ON c.CustomerID = ca.CustomerID
+INNER JOIN SalesLT.Address AS a
+ON a.AddressID = ca.AddressID
+WHERE ca.AddressType = 'Shipping'
+ORDER BY c.CompanyName;
+```
 
+## Using Functions and Aggregating Data
 
 
 
