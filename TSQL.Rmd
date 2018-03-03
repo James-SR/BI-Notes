@@ -843,3 +843,80 @@ FROM SalesLT.Product;
 ```
 
 ### Logical Functions
+
+Logical functions test if someting is true or not i.e. traditional boolean. But we can use logical functions as filters by using CHOOSE for example, you could use IIF which is also a logical, or we could use CASE to achieve the same result.  
+
+An exmaple might be if we want to return some numeric sizes, for instance if we have a table of data with different size formats:
+
+```{sql connection=con}
+SELECT Name, Size
+FROM SalesLT.Product;
+```
+
+We might only be interested in those that have a numeric type, even though the data is in a char data string, 1 in this instance means true:
+```{sql connection=con}
+SELECT Name, Size AS NumericSize
+FROM SalesLT.Product
+WHERE ISNUMERIC(Size) = 1;
+```
+
+Or we might want to assign a value to something, like a product type of bike to certain values and other to everything else.
+
+```{sql connection=con}
+SELECT Name, IIF(ProductCategoryID IN (5,6,7), 'Bike', 'Other') ProductType
+FROM SalesLT.Product;
+```
+
+Or a more complicated query where we assign mutiple product types.
+
+```{sql connection=con}
+SELECT prd.Name AS ProductName, cat.Name AS Category,
+      CHOOSE (cat.ParentProductCategoryID, 'Bikes','Components','Clothing','Accessories') AS ProductType
+FROM SalesLT.Product AS prd
+JOIN SalesLT.ProductCategory AS cat
+ON prd.ProductCategoryID = cat.ProductCategoryID;
+```
+
+### Window Functions
+
+A window in this context is a set of rows - a window in to the database or table.  For instance, we might want to RANK a set (or window) of data.  The query below will pull out the top 100 more expensive products (ordered by list price) then creates a ranking based on this list price, then orders the results by this ranking.
+
+```{sql connection=con}
+SELECT TOP(100) ProductID, Name, ListPrice,
+	RANK() OVER(ORDER BY ListPrice DESC) AS RankByPrice
+FROM SalesLT.Product AS p
+ORDER BY RankByPrice;
+```
+
+Or we might want to partition the results by product category, similar to grouping by product category.  This will result in a ranking for each product category.  The results might look a little odd at first glance.
+
+```{sql connection=con}
+SELECT c.Name AS Category, p.Name AS Product, ListPrice,
+	RANK() OVER(PARTITION BY c.Name ORDER BY ListPrice DESC) AS RankByPrice
+FROM SalesLT.Product AS p
+JOIN SalesLT.ProductCategory AS c
+ON p.ProductCategoryID = c.ProductcategoryID
+ORDER BY Category, RankByPrice;
+```
+
+### Aggregate Functions
+
+There are a lot of aggregate functions including some statistical functions like s.d. as well as some more standard things like MIN, MAX, SUM etc over a set of data.  We can use GROUP BY.  
+
+First we can get some headline stats of what is in the table.
+
+```{sql connection=con}
+SELECT COUNT(*) AS Products, COUNT(DISTINCT ProductCategoryID) AS Categories, AVG(ListPrice) AS AveragePrice
+FROM SalesLT.Product;
+```
+
+Or we might be interested in summary figures for just one product type, like bikes.  Note that we use COUNT then the specific item, since using COUNT(*) would retunr the number of rows, which may include duplicates.
+
+```{sql connection=con}
+SELECT COUNT(p.ProductID) BikeModels, AVG(p.ListPrice) AveragePrice
+FROM SalesLT.Product AS p
+JOIN SalesLT.ProductCategory AS c
+ON p.ProductCategoryID = c.ProductCategoryID
+WHERE c.Name LIKE '%Bikes';
+```
+
