@@ -766,5 +766,80 @@ ORDER BY c.CompanyName;
 
 ## Using Functions and Aggregating Data
 
+Now we are looking to not just bring back individual rows but perform calculations, such as aggregations, on those results.
 
+The functions we will look at are shown below.
 
+```{r Functions, echo = FALSE, fig.cap='Transact-SQL Functions'}
+knitr::include_graphics("images/TSQL/Functions.png")
+```
+
+### Scalar Functions
+
+A scalar function returns a single value, not a row or column or table.  In database design things can be deterministic or non-deterministic
+
+* Deterministic - we know what the result will be, assuming the data hasn't changed.  The data going in and coming out will be the same
+* Non-deterministic - we cannot gaurantee what the result will be.  For instance if we tested if todays date was less than a value in a table, it would depend on the time and day that the query was run.  We can't say what the result will be, based on the data going in/from the db.
+
+A scalar function can be either deterministic or non-deterministic.  Scalar is a set of functions, and can do multiple things - date and times, text and image, mathematical, system and system statistical, metadata and so on.
+
+We might want to extract the year from a date, for instance to determine when a product was first sold.
+
+```{sql connection=con}
+SELECT YEAR(SellStartDate) SellStartYear, ProductID, Name
+FROM SalesLT.Product
+ORDER BY SellStartYear;
+```
+
+Other examples might include being able to extract certain parts of the date, like the month or day of the week, this can be achived with the DATENAME function
+
+```{sql connection=con}
+SELECT YEAR(SellStartDate) SellStartYear, DATENAME(mm,SellStartDate) SellStartMonth,
+       DAY(SellStartDate) SellStartDay, DATENAME(dw, SellStartDate) SellStartWeekday,
+	   ProductID, Name
+FROM SalesLT.Product
+ORDER BY SellStartYear;
+```
+
+Or we might want to calculate how long a product has been sold, we can use the DATEDIFF function to work this out.
+
+```{sql connection=con}
+SELECT DATEDIFF(yy,SellStartDate, GETDATE()) YearsSold, 
+       DATEDIFF(mm,SellStartDate, GETDATE()) MonthsSold,
+       ProductID, Name
+FROM SalesLT.Product
+ORDER BY ProductID;
+```
+
+Another common example might be to convert text to upper case.
+
+```{sql connection=con}
+SELECT UPPER(Name) AS ProductName
+FROM SalesLT.Product;
+```
+
+We might want to add two strings together but with a space or other text, so we could use the CONCAT function to achieve this.
+
+```{sql connection=con}
+SELECT CONCAT(FirstName + ' ', LastName) AS FullName,
+       FirstName, LastName
+FROM SalesLT.Customer;
+```
+
+Or we might want to return just a specific number of charecters from a string, perhaps there is a structure in the sequence - like the first two chars relate to a product type - so we want to just extract these first two.
+
+```{sql connection=con}
+SELECT Name, ProductNumber, LEFT(ProductNumber, 2) AS ProductType
+FROM SalesLT.Product;
+```
+
+Or we might have something more complex, where we want to find certain elements of text, we can use CHARINDEX to identify where a char occurs, then combine it with SUBSTRING to extract just a portion of the full string which is n chars before or after a particular charecter.
+
+```{sql connection=con}
+SELECT Name, ProductNumber, LEFT(ProductNumber, 2) AS ProductType,
+                            SUBSTRING(ProductNumber,CHARINDEX('-', ProductNumber) + 1, 4) AS ModelCode,
+							              SUBSTRING(ProductNumber, LEN(ProductNumber) - CHARINDEX('-', REVERSE(RIGHT(ProductNumber, 3))) + 2, 2) AS SizeCode
+FROM SalesLT.Product;
+```
+
+### Logical Functions
