@@ -910,7 +910,7 @@ SELECT COUNT(*) AS Products, COUNT(DISTINCT ProductCategoryID) AS Categories, AV
 FROM SalesLT.Product;
 ```
 
-Or we might be interested in summary figures for just one product type, like bikes.  Note that we use COUNT then the specific item, since using COUNT(*) would retunr the number of rows, which may include duplicates.
+Or we might be interested in summary figures for just one product type, like bikes.  Note that we use COUNT then the specific item, since using COUNT(*) would return the number of rows, which may include duplicates.
 
 ```{sql connection=con}
 SELECT COUNT(p.ProductID) BikeModels, AVG(p.ListPrice) AveragePrice
@@ -920,3 +920,80 @@ ON p.ProductCategoryID = c.ProductCategoryID
 WHERE c.Name LIKE '%Bikes';
 ```
 
+However, our aggregate functions are currently returnign totals.  In practice, we may want to return figures by groups, so we need to use GROUP BY in our queries.  When we use a GROUP BY which groups up the results, we have to group up everything in the select row that isn't being aggregated.  You can't have something in the SELECT which is neither being aggregated nor being grouped.  As we are grouping the results, we don't see individual rows of data anymore.
+
+The following example calulates the sales revenue for each sales person.
+
+```{sql connection=con}
+SELECT c.Salesperson, SUM(oh.SubTotal) SalesRevenue
+FROM SalesLT.Customer c
+JOIN SalesLT.SalesOrderHeader oh
+ON c.CustomerID = oh.CustomerID
+GROUP BY c.Salesperson
+ORDER BY SalesRevenue DESC;
+```
+
+Could it be that some sales people have no sales?  If so, we need to return values where the total is NULL, by assigning NULL a value of zero.  WE also use the LEFT JOIN rather than the INNER JOIN previously, we get sales people included who haven't sold anything.
+
+```{sql connection=con}
+SELECT c.Salesperson, ISNULL(SUM(oh.SubTotal), 0.00) SalesRevenue
+FROM SalesLT.Customer c
+LEFT JOIN SalesLT.SalesOrderHeader oh
+ON c.CustomerID = oh.CustomerID
+GROUP BY c.Salesperson
+ORDER BY SalesRevenue DESC;
+```
+
+Or we might want to know the number of customers each sales person has.
+
+```{sql connection=con}
+SELECT Salesperson, COUNT(CustomerID) Customers
+FROM SalesLT.Customer
+GROUP BY Salesperson
+ORDER BY Salesperson;
+```
+
+We might also want to know the sales Revenue by sales person and customer.  Note that we now includer the customer details, we cannot use the CUSTOMER alias from the SELECT query in the GROUP BY, as the SELECT query is run after the GROUP BY.
+
+```{sql connection=con}
+SELECT c.Salesperson, CONCAT(c.FirstName +' ', c.LastName) AS Customer, ISNULL(SUM(oh.SubTotal), 0.00) SalesRevenue
+FROM SalesLT.Customer c
+LEFT JOIN SalesLT.SalesOrderHeader oh
+ON c.CustomerID = oh.CustomerID
+GROUP BY c.Salesperson, CONCAT(c.FirstName +' ', c.LastName)
+ORDER BY SalesRevenue DESC, Customer;
+```
+
+Or the number of products in each category.
+
+```{sql connection=con}
+SELECT c.Name AS Category, COUNT(p.ProductID) AS Products
+FROM SalesLT.Product AS p
+JOIN SalesLT.ProductCategory AS c
+ON p.ProductCategoryID = c.ProductCategoryID
+GROUP BY c.Name
+ORDER BY Category;
+```
+
+### Filtering Groups
+
+If we want to filter, we can use the WHERE clause as we have seen in some previous examples.  However, most of the time we filter with the HAVING caluse.  **HAVING will filter the resutls RATHER than the input**.
+
+Having clause provides a search condition that each group must satisfy, for instance where the number of orders by a customer is greater than 10.
+
+In the example below, we are interested in finding out which sales people have more than 100 customers. 
+
+```{sql connection=con}
+SELECT Salesperson, COUNT(CustomerID) Customers
+FROM SalesLT.Customer
+GROUP BY Salesperson
+HAVING COUNT(CustomerID) > 100
+ORDER BY Salesperson;
+```
+
+Key Points:
+
+* You can use GROUP BY with aggregate functions to return aggregations grouped by one or more columns or expressions.
+* All columns in the SELECT clause that are not aggregate function expressions must be included in a GROUP BY clause.
+* The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.
+* You can filter the groups that are included in the query results by specifying a HAVING clause.
