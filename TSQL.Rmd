@@ -1085,3 +1085,48 @@ ORDER BY TotalRevenue DESC;
 ```
 
 ## Sub-queries and Apply
+
+Subqueries are queries within queries (nested).  The results of the inner or nested query are pasted to the outer query and behave much like an expression.  
+
+Our subquery might be scalr, for instance we might have a single value which is passed to the outer query.  So we might be interested in the last order (the maxium id) and the details from that order, where the information is held in two different tables.
+
+```{sql connection=con}
+SELECT salesorderid, productid, unitprice, orderqty 
+From SalesLT.SalesOrderDetail
+WHERE salesorderid =
+    (SELECT MAX(salesorderid) AS lastorder
+    FROM SalesLT.SalesOrderHeader);  
+```
+ 
+The subquery is in brackets, and the system will treat whatever is in brackets as an individual unit.
+ 
+In a multi-valued query, mutiple values are returned but as a single column set to the outer query.  So we might be interested in every customer in Mexico.  One will get returned from the subquery is a one dimensional array - a vector.
+
+### Self Contained or Correlated Query
+ 
+Queries we have looked at so far are self contained queries.  The sub-query parts works, then it supplies its value to the outer query.  Correlated sub-queries refer to elements of tables used in the outer query.  Because the sub-query is searching for values in the outer query, this can be resource intensive.  We might, for instance, make a reference to an employee number in the subquery, but that number is dependent on the result of the outer query, so the subqueriy works with the outer query.
+
+As with sub-queries generally, it is best to build the query up iteratively, so you can a) check the query is working and b) check your final sub-query results with those of the individual components to make sure it is doing what it should be.  However, this is more difficult when using a correlated query, since there is a dependency.
+
+So our goal is for each customer list all sales on the last day that they made a sale.
+
+So first, lets get a list of customers with their orders and dates.
+
+```{sql connection=con}
+SELECT CustomerID, SalesOrderID, OrderDate
+FROM SalesLT.SalesOrderHeader AS SO1
+ORDER BY CustomerID,OrderDate
+```
+
+Then let's say we want just the latest (max) order date in the db, for each customer ID we have, so we have their individual last order details.
+
+```{sql connection=con}
+SELECT CustomerID, SalesOrderID, OrderDate
+FROM SalesLT.SalesOrderHeader AS SO1
+WHERE orderdate =
+    (SELECT MAX(orderdate)
+FROM SalesLT.SalesOrderHeader AS SO2
+WHERE SO2.CustomerID = SO1.CustomerID)
+ORDER BY CustomerID;
+```
+
