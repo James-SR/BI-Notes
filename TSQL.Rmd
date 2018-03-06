@@ -509,7 +509,7 @@ ON e.ManagerID = m.EmployeeID
 ORDER BY e.ManagerID;
 ```
 
-### Lab Session
+### Lab Exercises
 
 Write a query that returns the company name from the Sale.Customer table, the sales order ID and total due from the SalesLT.SalesOrderHeader table. 
 
@@ -666,7 +666,7 @@ SELECT FirstName, LastName
 FROM SalesLT.Employees;
 ```
 
-### Lab exercises
+### Lab Exercises
 
 Customers can have two kinds of address: a main office address and a shipping address. The accounts department wants to ensure that the main office address is always used for billing, and have asked you to write a query that clearly identifies the different types of address for each customer.
 
@@ -998,7 +998,7 @@ Key Points:
 * The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.
 * You can filter the groups that are included in the query results by specifying a HAVING clause.
 
-### Lab exercises
+### Lab Exercises
 
 Write a query to return the product ID of each product, together with the product name formatted as upper case and a column named ApproxWeight with the weight of each product rounded to the nearest whole unit.
 
@@ -1128,5 +1128,121 @@ WHERE orderdate =
 FROM SalesLT.SalesOrderHeader AS SO2
 WHERE SO2.CustomerID = SO1.CustomerID)
 ORDER BY CustomerID;
+```
+
+### The Apply Operator
+
+Using an apply operator and a table function can achieve something similar to a correlated query, but in less complicated code.  A CROSS APPLY applies the right table expression to each row in the left table, a bit like the correlated sub-query, with CROSS APPLY being similar to a CROSS JOIN.
+
+Similarily OUTER APPLY adds rows for those with NULL in columns for the right table, similar to LEFT OUTER JOIN.  In these instances, the right table is the table returned by the APPLY function.
+
+The first thing we need to do is to create a function.  Notice we are passing the function the SalesOrderID, and the most expensive item in the order gets passed back.
+
+```{sql connection=con}
+-- Setup
+CREATE FUNCTION SalesLT.udfMaxUnitPrice (@SalesOrderID int)
+RETURNS TABLE
+AS
+RETURN
+SELECT SalesOrderID,Max(UnitPrice) as MaxUnitPrice FROM 
+SalesLT.SalesOrderDetail
+WHERE SalesOrderID=@SalesOrderID
+GROUP BY SalesOrderID;
+```
+
+To see what code created a function, to help understand what it does at a later time or if created by someone else, we can use the sp_helptext command. 
+
+```{sql connection=con}
+sp_helptext 'saleslt.udfmaxunitprice'
+```
+
+Then we can use that query to get the results.  Note this could have been achieved with a correlated sub-query, but this is perahps a little easier to interpret.
+
+```{sql connection=con}
+SELECT SOH.SalesOrderID, MUP.MaxUnitPrice 
+FROM SalesLT.SalesOrderDetail AS SOH
+CROSS APPLY SalesLT.udfMaxUnitPrice(SOH.SalesOrderID) AS MUP
+ORDER BY SOH.SalesOrderID;
+```
+
+Key Points:
+
+* The APPLY operator enables you to execute a table-valued function for each row in a rowset returned by a SELECT statement. Conceptually, this approach is similar to a correlated subquery.
+* CROSS APPLY returns matching rows, similar to an inner join. OUTER APPLY returns all rows in the original SELECT query results with NULL values for rows where no match was found.
+
+### Lab Exercises
+
+AdventureWorks products each have a standard cost that indicates the cost of manufacturing the product, and a list price that indicates the recommended selling price for the product. This data is stored in the SalesLT.Product table.
+
+Whenever a product is ordered, the actual unit price at which it was sold is also recorded in the SalesLT.SalesOrderDetail table.
+
+Use subqueries to compare the cost and list prices for each product with the unit prices charged in each sale.
+
+```{sql connection=con}
+SELECT ProductID, Name, ListPrice
+FROM SalesLT.Product
+WHERE ListPrice >
+    (SELECT AVG(UnitPRice) FROM SalesLT.SalesOrderDetail)
+ORDER BY ProductID;
+```
+
+AdventureWorks is interested in finding out which products are being sold at a loss.  Retrieve the product ID, name, and list price for each product where the list price is 100 or more, and the product has been sold for (strictly) less than 100.
+
+```{sql connection=con}
+SELECT ProductID, Name, ListPrice
+FROM SalesLT.Product
+WHERE ProductID IN
+  (SELECT ProductID FROM SalesLT.SalesOrderDetail
+   WHERE UnitPrice < 100)
+AND ListPrice >= 100
+ORDER BY ProductID;
+```
+
+In order to get an idea of how many products are selling above or below list price, you want to gather some aggregate product data. Retrieve the product ID, name, cost, and list price for each product along with the average unit price for which that product has been sold. 
+
+```{sql connection=con}
+SELECT ProductID, Name, StandardCost, ListPrice,
+    (SELECT AVG(UnitPrice)
+    FROM SalesLT.SalesOrderDetail AS SOD
+    WHERE P.ProductID = SOD.ProductID) AS AvgSellingPrice
+FROM SalesLT.Product AS P
+ORDER BY P.ProductID;
+```
+
+AdventureWorks is interested in finding out which products are costing more than they're being sold for, on average.  Filter the query for the previous exercise to include only products where the cost is higher than the average selling price.
+
+```{sql connection=con}
+SELECT ProductID, Name, StandardCost, ListPrice,
+    (SELECT AVG(UnitPrice)
+     FROM SalesLT.SalesOrderDetail AS SOD
+     WHERE P.ProductID = SOD.ProductID) AS AvgSellingPrice
+FROM SalesLT.Product AS P
+WHERE StandardCost >
+    (SELECT AVG(UnitPrice)
+     FROM SalesLT.SalesOrderDetail AS SOD
+     WHERE P.ProductID = SOD.ProductID)
+ORDER BY P.ProductID;
+```
+
+The AdventureWorksLT database includes a table-valued user-defined function named dbo.ufnGetCustomerInformation. Use this function to retrieve details of customers based on customer ID values retrieved from tables in the database. 
+
+Retrieve the sales order ID, customer ID, first name, last name, and total due for all sales orders from the SalesLT.SalesOrderHeader table and the dbo.ufnGetCustomerInformation function. 
+
+```{sql connection=con}
+SELECT SOH.SalesOrderID, SOH.CustomerID, CI.FirstName, CI.LastName, SOH.TotalDue
+FROM SalesLT.SalesOrderHeader AS SOH
+CROSS APPLY dbo.ufnGetCustomerInformation(SOH.CustomerID) AS CI
+ORDER BY SOH.SalesOrderID;
+```
+
+Use the table-valued user-defined function dbo.ufnGetCustomerInformation again to retrieve details of customers based on customer ID values retrieved from tables in the database.  Retrieve the customer ID, first name, last name, address line 1 and city for all customers from the SalesLT.Address and SalesLT.CustomerAddress tables, using the dbo.ufnGetCustomerInformation function.
+
+```{sql connection=con}
+SELECT CA.CustomerID, CI.FirstName, CI.LastName, A.AddressLine1, A.City
+FROM SalesLT.Address AS A
+JOIN SalesLT.CustomerAddress AS CA
+ON A.AddressID = CA.AddressID
+CROSS APPLY dbo.ufnGetCustomerInformation(CA.CustomerID) AS CI
+ORDER BY CA.CustomerID;
 ```
 
