@@ -1246,3 +1246,78 @@ CROSS APPLY dbo.ufnGetCustomerInformation(CA.CustomerID) AS CI
 ORDER BY CA.CustomerID;
 ```
 
+## Using Table Expressions
+
+We can create tables in a number of ways that can then be re-usd, rather than being a one-off query.
+
+### Views
+
+One way we can do this is using a view.  Rather than repeatadly joining and selected fields from two tables, we can create a view that contains the join syntax then just select the view.  This view can be used and queried as if it were a table.  The data is still in the underlying tables, but it is a view or presentation on top of the tables.  It's like a named query, which can make this simpler, plus we can add data at the view level, so they can view rights for the view table, but not the underlying data.  Note that whilst you are able to use insert to add new rows, you can only do this to one of the underlying tables.
+
+First we create a view
+
+```{sql connection=con}
+-- Create a view
+CREATE VIEW SalesLT.vCustomerAddress
+AS
+SELECT C.CustomerID, FirstName, LastName, AddressLine1, City, StateProvince 
+FROM
+SalesLT.Customer C JOIN SalesLT.CustomerAddress CA
+ON C.CustomerID=CA.CustomerID
+JOIN SalesLT.Address A
+ON CA.AddressID=A.AddressID
+```
+
+Then we can query the view.
+
+```{sql connection=con}
+SELECT CustomerID, City
+FROM SalesLT.vCustomerAddress
+```
+
+And we can join data to that view.
+
+```{sql connection=con}
+SELECT c.StateProvince, c.City, ISNULL(SUM(s.TotalDue), 0.00) AS Revenue
+FROM SalesLT.vCustomerAddress AS c
+LEFT JOIN SalesLT.SalesOrderHeader AS s
+ON s.CustomerID = c.CustomerID
+GROUP BY c.StateProvince, c.City
+ORDER BY c.StateProvince, Revenue DESC;
+```
+
+### Using Temporary Tables and Table Variables
+
+Views are persistent database objects, however we might want a temporary table.  We prefix the object with a # symbol and they are created in a seperate temporary database called tempdb, rather than the db you are working in.  Typically using a single # will mean the table exists for the current user session.  If you wanted it to persistent over multiple sessions, use the ## prefix.  
+
+An alternative approach is to use table variables, which were introduced to cause performance problems if used again, as the table has to be re-created each user session, which can become a problem if there are many tables.  If we want to use one we prefix it with an @ sign to signify it is a variable e.g. @varProducts table so we define the variable as a table.  This is connected to the batch rather than the session, so as long as we are in the block of code.  It only works well on small databases or queries.  They are for temporary situations or a temporary holding space.
+
+In the next block of code we show how we create a temporary table then update and query it.
+
+```{sql connection=con}
+CREATE TABLE #Colors
+(Color varchar(15));
+
+INSERT INTO #Colors
+SELECT DISTINCT Color FROM SalesLT.Product;
+
+SELECT * FROM #Colors;
+```
+
+A table variable is similar, with some syntax differences, but this works on the code set (batch of commans ran at the same time) rather than being for the entire session.
+
+```{sql connection=con}
+DECLARE @Colors AS TABLE (Color varchar(15));
+
+INSERT INTO @Colors
+SELECT DISTINCT Color FROM SalesLT.Product;
+
+SELECT * FROM @Colors;
+```
+
+Key Points
+
+* Temporary tables are prefixed with a # symbol (You can also create global temporary tables that can be accessed by other processes by prefixing the name with ##)
+* Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.
+* Table variables are prefixed with a @ symbol.
+* Table variables are scoped to the batch in which they are created.
