@@ -1321,3 +1321,102 @@ Key Points
 * Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.
 * Table variables are prefixed with a @ symbol.
 * Table variables are scoped to the batch in which they are created.
+
+### Table Value Functions (TVF)
+
+This is a specific type of function which returns a table.  It is a permanently define database object.  Unlike views, we can pass values in to a TVF.
+
+So first we create a TVF.
+
+```{sql connection=con}
+CREATE FUNCTION SalesLT.udfCustomersByCity
+(@City AS VARCHAR(20))
+RETURNS TABLE
+AS
+RETURN
+    (SELECT C.CustomerID, FirstName, LastName, AddressLine1, City, StateProvince
+     FROM SalesLT.Customer C JOIN SalesLT.CustomerAddress CA
+     ON C.CustomerID=CA.CustomerID
+     JOIN SalesLT.Address A ON CA.AddressID=A.AddressID
+     WHERE City=@City);
+```
+
+Then we can call the TVF passing a parameter - in this instance we prvoide a city name of Bellevue - which will then return the results of the SELECT statement which is a list of customers in that city.
+
+```{sql connection=con}
+SELECT * FROM SalesLT.udfCustomersByCity('Bellevue')
+```
+
+### Derived Tables
+
+These are derived tables that return a multi column table.  They are a virtual table to simplify a query.  The table only exists within that SELECT query.  It is a programming construct within a SELECT statement, it is used for programming purposes.  They can use internal (aka inline) within the derived table element, or external aliases for columns - outside the () of the derived table.
+
+In the example derived table below, the alias ProdCats is provided external to the query (outside the parentheses).  Other elements such as Category as defined as internal aliases.
+
+```{sql connection=con}
+SELECT Category, COUNT(ProductID) AS Products
+FROM
+	(SELECT p.ProductID, p.Name AS Product, c.Name AS Category
+	 FROM SalesLT.Product AS p
+	 JOIN SalesLT.ProductCategory AS c
+	 ON p.ProductCategoryID = c.ProductCategoryID) AS ProdCats
+GROUP BY Category
+ORDER BY Category;
+```
+
+### Using Common Table Expressions (CTEs)
+
+Similar to a TVF before we are defining a temporary table object which is used within the scope of the query.  But this time aorund we define the CTE first, then make calls to that CTE afterwards.  Unlike a derived query however, you can refer to the CTE mutiple times within the same query/code batch, but it won't live on like a view.  We can also use a CTE for recursive elements like loops, so you might want to get everyone within a management tier, then say you want to go through that process three times for the top 3 levels, using the OPTION(MAXRECURSION 3).
+
+So in the following example, we first define the CTE, then we make reference to it.  The result here is the same as our derived query previously, but perhaps a little easiter to understand.
+
+```{sql connection=con}
+WITH ProductsByCategory (ProductID, ProductName, Category)
+AS
+(
+	SELECT p.ProductID, p.Name, c.Name AS Category
+	 FROM SalesLT.Product AS p
+	 JOIN SalesLT.ProductCategory AS c
+	 ON p.ProductCategoryID = c.ProductCategoryID
+)
+
+SELECT Category, COUNT(ProductID) AS Products
+FROM ProductsByCategory
+GROUP BY Category
+ORDER BY Category;
+```
+
+Next we will look at the our organisation chart example as previously mentioned.  First let's look at our employee table.
+
+```{sql connection=con}
+SELECT * FROM SalesLT.Employee
+```
+
+We can see that each employee has a manager ID apart from Employee 3 who is the CEO/MD.  So we have a hierarchy of employees.  We will go 3 levels deep this time (three recursions). 
+
+```{sql connection=con}
+WITH OrgReport (ManagerID, EmployeeID, EmployeeName, Level)
+AS
+(
+	-- Anchor query
+	SELECT e.ManagerID, e.EmployeeID, EmployeeName, 0
+	FROM SalesLT.Employee AS e
+	WHERE ManagerID IS NULL
+
+	UNION ALL
+
+	-- Recursive query
+	SELECT e.ManagerID, e.EmployeeID, e.EmployeeName, Level + 1
+	FROM SalesLT.Employee AS e
+	INNER JOIN OrgReport AS o ON e.ManagerID = o.EmployeeID
+)
+
+SELECT * FROM OrgReport
+OPTION (MAXRECURSION 3);
+```
+
+Key Points
+
+* A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.
+* Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.
+* You can use CTEs to define recursive queries.
