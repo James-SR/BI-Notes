@@ -1420,3 +1420,77 @@ Key Points
 * A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.
 * Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.
 * You can use CTEs to define recursive queries.
+
+### Lab Exercises
+
+AdventureWorks sells many products that are variants of the same product model. You must write queries that retrieve information about these products.  Retrieve the product ID, product name, product model name, and product model summary for each product from the SalesLT.Product table and the SalesLT.vProductModelCatalogDescription view. 
+
+```{sql connection=con}
+SELECT P.ProductID, P.Name AS ProductName, PM.Name AS ProductModel, PM.Summary
+FROM SalesLT.Product AS P
+JOIN SalesLT.vProductModelCatalogDescription AS PM
+ON P.ProductModelID = PM.ProductModelID
+ORDER BY ProductID;
+```
+
+You are only interested in products which have a listed color in the database.  Create a table variable and populate it with a list of distinct colors from the SalesLT.Product table. Then use the table variable to filter a query that returns the product ID, name, and color from the SalesLT.Product table so that only products with a color listed in the table variable are returned. 
+
+```{sql connection=con}
+DECLARE @Colors AS TABLE (Color NVARCHAR(15));
+
+INSERT INTO @Colors
+SELECT DISTINCT Color FROM SalesLT.Product;
+
+SELECT ProductID, Name, Color
+FROM SalesLT.Product
+WHERE Color IN (SELECT Color FROM @Colors);
+```
+
+The AdventureWorksLT database includes a table-valued function named dbo.ufnGetAllCategories, which returns a table of product categories (e.g. 'Road Bikes') and parent categories (for example 'Bikes').  Write a query that uses this function to return a list of all products including their parent category and their own category. 
+
+```{sql connection=con}
+SELECT C.ParentProductCategoryName AS ParentCategory,
+       C.ProductCategoryName AS Category,
+       P.ProductID, P.Name AS ProductName
+FROM SalesLT.Product AS P
+JOIN dbo.ufnGetAllCategories() AS C
+ON P.ProductCategoryID = C.ProductCategoryID
+ORDER BY ParentCategory, Category, ProductName;
+```
+
+Each AdventureWorks customer is a retail company with a named contact. You must create queries that return the total revenue for each customer, including the company and customer contact names.  Retrieve a list of customers in the format Company (Contact Name) together with the total revenue for each customer. Use a derived table or a common table expression to retrieve the details for each sales order, and then query the derived table or CTE to aggregate and group the data. 
+
+```{sql connection=con}
+SELECT CompanyContact, SUM(SalesAmount) AS Revenue
+FROM
+	(SELECT CONCAT(c.CompanyName, CONCAT(' (' + c.FirstName + ' ', c.LastName + ')')), SOH.TotalDue
+	 FROM SalesLT.SalesOrderHeader AS SOH
+	 JOIN SalesLT.Customer AS c
+	 ON SOH.CustomerID = c.CustomerID) AS CustomerSales(CompanyContact, SalesAmount)
+GROUP BY CompanyContact
+ORDER BY CompanyContact;
+```
+
+## Grouping Sets and Pivoting Data
+
+These are both ways of summarising data - grouping data includes cubing the data.
+
+Grouping sets allows you to define multiple groupings within the same query.  So you may haved a number of subtotals for different product types, then a total of all the subtotals combined.  
+
+So you would have something like
+
+> SELECT <list of cols>
+  FROM <table>
+  GROUP BY
+  GROUPING SETS
+  (
+      <col 1>,
+      <col 2>
+      () -- empty parentheses if aggregating all rows
+  )
+
+A result line will appear with NULLs in all column(s) which is the grand total.
+
+There are other ways to aggregate the data such as ROLLUP and CUBE.  ROLLUP is useful if you haave hierarchy - people in households, towns in regions. Cube will show every possible aggregation, rather than specifying each aggregation.
+
+Both are specified in the GROUP BY X (<cols>) where x is either ROLLUP or CUBE.  You can add in GROUPING_ID<col> AS <col_name> fiels to make the interpretation easier when using multiple grouping columns.  You can then see the grand total more easily, since it will have a 1 in each groupid column. 
