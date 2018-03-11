@@ -1494,3 +1494,107 @@ A result line will appear with NULLs in all column(s) which is the grand total.
 There are other ways to aggregate the data such as ROLLUP and CUBE.  ROLLUP is useful if you haave hierarchy - people in households, towns in regions. Cube will show every possible aggregation, rather than specifying each aggregation.
 
 Both are specified in the GROUP BY X (<cols>) where x is either ROLLUP or CUBE.  You can add in GROUPING_ID<col> AS <col_name> fiels to make the interpretation easier when using multiple grouping columns.  You can then see the grand total more easily, since it will have a 1 in each groupid column. 
+
+So a usual group by might look something like this - with a high level Parent Category followed by a Product Category and a count of items.
+
+```{sql connection=con}
+SELECT cat.ParentProductCategoryName, cat.ProductCategoryName, count(prd.ProductID) AS Products
+FROM SalesLT.vGetAllCategories as cat
+LEFT JOIN SalesLT.Product AS prd
+ON prd.ProductCategoryID = cat.ProductcategoryID
+GROUP BY cat.ParentProductCategoryName, cat.ProductCategoryName
+ORDER BY cat.ParentProductCategoryName, cat.ProductCategoryName;
+```
+
+Here there are no grand total by parent categories. Also, there might be certain items appear in more than one category without totals e.g. bike racks might be in mutiple parent categories. 
+
+Alternatively, we might create GROUPING SETS which also allows us to create totals.
+
+```{sql connection=con}
+SELECT cat.ParentProductCategoryName, cat.ProductCategoryName, count(prd.ProductID) AS Products
+FROM SalesLT.vGetAllCategories as cat
+LEFT JOIN SalesLT.Product AS prd
+ON prd.ProductCategoryID = cat.ProductcategoryID
+GROUP BY GROUPING SETS(cat.ParentProductCategoryName, cat.ProductCategoryName, ())
+ORDER BY cat.ParentProductCategoryName, cat.ProductCategoryName;
+```
+
+We now start getting totals, we can see there is a total of 295 products, followed by 3 bib-shorts (irrespective of parent), and later in the table we get the totals by parent categories.  But we have no loss some of the relationships with parent categories with this query.  It is possible to write a query where these things might appear, GROUPING SETS is the most flexible of the grouping commands, but it might be easier to use one of the other grouping options as required, next shows the the ROLLUP command.
+
+```{sql connection=con}
+SELECT cat.ParentProductCategoryName, cat.ProductCategoryName, count(prd.ProductID) AS Products
+FROM SalesLT.vGetAllCategories as cat
+LEFT JOIN SalesLT.Product AS prd
+ON prd.ProductCategoryID = cat.ProductcategoryID
+GROUP BY ROLLUP (cat.ParentProductCategoryName, cat.ProductCategoryName)
+ORDER BY cat.ParentProductCategoryName, cat.ProductCategoryName;
+```
+
+It is now giving us totals for parents and products. However, we are now missing situations where items might appear in more than one parent category e.g. bottles and cages that are in a category other than accessories.  So we can use CUBE to get these other aggregation options, which will give us all possible aggregations.
+
+```{sql connection=con}
+SELECT cat.ParentProductCategoryName, cat.ProductCategoryName, count(prd.ProductID) AS Products
+FROM SalesLT.vGetAllCategories as cat
+LEFT JOIN SalesLT.Product AS prd
+ON prd.ProductCategoryID = cat.ProductcategoryID
+GROUP BY CUBE (cat.ParentProductCategoryName, cat.ProductCategoryName)
+ORDER BY cat.ParentProductCategoryName, cat.ProductCategoryName;
+```
+
+Key Points
+* Use GROUPING SETS to define custom groupings.
+* Use ROLLUP to include subtotals and a grand total for hierarchical groupings.
+* Use CUBE to include all possible groupings.
+
+### Pivoting Data
+
+Pivoting is another form of summarising data. We take row based items and pivot them in to single, summarised, columns in a new table.  We simply use the PIVOT command.  It is possible to undue this using UNPIVOT however this may loose some of the detail that existed in the original data.  For instance line level data, such as which particular clothing items were purchased and at which value, is now lost as we just get a clothing total, but re-orientated to match the original data format.
+
+We might want to be able to see the totals by colour in our data and by cateory.  You have to know which columns you wish to create using the PIVOT table, for instance in the code below we are listing the actual colours our in the PIVOT command.  If one colour was missed, the query would work, but you obviously wouldn't get that colour returned or inlcuded in totals.
+
+```{sql connection=con}
+SELECT * FROM
+    (SELECT P.ProductID, PC.Name,ISNULL(P.Color, 'Uncolored') AS Color
+     FROM saleslt.productcategory AS PC
+     JOIN SalesLT.Product AS P
+     ON PC.ProductCategoryID=P.ProductCategoryID
+     ) AS PPC
+PIVOT(COUNT(ProductID) FOR Color IN([Red],[Blue],[Black],[Silver],[Yellow],[Grey], [Multi], [Uncolored])) as pvt
+ORDER BY Name;
+```
+
+If we wanted to, we could copy/archive this in to a new table, which can be re-used again or compared and retrieved in the future.  
+
+```{sql connection=con}
+CREATE TABLE #ProductColorPivot
+(Name varchar(50), Red int, Blue int, Black int, Silver int, Yellow int, Grey int , multi int, uncolored int);
+
+INSERT INTO #ProductColorPivot
+    SELECT * FROM
+    (SELECT P.ProductID, PC.Name,ISNULL(P.Color, 'Uncolored') AS Color
+     FROM saleslt.productcategory AS PC
+     JOIN SalesLT.Product AS P
+     ON PC.ProductCategoryID=P.ProductCategoryID
+     ) AS PPC
+PIVOT(COUNT(ProductID) FOR Color IN([Red],[Blue],[Black],[Silver],[Yellow],[Grey], [Multi], [Uncolored])) as pvt
+ORDER BY Name;
+```
+
+If we then wanted to unpvivot the data we would do so as follows.
+
+```{sql connection=con}
+SELECT Name, Color, ProductCount
+FROM
+    (SELECT Name,
+    [Red],[Blue],[Black],[Silver],[Yellow],[Grey], [Multi], [Uncolored]
+    FROM #ProductColorPivot) pcp
+UNPIVOT
+(ProductCount FOR Color IN ([Red],[Blue],[Black],[Silver],[Yellow],[Grey], [Multi], [Uncolored])
+) AS ProductCounts
+```
+
+Key Points
+* Use PIVOT to re-orient a rowset by generating mulitple columns from values in a single column.
+* Use UNPIVOT to re-orient mulitple columns in a an existing rowset into a single column.
+
+### Lab Exercises
