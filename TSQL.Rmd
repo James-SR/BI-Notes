@@ -1138,7 +1138,7 @@ Similarily OUTER APPLY adds rows for those with NULL in columns for the right ta
 
 The first thing we need to do is to create a function.  Notice we are passing the function the SalesOrderID, and the most expensive item in the order gets passed back.
 
-```{sql connection=con}
+```{sql connection=con, eval = FALSE}
 -- Setup
 CREATE FUNCTION SalesLT.udfMaxUnitPrice (@SalesOrderID int)
 RETURNS TABLE
@@ -1256,7 +1256,7 @@ One way we can do this is using a view.  Rather than repeatadly joining and sele
 
 First we create a view
 
-```{sql connection=con}
+```{sql connection=con, eval = FALSE}
 -- Create a view
 CREATE VIEW SalesLT.vCustomerAddress
 AS
@@ -1328,7 +1328,7 @@ This is a specific type of function which returns a table.  It is a permanently 
 
 So first we create a TVF.
 
-```{sql connection=con}
+```{sql connection=con, eval = FALSE}
 CREATE FUNCTION SalesLT.udfCustomersByCity
 (@City AS VARCHAR(20))
 RETURNS TABLE
@@ -1565,7 +1565,7 @@ ORDER BY Name;
 
 If we wanted to, we could copy/archive this in to a new table, which can be re-used again or compared and retrieved in the future.  
 
-```{sql connection=con}
+```{sql connection=con, eval = FALSE}
 CREATE TABLE #ProductColorPivot
 (Name varchar(50), Red int, Blue int, Black int, Silver int, Yellow int, Grey int , multi int, uncolored int);
 
@@ -1582,7 +1582,7 @@ ORDER BY Name;
 
 If we then wanted to unpvivot the data we would do so as follows.
 
-```{sql connection=con}
+```{sql connection=con, eval = FALSE}
 SELECT Name, Color, ProductCount
 FROM
     (SELECT Name,
@@ -1603,7 +1603,7 @@ AdventureWorks sells products to customers in multiple country/regions around th
 
 An existing report uses the query provided in the editor to return total sales revenue grouped by country/region and state/province.  Modify the query so that the results include a grand total for all sales revenue and a subtotal for each country/region in addition to the state/province subtotals that are already returned. 
 
-```{sql connection=con}
+```{sql connection = con}
 SELECT a.CountryRegion, a.StateProvince, SUM(soh.TotalDue) AS Revenue
 FROM SalesLT.Address AS a
 JOIN SalesLT.CustomerAddress AS ca
@@ -1618,7 +1618,7 @@ ORDER BY a.CountryRegion, a.StateProvince;
 
 Modify your query to include a column named Level that indicates at which level in the total, country/region, and state/province hierarchy the revenue figure in the row is aggregated.
 
-```{sql connection=CON}
+```{sql connection = con}
 SELECT a.CountryRegion, a.StateProvince,
     IIF(GROUPING_ID(a.CountryRegion) = 1 AND GROUPING_ID(a.StateProvince) = 1, 'Total', IIF(GROUPING_ID(a.StateProvince) = 1, a.CountryRegion     + ' Subtotal', a.StateProvince + ' Subtotal')) AS Level,
 SUM(soh.TotalDue) AS Revenue
@@ -1704,9 +1704,11 @@ GO
 
 If we then wanted to explicitly add or insert a row in to the datbase we do the following - note the CallID does not need to be given since this is automatically created :
 
-```{sql connection=con, EVAL = FALSE}
-INSERT INTO SalesLT.CallLog -- INT is optional
-VALUES -- as we are explicitly stating the values
+-- INT is optional, we state values as we are explicitly stating the values
+
+```{sql connection=con, eval = FALSE}
+INSERT INTO SalesLT.CallLog 
+VALUES 
 ('2015-01-01T12:30:00', 'adventure-works\pamela0', 1, '245-555-0173', 'Returning call re: enquiry about delivery');
 ```
 
