@@ -1686,3 +1686,58 @@ Our Identity property of a column generates sequential numbers for insertations 
 An alternative is to use SELECT SCOPE_IDENTITY() AS ORDERID which wil bring back the last identity column for the specified table in the current session, but again this can be problematic. The alternative is to use IDENT_CURRENT('<table_name'>) which passes the last identity inserted into a particular table, however this is across all sessions, so if others are inserting the table this can be problematic.  So generally the best option is to use SCOPE_IDENTITY and present that, before then going on to do other things.
 
 If you perhaps wanted to have two different tables for two different order types - say in store purchases and online purchases as two dinstinct tables - but to both use the same sequential list for order ID, you could do this using sequences.  They exist independently of tables so can be referenced by mutiple tables, the query will ask the server what the next id is in the sequence and be provided with that.  It is like a central store that issues new numbers on request.
+
+So to create a new table for customer call logs we do the following:
+
+```{sql connection=con, eval = FALSE}
+CREATE TABLE SalesLT.CallLog
+(
+	CallID int IDENTITY PRIMARY KEY NOT NULL, -- no seed or increment set, so will start at 1 then add 1
+	CallTime datetime NOT NULL DEFAULT GETDATE(), -- if not date and time set, it will get the current date and time
+	SalesPerson nvarchar(256) NOT NULL,
+	CustomerID int NOT NULL REFERENCES SalesLT.Customer(CustomerID), -- references a foreign key from the customer table
+	PhoneNumber nvarchar(25) NOT NULL,
+	Notes nvarchar(max) NULL -- the only column which is allowed to be NULL, since perhaps the customer does not answer
+);
+GO
+```
+
+If we then wanted to explicitly add or insert a row in to the datbase we do the following - note the CallID does not need to be given since this is automatically created :
+
+```{sql connection=con, EVAL = FALSE}
+INSERT INTO SalesLT.CallLog -- INT is optional
+VALUES -- as we are explicitly stating the values
+('2015-01-01T12:30:00', 'adventure-works\pamela0', 1, '245-555-0173', 'Returning call re: enquiry about delivery');
+```
+
+If we wantedc to accept the default options, we can do that by using DEFAULT (e.g. for data/time) and if there are no notes we can use NULL.
+
+```{sql connection=con, eval = FALSE}
+INSERT INTO SalesLT.CallLog
+VALUES
+(DEFAULT, 'adventure-works\david8', 2, '170-555-0127', NULL);
+```
+
+Perhaps we need to re-order our fields rather than accepting the default sequence, perhaps it is a modified table or a table form another source.  To do this, we explicitly state the columns.
+
+```{sql connection=con, eval = FALSE}
+INSERT INTO SalesLT.CallLog (SalesPerson, CustomerID, PhoneNumber)
+VALUES
+('adventure-works\jillian0', 3, '279-555-0130');
+```
+
+If we wanted to add two records, we can do this at the same time, and even use some different options for the different rows.
+
+```{sql connection=con, eval = FALSE}
+INSERT INTO SalesLT.CallLog
+VALUES
+(DATEADD(mi,-2, GETDATE()), 'adventure-works\jillian0', 4, '710-555-0173', NULL),
+(DEFAULT, 'adventure-works\shu0', 5, '828-555-0186', 'Called to arrange deliver of order 10987');
+```
+
+There are more examples with adding query results into tables and getting identity values in the demo files.
+
+Key Points
+* Use the INSERT statement to insert one or more rows into a table.
+* When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.
+* Identity columns generate a unique integer identifier for each row. You can also use a sequence to generate unique values that can be used in multiple tables.
