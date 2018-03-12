@@ -1598,3 +1598,91 @@ Key Points
 * Use UNPIVOT to re-orient mulitple columns in a an existing rowset into a single column.
 
 ### Lab Exercises
+
+AdventureWorks sells products to customers in multiple country/regions around the world.
+
+An existing report uses the query provided in the editor to return total sales revenue grouped by country/region and state/province.  Modify the query so that the results include a grand total for all sales revenue and a subtotal for each country/region in addition to the state/province subtotals that are already returned. 
+
+```{sql connection=con}
+SELECT a.CountryRegion, a.StateProvince, SUM(soh.TotalDue) AS Revenue
+FROM SalesLT.Address AS a
+JOIN SalesLT.CustomerAddress AS ca
+ON a.AddressID = ca.AddressID
+JOIN SalesLT.Customer AS c
+ON ca.CustomerID = c.CustomerID
+JOIN SalesLT.SalesOrderHeader as soh
+ON c.CustomerID = soh.CustomerID
+GROUP BY ROLLUP (a.CountryRegion, a.StateProvince)
+ORDER BY a.CountryRegion, a.StateProvince;
+```
+
+Modify your query to include a column named Level that indicates at which level in the total, country/region, and state/province hierarchy the revenue figure in the row is aggregated.
+
+```{sql connection=CON}
+SELECT a.CountryRegion, a.StateProvince,
+    IIF(GROUPING_ID(a.CountryRegion) = 1 AND GROUPING_ID(a.StateProvince) = 1, 'Total', IIF(GROUPING_ID(a.StateProvince) = 1, a.CountryRegion     + ' Subtotal', a.StateProvince + ' Subtotal')) AS Level,
+SUM(soh.TotalDue) AS Revenue
+FROM SalesLT.Address AS a
+JOIN SalesLT.CustomerAddress AS ca
+ON a.AddressID = ca.AddressID
+JOIN SalesLT.Customer AS c
+ON ca.CustomerID = c.CustomerID
+JOIN SalesLT.SalesOrderHeader as soh
+ON c.CustomerID = soh.CustomerID
+GROUP BY ROLLUP(a.CountryRegion, a.StateProvince)
+ORDER BY a.CountryRegion, a.StateProvince;
+```
+
+Or to extend your query to include a grouping for individual cities.
+
+```{sql connection=con}
+SELECT a.CountryRegion, a.StateProvince, a.City,
+CHOOSE (1 + GROUPING_ID(a.CountryRegion) + GROUPING_ID(a.StateProvince) + GROUPING_ID(a.City),
+        a.City + ' Subtotal', a.StateProvince + ' Subtotal',
+        a.CountryRegion + ' Subtotal', 'Total') AS Level,
+SUM(soh.TotalDue) AS Revenue
+FROM SalesLT.Address AS a
+JOIN SalesLT.CustomerAddress AS ca
+ON a.AddressID = ca.AddressID
+JOIN SalesLT.Customer AS c
+ON ca.CustomerID = c.CustomerID
+JOIN SalesLT.SalesOrderHeader as soh
+ON c.CustomerID = soh.CustomerID
+GROUP BY ROLLUP(a.CountryRegion, a.StateProvince, a.City)
+ORDER BY a.CountryRegion, a.StateProvince, a.City;
+```
+
+AdventureWorks products are grouped into categories, which in turn have parent categories (defined in the SalesLT.vGetAllCategories view).
+
+AdventureWorks customers are retail companies, and they may place orders for products of any category. The revenue for each product in an order is recorded as the LineTotal value in the SalesLT.SalesOrderDetail table.
+
+Retrieve a list of customer company names together with their total revenue for each parent category in Accessories, Bikes, Clothing, and Components. Make sure to use the aliases provided, and default column names elsewhere.
+
+```{sql connection=con}
+SELECT * FROM
+(SELECT cat.ParentProductCategoryName, cust.CompanyName, sod.LineTotal
+ FROM SalesLT.SalesOrderDetail AS sod
+ JOIN SalesLT.SalesOrderHeader AS soh ON sod.SalesOrderID = soh.SalesOrderID
+ JOIN SalesLT.Customer AS cust ON soh.CustomerID = cust.CustomerID
+ JOIN SalesLT.Product AS prod ON sod.ProductID = prod.ProductID
+ JOIN SalesLT.vGetAllCategories AS cat ON prod.ProductcategoryID = cat.ProductCategoryID) AS catsales
+PIVOT (SUM(LineTotal) FOR ParentProductCategoryName
+IN ([Accessories], [Bikes], [Clothing], [Components])) AS pivotedsales
+ORDER BY CompanyName;
+```
+
+## Modifying Data
+
+This section isn't about querying data, but adding, deleting and updating data in our database.
+
+To add data we use the INSERT ... VALUES command, where you can leave blank columns that allow NULLs and cols with default constraints.  You can also leave identify/primary key fields blank since they will be generated automatically, depending on what seed and increment values were specified when the table was set up, however it is possible to overide these values if you wish.  You can add a NULL value to a column if you wish.
+
+You can also insert the results of another query in to an existing table using INSERT ... SELECT or INSERT ... EXEC where EXEC is the execution of a stored query.
+
+Another option is SELECT ... INTO will explicity create a new table, inserting data based on query.  However this newly created table will not have contraints, defaults, indexes or primary keys, just a set of columns with the results of the query.  This is currently not supported in Azure, however you could create the table first with the items needed such as columns and pk, then use the INSERT INTO for Azure.
+
+Our Identity property of a column generates sequential numbers for insertations of new data into a database and we can set the parameters of this identity column. If you insert a new item (row) in to a table, you might want to then get back this identity column for this new item e.g. you automatically generate a new sales ID but a new order, however you might want to then present this back to the customer, this is acheived using @@IDENITY, but this returns the last identity referenced, so if you are adding the sales order first then the individual items in a seperate table, it will retrieve the idenity column from the sales order details rather than sales order header.  This command therefore returns the last identity from the current connected session.
+
+An alternative is to use SELECT SCOPE_IDENTITY() AS ORDERID which wil bring back the last identity column for the specified table in the current session, but again this can be problematic. The alternative is to use IDENT_CURRENT('<table_name'>) which passes the last identity inserted into a particular table, however this is across all sessions, so if others are inserting the table this can be problematic.  So generally the best option is to use SCOPE_IDENTITY and present that, before then going on to do other things.
+
+If you perhaps wanted to have two different tables for two different order types - say in store purchases and online purchases as two dinstinct tables - but to both use the same sequential list for order ID, you could do this using sequences.  They exist independently of tables so can be referenced by mutiple tables, the query will ask the server what the next id is in the sequence and be provided with that.  It is like a central store that issues new numbers on request.
