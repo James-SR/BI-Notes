@@ -1743,3 +1743,31 @@ Key Points
 * Use the INSERT statement to insert one or more rows into a table.
 * When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.
 * Identity columns generate a unique integer identifier for each row. You can also use a sequence to generate unique values that can be used in multiple tables.
+
+### Updating and Deleting Data
+
+The UPDATE command will update all the rows in a table or view and can be filtered using WHERE and the columns can be selected using FROM.  It is more likely we will want to select a particular set of rows, so we will be using the WHERE clause in most instances.  We use the SET clause in the UPDATE statement to assign a value and we can use a calculation and we can specify multiple columns e.g. SET unitprice = (unitprice *1.04), notes = 'price increase by 4% due to inflation'.  You can also update values in a table based on the results of a query.  Only columns in the set clause are affected. There are a number of examples in the MSDN TSQL pages [Transact-SQL Refrence](https://docs.microsoft.com/en-gb/sql/t-sql/language-reference).
+
+A common challenge in data warehousing is what is sometimes referred to as 'upserting' - we are updating records that already exist AND we insert new records if they do not.  To do this, we use the MERGE command, which modifies data based on a condition. We look at situations of when the source data matches the target data.  So we might check if the ProductID already exists, and where it does we use an UPDATE. But if there is a record in the source table but on the target table (db) we will INSERT a new product. The code below is an example
+
+```{sql connection=con, eval = FALSE}
+MERGE INTO Production.Products as P
+	USING Production.ProductsStaging as S
+	ON P.ProductID=S.ProductID
+WHEN MATCHED THEN
+	UPDATE SET
+	P.UnitPrice = S.UnitPrice, P.Discontinued=S.Discontinued
+WHEN NOT MATCHED THEN
+	INSERT (ProductName, CategoryID, UnitPrice, Discontinued)
+	VALUES (S.ProductName, S.CategoryID, S.UnitPrice, S.Discontinued);
+```
+
+We can delete data from a table, however we need to be careful, if we don't specify a WHERE clause we may delete a lot of data!
+
+```{sql connection=con, eval = FALSE}
+DELETE FROM Sales.OrderDetails
+WHERE orderid = 10248;
+```
+
+There is an overhead with this approach, since SQL Server will record this transaction.  If we are deleting a whole table and wish to deallocate the entire table space, we are based to use TRUNCATE.  TRUNCATE TABLE Will fail if the table is referenced by a foreign key constraint in another table, the same will happen with the DELETE command.  The table definition remains, but all the data is removed and the space reallocated.  This is often used in staging tables, so we might load new data in to a staging table, then use the MERGE command for your target table, then empty the staging table but keep the strucutre, so we use TRUNCATE.  
+
