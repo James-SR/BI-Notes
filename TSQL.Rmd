@@ -1914,4 +1914,56 @@ Key Points
 * A batch defines a group of Transact-SQL command submitted by a client application for execution. Some commands can only be executed at the start of a new batch, and variable values cannot span batches.  
 * Use comments to document your Transact-SQL code. Inline comments are prefixed by --, and multi-line comment blocks are enclosed in /* and */.  
 * Declare variables by using the DECLARE keyword, specifying a name (prefixed with @) and a data type. You can optionally assign an initial value.   
-* Assign values to variables by using the SET keyword or in a SELECT statement.  
+* Assign values to variables by using the SET keyword or in a SELECT statement. 
+
+### Conditional Branching
+
+An IF statement is one such an example, do one thing or something else or indeed nothing.  We can go further using IF and ELSE. We can also use this for providing messages, as shown below where we print a message if the row is <1 i.e. it is not found.
+
+It is not neccessary to add a BEGIN adn END in all cases, but it can be easier to read and helps when possibly expanding the IF list later.
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.Product
+SET DiscontinuedDate=getdate()
+WHERE ProductID=1;
+
+IF @@ROWCOUNT<1
+BEGIN
+	PRINT 'Product was not found'
+END
+ELSE
+BEGIN
+	PRINT 'Product Updated'
+END
+```
+
+Key Points
+* Use the IF keyword to execute a task based on the results of a conditional test.  
+* Use an ELSE clause if you need to execute an alternative task if the conditional test returns false.  
+* Enclose mulitple statements in an IF or ELSE clause between BEGIN and END keywords.
+
+### Looping
+
+Typically in SQL Server we don't want to loop through our data, we work on sets of data, as looping can be slow, so the ideal is to work with sets.  A loop will end where a condition (predicate) evaluates to FALSE or unknown.  Either we have a BREAK which stops everything or continue, which will move on to the next set of code.  So in the example below 5 rows will be affected, as we set the counter as <= 5, adding a row.  Looping is best used when you might need to check for something, where we don't know how many times we might need to do something, a situation which is not that common in SQL Server.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @Counter int=1
+
+WHILE @Counter <=5
+
+BEGIN
+	INSERT SalesLT.DemoTable(Description)
+	VALUES ('ROW '+CONVERT(varchar(5),@Counter))
+	SET @Counter=@Counter+1
+END
+
+SELECT Description FROM SalesLT.DemoTable
+```
+
+Key Points
+
+* Use a WHILE loop if you need to repeat one or more statements until a specified condition is true.  
+* Use BREAK and CONTINUE to exit or restart the loop.  
+* Avoid using loops to iteratively update or retrieve single records - in most cases, you should use set-based operations to retrieve and modify data.
+
+### Stored Procedures
