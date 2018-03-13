@@ -1771,3 +1771,147 @@ WHERE orderid = 10248;
 
 There is an overhead with this approach, since SQL Server will record this transaction.  If we are deleting a whole table and wish to deallocate the entire table space, we are based to use TRUNCATE.  TRUNCATE TABLE Will fail if the table is referenced by a foreign key constraint in another table, the same will happen with the DELETE command.  The table definition remains, but all the data is removed and the space reallocated.  This is often used in staging tables, so we might load new data in to a staging table, then use the MERGE command for your target table, then empty the staging table but keep the strucutre, so we use TRUNCATE.  
 
+So if we wanted to add a value to where a value is currently NULL, for instance to state that no notes were recorded, we can do this as:
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.CallLog
+SET Notes = 'No notes'
+WHERE Notes IS NULL;
+```
+
+Or we can update multiple columns, in the following example we set two empty strings using '' - note this does it for the ENTIRE table, as there is no WHERE clause.
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.CallLog
+SET SalesPerson = '', PhoneNumber = '';
+```
+
+Now we want to re-add the data just deleted, using a query, getting Sales Person and Phone Number from the customer table, where the CustomerID matches.
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.CallLog
+SET SalesPerson = c.SalesPerson, PhoneNumber = c.Phone
+FROM SalesLT.Customer AS c
+WHERE c.CustomerID = SalesLT.CallLog.CustomerID;
+```
+
+We might want to archive off then delete anything older than this week.  This can be achived by using DELETE and WHERE.
+
+```{sql connection=con, eval = FALSE}
+DELETE FROM SalesLT.CallLog
+WHERE CallTime < DATEADD(dd, -7, GETDATE());
+```
+
+Or if we want to complete wipe the call log table we use TRUNCATE.
+
+```{sql connection=con, eval = FALSE}
+TRUNCATE TABLE SalesLT.CallLog;
+```
+
+Key Points
+* Use the UPDATE statement to modify the values of one or more columns in specified rows of a table.  
+* Use the DELETE statement to delete specified rows in a table.  
+* Use the MERGE statement to insert, update, and delete rows in a target table based on data in a source table.  
+
+### Lab Exercises
+
+AdventureWorks has started selling the new product - LED Lights. Insert it into the SalesLT.Product table, using default or NULL values for unspecified columns.  Once you've inserted the product, run SELECT SCOPE_IDENTITY(); to get the last identity value that was inserted.
+Add a query to view the row for the product in the SalesLT.Product table.
+
+```{sql connection=con}
+-- Finish the INSERT statement
+INSERT INTO SalesLT.Product (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
+VALUES
+('LED Lights', 'LT-L123', 2.56, 12.99, 37, GETDATE());
+
+SELECT SCOPE_IDENTITY();
+
+SELECT * FROM SalesLT.Product
+WHERE ProductID = SCOPE_IDENTITY();
+```
+
+Insert the two new products with the appropriate ProductCategoryID value, based on the product details above.
+
+Finish the query to join the SalesLT.Product and SalesLT.ProductCategory tables. That way, you can verify that the data has been inserted. Make sure to use the aliases provided, and default column names elsewhere.
+
+```{sql connection=con}
+INSERT INTO SalesLT.ProductCategory (ParentProductCategoryID, Name)
+VALUES
+(4, 'Bells and Horns');
+
+INSERT INTO SalesLT.Product (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
+VALUES
+('Bicycle Bell', 'BB-RING', 2.47, 4.99, IDENT_CURRENT('SalesLT.ProductCategory'), GETDATE()),
+('Bicycle Horn', 'BB-PARP', 1.29, 3.75, IDENT_CURRENT('SalesLT.ProductCategory'), GETDATE());
+
+SELECT c.Name As Category, p.Name AS Product
+FROM SalesLT.Product AS p
+JOIN SalesLT.ProductCategory as c ON p.ProductCategoryID = c.ProductCategoryID
+WHERE p.ProductCategoryID = IDENT_CURRENT('SalesLT.ProductCategory');
+```
+
+You must now update the records you have previously inserted to reflect the correct pricing.  The sales manager at AdventureWorks has mandated a 10% price increase for all products in the Bells and Horns category. Update the rows in the SalesLT.Product table for these products to increase their price by 10%.
+
+```{sql connection=con}
+UPDATE SalesLT.Product
+SET ListPrice = ListPrice * 1.1
+WHERE ProductCategoryID =
+  (SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+```
+
+The new LED lights you inserted in the previous challenge are to replace all previous light products.  Update the SalesLT.Product table to set the DiscontinuedDate to today's date for all products in the Lights category (ProductCategoryID 37) other than the LED Lights product you inserted previously.  So we delete records from the SalesLT.Product table first then delete records from the SalesLT.ProductCategory table.
+
+```{sql connection=con}
+DELETE FROM SalesLT.Product
+WHERE ProductCategoryID =
+	(SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+
+DELETE FROM SalesLT.ProductCategory
+WHERE ProductCategoryID =
+	(SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+```
+
+
+```{sql connection=con}
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductCategoryID = 37 AND ProductNumber <> 'LT-L123';
+```
+
+The Bells and Horns category has not been successful and it must be deleted from the database.  Delete the records for the Bells and Horns category and its products. You must ensure that you delete the records from the tables in the correct order to avoid a foreign-key constraint violation.
+
+## Programming with Transact-SQL
+
+We will start looking at procedural logic in this section.  
+
+### Batches
+
+Batches are sets of commands to to SQL Server as a unit.  We can seperate out elements using the GO command, which will send that batch.  GO is not a T-SQL command, it interpretor which uses the GO command to send that batch.
+
+### Comments
+
+We can add a code block using /* Comment */ for multiple lines or a comment block, this can come in useful to explain what the code is for or why you are doing something a certain way.
+
+### Variables
+
+Variables - usually single scalar values - can be used for many things. We delare the variable, give it a data type, then initialise it with a value if you like, or assign a value later.  They are declaring using DECLARE @color nvarchar(15)
+
+```{sql connection=con, eval = FALSE}
+DECLARE @City VARCHAR(20)='Toronto';
+```
+
+But rather than declaring a variables value, we can have a variable which receives something e.g. the results of a select query.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @Result money
+SELECT @Result=MAX(TotalDue)
+FROM SalesLT.SalesOrderHeader
+
+PRINT @Result
+```
+
+Key Points
+* A batch defines a group of Transact-SQL command submitted by a client application for execution. Some commands can only be executed at the start of a new batch, and variable values cannot span batches.  
+* Use comments to document your Transact-SQL code. Inline comments are prefixed by --, and multi-line comment blocks are enclosed in /* and */.  
+* Declare variables by using the DECLARE keyword, specifying a name (prefixed with @) and a data type. You can optionally assign an initial value.   
+* Assign values to variables by using the SET keyword or in a SELECT statement.  
