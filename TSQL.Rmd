@@ -470,8 +470,8 @@ ORDER BY p.ProductID;
 
 ** Key Points** 
 
-* Use a Left Outer Join to include all rows from the first table and values from matched rows in the second table. Columns in the second table for which no matching rows exist are populated with NULLs.
-* Use a Right Outer Join to include all rows from the second table and values from matched rows in the first table. Columns in the first table for which no matching rows exist are populated with NULLs.
+* Use a Left Outer Join to include all rows from the first table and values from matched rows in the second table. Columns in the second table for which no matching rows exist are populated with NULLs.  
+* Use a Right Outer Join to include all rows from the second table and values from matched rows in the first table. Columns in the first table for which no matching rows exist are populated with NULLs.  
 * Use a Full Outer Join to include all rows from the first and second tables. Columns in the either table for which no matching rows exist are populated with NULLs.
 
 ### Cross Joins
@@ -991,11 +991,11 @@ HAVING COUNT(CustomerID) > 100
 ORDER BY Salesperson;
 ```
 
-Key Points:
+** Key Points **
 
-* You can use GROUP BY with aggregate functions to return aggregations grouped by one or more columns or expressions.
-* All columns in the SELECT clause that are not aggregate function expressions must be included in a GROUP BY clause.
-* The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.
+* You can use GROUP BY with aggregate functions to return aggregations grouped by one or more columns or expressions.  
+* All columns in the SELECT clause that are not aggregate function expressions must be included in a GROUP BY clause.  
+* The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.  
 * You can filter the groups that are included in the query results by specifying a HAVING clause.
 
 ### Lab Exercises
@@ -1165,9 +1165,9 @@ CROSS APPLY SalesLT.udfMaxUnitPrice(SOH.SalesOrderID) AS MUP
 ORDER BY SOH.SalesOrderID;
 ```
 
-Key Points:
+** Key Points **
 
-* The APPLY operator enables you to execute a table-valued function for each row in a rowset returned by a SELECT statement. Conceptually, this approach is similar to a correlated subquery.
+* The APPLY operator enables you to execute a table-valued function for each row in a rowset returned by a SELECT statement. Conceptually, this approach is similar to a correlated subquery.  
 * CROSS APPLY returns matching rows, similar to an inner join. OUTER APPLY returns all rows in the original SELECT query results with NULL values for rows where no match was found.
 
 ### Lab Exercises
@@ -1315,11 +1315,11 @@ SELECT DISTINCT Color FROM SalesLT.Product;
 SELECT * FROM @Colors;
 ```
 
-Key Points
+** Key Points **
 
-* Temporary tables are prefixed with a # symbol (You can also create global temporary tables that can be accessed by other processes by prefixing the name with ##)
-* Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.
-* Table variables are prefixed with a @ symbol.
+* Temporary tables are prefixed with a # symbol (You can also create global temporary tables that can be accessed by other processes by prefixing the name with ##)  
+* Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.  
+* Table variables are prefixed with a @ symbol.  
 * Table variables are scoped to the batch in which they are created.
 
 ### Table Value Functions (TVF)
@@ -1415,10 +1415,10 @@ SELECT * FROM OrgReport
 OPTION (MAXRECURSION 3);
 ```
 
-Key Points
+** Key Points **
 
-* A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.
-* Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.
+* A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.  
+* Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.  
 * You can use CTEs to define recursive queries.
 
 ### Lab Exercises
@@ -1541,10 +1541,10 @@ GROUP BY CUBE (cat.ParentProductCategoryName, cat.ProductCategoryName)
 ORDER BY cat.ParentProductCategoryName, cat.ProductCategoryName;
 ```
 
-Key Points
-* Use GROUPING SETS to define custom groupings.
-* Use ROLLUP to include subtotals and a grand total for hierarchical groupings.
-* Use CUBE to include all possible groupings.
+** Key Points **
+* Use GROUPING SETS to define custom groupings.  
+* Use ROLLUP to include subtotals and a grand total for hierarchical groupings.  
+* Use CUBE to include all possible groupings.  
 
 ### Pivoting Data
 
@@ -1593,8 +1593,8 @@ UNPIVOT
 ) AS ProductCounts
 ```
 
-Key Points
-* Use PIVOT to re-orient a rowset by generating mulitple columns from values in a single column.
+** Key Points **
+* Use PIVOT to re-orient a rowset by generating mulitple columns from values in a single column.  
 * Use UNPIVOT to re-orient mulitple columns in a an existing rowset into a single column.
 
 ### Lab Exercises
@@ -1739,9 +1739,9 @@ VALUES
 
 There are more examples with adding query results into tables and getting identity values in the demo files.
 
-Key Points
-* Use the INSERT statement to insert one or more rows into a table.
-* When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.
+** Key Points **
+* Use the INSERT statement to insert one or more rows into a table.  
+* When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.  
 * Identity columns generate a unique integer identifier for each row. You can also use a sequence to generate unique values that can be used in multiple tables.
 
 ### Updating and Deleting Data
@@ -1808,7 +1808,7 @@ Or if we want to complete wipe the call log table we use TRUNCATE.
 TRUNCATE TABLE SalesLT.CallLog;
 ```
 
-Key Points
+** Key Points **
 * Use the UPDATE statement to modify the values of one or more columns in specified rows of a table.  
 * Use the DELETE statement to delete specified rows in a table.  
 * Use the MERGE statement to insert, update, and delete rows in a target table based on data in a source table.  
@@ -1910,7 +1910,7 @@ FROM SalesLT.SalesOrderHeader
 PRINT @Result
 ```
 
-Key Points
+** Key Points **
 * A batch defines a group of Transact-SQL command submitted by a client application for execution. Some commands can only be executed at the start of a new batch, and variable values cannot span batches.  
 * Use comments to document your Transact-SQL code. Inline comments are prefixed by --, and multi-line comment blocks are enclosed in /* and */.  
 * Declare variables by using the DECLARE keyword, specifying a name (prefixed with @) and a data type. You can optionally assign an initial value.   
@@ -1937,7 +1937,7 @@ BEGIN
 END
 ```
 
-Key Points
+** Key Points **
 * Use the IF keyword to execute a task based on the results of a conditional test.  
 * Use an ELSE clause if you need to execute an alternative task if the conditional test returns false.  
 * Enclose mulitple statements in an IF or ELSE clause between BEGIN and END keywords.
@@ -1960,10 +1960,145 @@ END
 SELECT Description FROM SalesLT.DemoTable
 ```
 
-Key Points
+** Key Points **
 
 * Use a WHILE loop if you need to repeat one or more statements until a specified condition is true.  
 * Use BREAK and CONTINUE to exit or restart the loop.  
 * Avoid using loops to iteratively update or retrieve single records - in most cases, you should use set-based operations to retrieve and modify data.
 
 ### Stored Procedures
+
+This is encapsulated a block of code in to a named block. They are setup to take parameters as inputs and can use conidtional branching (IF ELSE) and other such items.  Sounds an awful lot like a function in R.  In the example below, if we don't specify a value (the @CategoryID) then we run a query which will select all the products (the IF element).  If I do specify a category, then return the products in the category (ELSE).  
+
+```{sql connection=con, eval = FALSE}
+CREATE PROCEDURE SalesLT.GetProductsByCategory (@CategoryID INT = NULL)
+AS
+IF @CategoryID IS NULL
+	SELECT ProductID, Name, Color, Size, ListPrice
+	FROM SalesLT.Product
+ELSE
+	SELECT ProductID, Name, Color, Size, ListPrice
+	FROM SalesLT.Product
+	WHERE ProductCategoryID = @CategoryID;
+```
+
+The first time around, the object - the stored proceedure - will be created.  To use it, we must use an EXEC or EXECUTE (UTE is optional) statement.  
+
+```{sql connection=con, eval = FALSE}
+EXEC SalesLT.GetProductsByCategory
+```
+
+If we want to pass a paramter e.g. category 6, we do a similar exercise.
+
+```{sql connection=con, eval = FALSE}
+EXEC SalesLT.GetProductsByCategory 6
+```
+
+** Key Points **
+* Use stored procedures to encapsulate Transact-SQL code in a reusable database objects.  
+* You can define parameters for a stored procedure, and use them as variables in the Transact-SQL code it contains.  
+* Stored procedures can return rowsets (usually the results of a SELECT statement). They can also return output parameters, and they always   return a return value, which is used to indicate status.
+
+### Lab Exercises
+
+You want to create reusable scripts that make it easy to insert sales orders. You plan to create a script to insert the order header record, and a separate script to insert order detail records for a specified order header.
+
+Both scripts will make use of variables to make them easy to reuse. Your script to insert an order header must enable users to specify values for the order date, due date, and customer ID.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @OrderDate datetime = GETDATE();
+DECLARE @DueDate datetime = DATEADD(dd, 7, GETDATE());
+DECLARE @CustomerID int = 1;
+
+INSERT INTO SalesLT.SalesOrderHeader (OrderDate, DueDate, CustomerID, ShipMethod)
+VALUES (@OrderDate, @DueDate, @CustomerID, 'CARGO TRANSPORT 5');
+
+PRINT SCOPE_IDENTITY();
+```
+
+As a next step, you want to insert an order detail. The script for this must enable users to specify a sales order ID, a product ID, a quantity, and a unit price.
+
+The script should check if the specified sales order ID exists in the SalesLT.SalesOrderHeader table. This can be done with the EXISTS predicate.
+
+If it does, the code should insert the order details into the SalesLT.SalesOrderDetail table (using default values or NULL for unspecified columns).
+
+If the sales order ID does not exist in the SalesLT.SalesOrderHeader table, the code should print the message 'The order does not exist'.
+
+```{sql connection=con, eval = FALSE}
+-- Code from previous exercise
+DECLARE @OrderDate datetime = GETDATE();
+DECLARE @DueDate datetime = DATEADD(dd, 7, GETDATE());
+DECLARE @CustomerID int = 1;
+INSERT INTO SalesLT.SalesOrderHeader (OrderDate, DueDate, CustomerID, ShipMethod)
+VALUES (@OrderDate, @DueDate, @CustomerID, 'CARGO TRANSPORT 5');
+DECLARE @OrderID int = SCOPE_IDENTITY();
+
+-- Additional script to complete
+DECLARE @ProductID int = 760;
+DECLARE @Quantity int = 1;
+DECLARE @UnitPrice money = 782.99;
+
+IF EXISTS (SELECT * FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID)
+BEGIN
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice)
+	VALUES (@OrderID, @Quantity, @ProductID, @UnitPrice)
+END
+ELSE
+BEGIN
+	PRINT 'The order does not exist'
+END
+```
+
+Adventure Works has determined that the market average price for a bike is $2,000, and consumer research has indicated that the maximum price any customer would be likely to pay for a bike is $5,000.
+
+You must write some Transact-SQL logic that incrementally increases the list price for all bike products by 10% until the average list price for a bike is at least the same as the market average, or until the most expensive bike is priced above the acceptable maximum indicated by the consumer research.
+
+The product categories in the Bikes parent category can be determined from the SalesLT.vGetAllCategories view.
+
+** Key Points **
+
+* The loop should execute only if the average list price of a product in the 'Bikes' parent category is less than the market average.  
+* Update all products that are in the 'Bikes' parent category, increasing the list price by 10%.  
+* Determine the new average and maximum selling price for products that are in the 'Bikes' parent category.  
+* If the new maximum price is greater than or equal to the maximum acceptable price, exit the loop; otherwise continue.  
+
+```{sql connection=con, eval = FALSE}
+DECLARE @MarketAverage money = 2000;
+DECLARE @MarketMax money = 5000;
+DECLARE @AWMax money;
+DECLARE @AWAverage money;
+
+SELECT @AWAverage = AVG(ListPrice), @AWMax = MAX(ListPrice)
+FROM SalesLT.Product
+WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+WHILE @AWAverage < @MarketAverage
+BEGIN
+   UPDATE SalesLT.Product
+   SET ListPrice = ListPrice * 1.1
+   WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+	SELECT @AWAverage = AVG(ListPrice), @AWMax = MAX(ListPrice)
+	FROM SalesLT.Product
+	WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+   IF @AWMax >= @MarketMax
+      END
+   ELSE
+      CONTINUE
+END
+
+PRINT 'New average bike price:' + CONVERT(VARCHAR, @AWAverage);
+PRINT 'New maximum bike price:' + CONVERT(VARCHAR, @AWMax);
+```
+
+## Error Handling and Transactions
