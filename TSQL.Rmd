@@ -2102,3 +2102,39 @@ PRINT 'New maximum bike price:' + CONVERT(VARCHAR, @AWMax);
 ```
 
 ## Error Handling and Transactions
+
+You can raise errors yourself because of a condition, and not just some system error.  For instance you can introduce business logic, so whilst a transaction in to the database might in principle be ok, you might not see that some business rules are valide i.e. too high of a discount price for instance.  You can also pass error mesages back to client applications. 
+
+ The errors have different levels of severity from 1 to 25 and includes the line number which caused the error. A line with proceedure will state which procedure or sub-proceedure caused the problem. If the error message is particularly high, SQL Server will also udnertake some certain actions to mitigte some of these problems like disconnect from the server if the disk is corrupt.  A state is also given, which can be useful when seeking assistance for troubleshooting. Within the database error messages are stored in the sys.messages table in the database and you can add custom messages using sp_addmessage to this table (note this is for SQL Server and not Azure).  It is better and more 'current' to throw custom error messages within your code, rather than in the db table, and this approach will work with SQL on Azure.
+
+### Raising or Throwing Errors
+
+if you wish to raise an error you can do so using the RAISERROR command - this works in both SQL Server and Azure.  You can specify the serverity and state when doing so.
+
+Another way of raising errors which is newer syntax, it will in time replace RAISERROR, which is THROW.  Such user defined errors can only be generated for lower levels of severity, so higher level problems don't cause SQL Server to take mitigating actions like disconnecting the server.  The customer error message must be above 50000.
+
+In the following example, the SQL query would run, but we introduce a rule based on business logic which will return an error if no rows are affected by the query.  Nothing has failed, but nothing actually happended.
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductID = 0;
+
+IF @@ROWCOUNT < 1
+	RAISERROR('The product was not found - no products have been updated', 16, 0);
+```
+
+Or we can use the newer THROW command.
+
+```{sql connection=con, eval = FALSE}
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductID = 0;
+
+IF @@ROWCOUNT < 1
+	THROW 50001, 'The product was not found - no products have been updated', 0;
+```
+ 
+** Key Points **
+* System errors have pre-defined numbers, messages, severity levels, and other characteristics that you can use to troubleshoot issues.  
+* You can use RAISERROR and THROW to raise custom errors.  
