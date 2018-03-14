@@ -2138,3 +2138,155 @@ IF @@ROWCOUNT < 1
 ** Key Points **
 * System errors have pre-defined numbers, messages, severity levels, and other characteristics that you can use to troubleshoot issues.  
 * You can use RAISERROR and THROW to raise custom errors.  
+
+### Catching and Handling Errors
+
+This is sometimes called stuctured exception handling, where we have a TRY block of code which is something we want to run, then we have a CATCH block of code so that if the TRY code fails we catch and handle that error.  We either deal with the rror and fix it or thrown an error to the compiler.  IF the TRY block code works, no error will be thrown.  There are a number of system global variables we can call for errors depending on what we are trying to catch.  We can throw the original message, or we can throw a custom error. 
+
+In the first example below, we update the product table using the ProductNumber as ProductID divided by the weight.  If the weight is missing, we add 0 in to the divide, which is likely to cause problems since this divides by infinity.  If something does go wrong, we will print an error message of what occured.  No red error text will occur, since the application is correctly running - the rror is captured by the code.
+
+```{sql connection=con, eval = FALSE}
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	PRINT 'The following error occurred:';
+	PRINT ERROR_MESSAGE();
+END CATCH;
+```
+
+Another approach is to return the error to the application, so that it can do it's own error handling.  Here we re THROW the error back to the client application.  This time the error will be returned in red as an error.
+
+```{sql connection=con, eval = FALSE}
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	PRINT 'The following error occurred:';
+	PRINT ERROR_MESSAGE();
+	THROW;
+END CATCH;
+```
+
+Anotehr more advanced way would be to create some variables in the CATCH block and use a stored procedure in the database.  This stored procedure will store the error in to an error log table and throws that error back to the stored procedure.  This means you can transport the strored proceedure across different databases without having to re-write code and still have a consistent way to handle errors.
+
+```{sql connection=con}
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	DECLARE @ErrorLogID as int, @ErrorMsg AS varchar(250);
+	EXECUTE dbo.uspLogError @ErrorLogID OUTPUT;
+	SET @ErrorMsg = 'The update failed because of an error. View error #'
+	                 + CAST(@ErrorLogID AS varchar)
+					 + ' in the error log for details.';
+	THROW 50001, @ErrorMsg, 0;
+END CATCH;
+```
+
+Then we can view the error log if we want.
+
+```{sql connection=con}
+SELECT * FROM dbo.ErrorLog;
+```
+
+** Key Points **
+* Use TRY...CATCH blocks in your Transact-SQL code to catch and handle exceptions.  
+* A common exception handling pattern is to log the error, and then if the operation cannot be completed successfully, throw it (or a new custom error) to the calling application.  
+
+### Transactions
+
+We are concerned about protecting the integrity of the database.  A transaction is a group of tasks, possibly inserting in to multiple tables. 
+A transaction can be ACID 
+
+* Atomic - one unit of work that everythign contributes towards, you can split it up in to seperate parts  
+* Consistent - when the transaction is finished, there won't be any orphaned records or rows
+* Isolated - whilst that transaction is happening, other transactions or queries are not effected, they won't get to see the in flight data  
+* Durable - one finished the data will be stored in the database unless we explicity DELETE it
+
+A transaction must either fully succeed or wholly fail, we cannot have a partial succeed.  So for instance if we add a new order, we might add summary info in to a order header table then all the prodcuts into the order detail table.  We don't want half of this to work - just inserts in to one table - the whole thing, the transaction, must take place for it to be successful.  If for some reason it something doesn't work, perhaps as a consequence for a system fail or network issue, we want the operation to fail not partially succeed or complete.  SQL Server will handle this by itself, you don't need to add any transaction error codes or error handling, it will lock or isolate the data as required.  
+
+However, if there are multiple statements that you want to execute, it is best done as an encapsulated transaction explicitly.  This is done by BEGIN TRANSACTION <some code> then COMMIT TRANSACTION if there is an error will can throw an error and use ROLLBACK TRANSACTION.  These can be nexted TRANSACTIONS which can get complicated.  If you ROLLBACK it will ROLLBACK right back to the beggining - so it is Atomic and Consistent.  Rather than use ROLLBACK you can use XACT_ABORT which will rollback all transactions if an error is encountered.
+
+
+So if we had some code as shown below, this would lead to a record being adding to the order header, but no details being added to the product table, since the product we are trying to add (ProductID 9999) does not exist.  This would lead to an orphaned sales order header.
+
+```{sql connection=con, eval = FALSE}
+BEGIN TRY
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+END TRY
+BEGIN CATCH
+	PRINT ERROR_MESSAGE();
+END CATCH;
+```
+
+So we want to add this code within a single transaction, so if one part fails the whole thing will.  In this instance it wil try to do both parts individually, but the whole thing will fail as the second part - adding in an invalid productID - fails.  So in effect it will undo the transaction - the first part which succeeds adding the order header.  If you have many rows, this can therefore be time consuming as it might try to add 10,000 rows, then fails at a later stage, then has to go back and undo all those 10,000 rows.  So you may want to add some logic at the beggining of the transaction, before this addition and error followed by rollback occurs.
+
+```{sql connection=con, eval = FALSE}
+BEGIN TRY
+  BEGIN TRANSACTION
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+  COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+  BEGIN
+    PRINT XACT_STATE();
+	ROLLBACK TRANSACTION;
+  END
+  PRINT ERROR_MESSAGE();
+  THROW 50001,'An insert failed. The transaction was cancelled.', 0;
+END CATCH;
+```
+
+As previously discussed, we can use XACT_ABORT rather than ROLLBACK.  Again we might want to add some logic at the beggining to check for validity before adding and undoing mutiple
+
+```{sql connection=con, eval = FALSE}
+SET XACT_ABORT ON;
+BEGIN TRY
+  BEGIN TRANSACTION
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+  COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+  PRINT ERROR_MESSAGE();
+  THROW 50001,'An insert failed. The transaction was cancelled.', 0;
+END CATCH;
+SET XACT_ABORT OFF;
+```
+
+** Key Points **
+* Transactions are used to protect data integrity by ensuring that all data changes within a transaction succeed or fail as a unit.  
+* Individual Transact-SQL statements are inherently treated as transactions, and you can define explicit transactions that encompass mulitple * statements.  
+* Use the BEGIN TRANSACTION, COMMIT TRANSACTION, and ROLLBACK TRANSACTION statements to manage transactions.  
+* Enable the XACT_ABORT option to automatically rollback all transactions if an exception occurs.  
+* Use the @@TRANCOUNT system variable and XACT_STATE system function to determine transaction status.  
+
+### Lab Exercises
