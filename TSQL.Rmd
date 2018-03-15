@@ -2290,3 +2290,143 @@ SET XACT_ABORT OFF;
 * Use the @@TRANCOUNT system variable and XACT_STATE system function to determine transaction status.  
 
 ### Lab Exercises
+
+You are implementing a Transact-SQL script to delete orders, and you want to handle any errors that occur during the deletion process.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @OrderID int = 0
+
+-- Declare a custom error if the specified order doesn't exist
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+IF NOT NULL (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+BEGIN
+  THROW 50001, @error, 0;
+END
+ELSE
+BEGIN
+  SELECT FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID;
+  DELETE FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID;
+END
+```
+
+Now your code now throws an error if the specified order does not exist. Refine your code to catch this (or any other) error and print the error message to the user interface using the PRINT command. You can use BEGIN TRY, END TRY, BEGIN CATCH and END CATCH for this.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @OrderID int = 71774
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+-- Wrap IF ELSE in a TRY block
+TRY CATCH
+  IF NOT EXISTS (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+  BEGIN
+    THROW 50001, @error, 0
+  END
+  ELSE
+  BEGIN
+    DELETE FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID;
+    DELETE FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID;
+  END
+END CATCH
+-- Add a CATCH block to print out the error
+BEGIN CATCH
+  PRINT ERROR_MESSAGE();
+END CATCH
+```
+
+You have implemented error handling logic in some Transact-SQL code that deletes order details and order headers. However, you are concerned that a failure partway through the process will result in data inconsistency in the form of undeleted order headers for which the order details have been deleted.
+
+Your task is to enhance the code you created in the previous challenge so that the two DELETE statements are treated as a single transactional unit of work.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @OrderID int = 0
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+BEGIN TRY
+  IF NOT EXISTS (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+  BEGIN
+    THROW 50001, @error, 0
+  END
+  ELSE
+  BEGIN
+    BEGIN TRANSACTION
+    DELETE FROM SalesLT.SalesOrderDetail
+    WHERE SalesOrderID = @OrderID;
+    DELETE FROM SalesLT.SalesOrderHeader
+    WHERE SalesOrderID = @OrderID;
+    END TRANSACTION
+  END
+END TRY
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+  BEGIN
+    ROLLBACK TRANSACTION;
+  END
+  ELSE
+  BEGIN
+    PRINT ERROR_MESSAGE();
+  END
+END CATCH
+```
+
+## Final Assessment
+
+### Section 1
+
+Select the quantity per unit for all products in the Products table.
+
+```{sql connection=con, eval = FALSE}
+SELECT QuantityPerUnit
+FROM Products;
+```
+
+Select the unique category IDs from the Products table.
+
+```{sql connection=con, eval = FALSE}
+SELECT DISTINCT CategoryID
+FROM Products;
+```
+
+Select the names of products from the Products table which have more than 20 units left in stock.
+
+```{sql connection=con, eval = FALSE}
+SELECT ProductName
+FROM Products
+WHERE UnitsInStock > 20;
+```
+
+Select the product ID, product name, and unit price of the 10 most expensive products from the Products table.
+
+```{sql connection=con, eval = FALSE}
+SELECT TOP (10) ProductID, ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC;
+```
+
+Select the product ID, product name, and quantity per unit for all products in the Products table. Sort your results alphabetically by product name.
+
+```{sql connection=con, eval = FALSE}
+SELECT ProductID, ProductName, QuantityPerUnit
+FROM Products
+ORDER BY ProductName;
+```
+
+Select the product ID, product name, and unit price of all products in the Products table. Sort your results by number of units in stock, from greatest to least.
+
+Skip the first 10 results and get the next 5 after that.
+
+```{sql connection=con, eval = FALSE}
+SELECT ProductID, ProductName, UnitPrice
+FROM Products
+ORDER BY UnitsInStock DESC
+OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY;
+```
+
+Use STR, CONVERT, and NVARCHAR(30) where appropriate to display the first name, employee ID and birthdate (as Unicode in ISO 8601 format) for each employee in the Employees table.
+
+```{sql connection=con, eval = FALSE}
+SELECT FirstName + ' has an EmployeeID of ' + STR(EmployeeID, 1) + ' and was born ' +
+	   CONVERT(NVARCHAR(30), BirthDate, 126) 
+FROM Employees;
+```
+
