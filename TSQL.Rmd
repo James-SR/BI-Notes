@@ -2430,3 +2430,46 @@ SELECT FirstName + ' has an EmployeeID of ' + STR(EmployeeID, 1) + ' and was bor
 FROM Employees;
 ```
 
+Select from the Orders table.
+
+The first column of your result should be a single string in exactly the following format:
+
+<<ShipName>> is from <<ShipCity or ShipRegion or ShipCountry>>
+
+If there is no ShipCity, then you should select ShipRegion, and if there is no ShipRegion you should select ShipCountry.
+
+```{sql connection=con, eval = FALSE}
+SELECT ShipName + ' is from ' +
+  CASE
+    WHEN ShipCity IS NULL THEN 'ShipRegion'
+    ELSE ShipCity
+  END
+FROM Orders;
+```
+
+The above works, but doesn't properly handle ShipCountry, a better option is to use the COALESCE which returns the first non-null value.  The AS destination is optional, if not specified the column will not have a title.
+
+```{sql connection=con, eval = FALSE}
+SELECT 
+ShipName + ' is from ' + 
+  COALESCE(ShipCity, ShipRegion,ShipCountry) AS destination
+FROM Orders;
+```
+
+Select the ship name and ship postal code from the Orders table. If the postal code is missing, display 'unknown'.  The following answer may be differnt for other dbs or flavours of SQL.
+
+```{sql connection=con, eval = FALSE}
+SELECT ShipName, ISNULL(ShipPostalCode, 'unknown')
+FROM Orders;
+```
+
+Using the Suppliers table, select the company name, and use a simple CASE expression to display 'outdated' if the company has a fax number, or 'modern' if it doesn't. 
+
+```{sql connection=con, eval = FALSE}
+SELECT CompanyName,
+  CASE
+    WHEN Fax IS NOT NULL THEN 'outdated'
+    ELSE 'modern' 
+  END AS Status
+FROM Suppliers;
+```
