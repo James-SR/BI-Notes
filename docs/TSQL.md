@@ -1119,8 +1119,8 @@ Sport-100 Helmet, Black     Helmets       SO71782
 
 ** Key Points** 
 
-* Use a Left Outer Join to include all rows from the first table and values from matched rows in the second table. Columns in the second table for which no matching rows exist are populated with NULLs.
-* Use a Right Outer Join to include all rows from the second table and values from matched rows in the first table. Columns in the first table for which no matching rows exist are populated with NULLs.
+* Use a Left Outer Join to include all rows from the first table and values from matched rows in the second table. Columns in the second table for which no matching rows exist are populated with NULLs.  
+* Use a Right Outer Join to include all rows from the second table and values from matched rows in the first table. Columns in the first table for which no matching rows exist are populated with NULLs.  
 * Use a Full Outer Join to include all rows from the first and second tables. Columns in the either table for which no matching rows exist are populated with NULLs.
 
 ### Cross Joins
@@ -2024,7 +2024,7 @@ Long-Sleeve Logo Jersey, M   LJ-0192-M       LJ            0192        M
 
 Logical functions test if someting is true or not i.e. traditional boolean. But we can use logical functions as filters by using CHOOSE for example, you could use IIF which is also a logical, or we could use CASE to achieve the same result.  
 
-An exmaple might be if we want to return some numeric sizes, for instance if we have a table of data with different size formats:
+An example might be if we want to return some numeric sizes, for instance if we have a table of data with different size formats:
 
 
 ```sql
@@ -2086,7 +2086,7 @@ Or we might want to assign a value to something, like a product type of bike to 
 
 
 ```sql
-SELECT Name, IIF(ProductCategoryID IN (5,6,7), 'Bike', 'Other') ProductType
+SELECT Name, IIF(ProductCategoryID IN (5,6,7), 'Bike', 'Other') AS ProductType
 FROM SalesLT.Product;
 ```
 
@@ -2229,7 +2229,7 @@ Table: (\#tab:unnamed-chunk-64)1 records
 
 Products    Categories   AveragePrice
 ---------  -----------  -------------
-295                 37       744.5952
+296                 37       742.1235
 
 </div>
 
@@ -2443,11 +2443,11 @@ adventure-works\shu0              151
 
 </div>
 
-Key Points:
+** Key Points **
 
-* You can use GROUP BY with aggregate functions to return aggregations grouped by one or more columns or expressions.
-* All columns in the SELECT clause that are not aggregate function expressions must be included in a GROUP BY clause.
-* The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.
+* You can use GROUP BY with aggregate functions to return aggregations grouped by one or more columns or expressions.  
+* All columns in the SELECT clause that are not aggregate function expressions must be included in a GROUP BY clause.  
+* The order in which columns or expressions are listed in the GROUP BY clause determines the grouping hierarchy.  
 * You can filter the groups that are included in the query results by specifying a HAVING clause.
 
 ### Lab Exercises
@@ -2890,9 +2890,9 @@ Table: (\#tab:unnamed-chunk-85)Displaying records 1 - 10
 
 </div>
 
-Key Points:
+** Key Points **
 
-* The APPLY operator enables you to execute a table-valued function for each row in a rowset returned by a SELECT statement. Conceptually, this approach is similar to a correlated subquery.
+* The APPLY operator enables you to execute a table-valued function for each row in a rowset returned by a SELECT statement. Conceptually, this approach is similar to a correlated subquery.  
 * CROSS APPLY returns matching rows, similar to an inner join. OUTER APPLY returns all rows in the original SELECT query results with NULL values for rows where no match was found.
 
 ### Lab Exercises
@@ -3216,11 +3216,11 @@ SELECT DISTINCT Color FROM SalesLT.Product;
 SELECT * FROM @Colors;
 ```
 
-Key Points
+** Key Points **
 
-* Temporary tables are prefixed with a # symbol (You can also create global temporary tables that can be accessed by other processes by prefixing the name with ##)
-* Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.
-* Table variables are prefixed with a @ symbol.
+* Temporary tables are prefixed with a # symbol (You can also create global temporary tables that can be accessed by other processes by prefixing the name with ##)  
+* Local temporary tables are automatically deleted when the session in which they were created ends. Global temporary tables are deleted when the last user sessions referencing them is closed.  
+* Table variables are prefixed with a @ symbol.  
 * Table variables are scoped to the batch in which they are created.
 
 ### Table Value Functions (TVF)
@@ -3417,10 +3417,10 @@ Table: (\#tab:unnamed-chunk-102)9 records
 
 </div>
 
-Key Points
+** Key Points **
 
-* A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.
-* Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.
+* A derived table is a subquery that generates a multicolumn rowset. You must use the AS clause to define an alias for a derived query.  
+* Common Table Expressions (CTEs) provide a more intuitive syntax or defining rowsets than derived tables, and can be used mulitple times in the same query.  
 * You can use CTEs to define recursive queries.
 
 ### Lab Exercises
@@ -3606,7 +3606,7 @@ Accessories                 Cleaners                      1
 Accessories                 Fenders                       1
 Accessories                 Helmets                       3
 Accessories                 Hydration Packs               1
-Accessories                 Lights                        3
+Accessories                 Lights                        4
 Accessories                 Locks                         1
 Accessories                 Panniers                      1
 
@@ -3634,7 +3634,7 @@ Table: (\#tab:unnamed-chunk-108)Displaying records 1 - 10
 
 ParentProductCategoryName   ProductCategoryName    Products
 --------------------------  --------------------  ---------
-NA                          NA                          295
+NA                          NA                          296
 NA                          Bib-Shorts                    3
 NA                          Bike Racks                    1
 NA                          Bike Stands                   1
@@ -3667,8 +3667,8 @@ Table: (\#tab:unnamed-chunk-109)Displaying records 1 - 10
 
 ParentProductCategoryName   ProductCategoryName    Products
 --------------------------  --------------------  ---------
-NA                          NA                          295
-Accessories                 NA                           29
+NA                          NA                          296
+Accessories                 NA                           30
 Accessories                 Bike Racks                    1
 Accessories                 Bike Stands                   1
 Accessories                 Bottles and Cages             3
@@ -3676,7 +3676,7 @@ Accessories                 Cleaners                      1
 Accessories                 Fenders                       1
 Accessories                 Helmets                       3
 Accessories                 Hydration Packs               1
-Accessories                 Lights                        3
+Accessories                 Lights                        4
 
 </div>
 
@@ -3700,7 +3700,7 @@ Table: (\#tab:unnamed-chunk-110)Displaying records 1 - 10
 
 ParentProductCategoryName   ProductCategoryName    Products
 --------------------------  --------------------  ---------
-NA                          NA                          295
+NA                          NA                          296
 NA                          Bib-Shorts                    3
 NA                          Bike Racks                    1
 NA                          Bike Stands                   1
@@ -3713,10 +3713,10 @@ NA                          Cleaners                      1
 
 </div>
 
-Key Points
-* Use GROUPING SETS to define custom groupings.
-* Use ROLLUP to include subtotals and a grand total for hierarchical groupings.
-* Use CUBE to include all possible groupings.
+** Key Points **
+* Use GROUPING SETS to define custom groupings.  
+* Use ROLLUP to include subtotals and a grand total for hierarchical groupings.  
+* Use CUBE to include all possible groupings.  
 
 ### Pivoting Data
 
@@ -3789,8 +3789,8 @@ UNPIVOT
 ) AS ProductCounts
 ```
 
-Key Points
-* Use PIVOT to re-orient a rowset by generating mulitple columns from values in a single column.
+** Key Points **
+* Use PIVOT to re-orient a rowset by generating mulitple columns from values in a single column.  
 * Use UNPIVOT to re-orient mulitple columns in a an existing rowset into a single column.
 
 ### Lab Exercises
@@ -4026,7 +4026,1092 @@ VALUES
 
 There are more examples with adding query results into tables and getting identity values in the demo files.
 
-Key Points
-* Use the INSERT statement to insert one or more rows into a table.
-* When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.
+** Key Points **
+* Use the INSERT statement to insert one or more rows into a table.  
+* When inserting explicit values, you can omit identity columns, columns that allow NULLs, and columns on which a default constraint is defined.  
 * Identity columns generate a unique integer identifier for each row. You can also use a sequence to generate unique values that can be used in multiple tables.
+
+### Updating and Deleting Data
+
+The UPDATE command will update all the rows in a table or view and can be filtered using WHERE and the columns can be selected using FROM.  It is more likely we will want to select a particular set of rows, so we will be using the WHERE clause in most instances.  We use the SET clause in the UPDATE statement to assign a value and we can use a calculation and we can specify multiple columns e.g. SET unitprice = (unitprice *1.04), notes = 'price increase by 4% due to inflation'.  You can also update values in a table based on the results of a query.  Only columns in the set clause are affected. There are a number of examples in the MSDN TSQL pages [Transact-SQL Refrence](https://docs.microsoft.com/en-gb/sql/t-sql/language-reference).
+
+A common challenge in data warehousing is what is sometimes referred to as 'upserting' - we are updating records that already exist AND we insert new records if they do not.  To do this, we use the MERGE command, which modifies data based on a condition. We look at situations of when the source data matches the target data.  So we might check if the ProductID already exists, and where it does we use an UPDATE. But if there is a record in the source table but on the target table (db) we will INSERT a new product. The code below is an example
+
+
+```sql
+MERGE INTO Production.Products as P
+	USING Production.ProductsStaging as S
+	ON P.ProductID=S.ProductID
+WHEN MATCHED THEN
+	UPDATE SET
+	P.UnitPrice = S.UnitPrice, P.Discontinued=S.Discontinued
+WHEN NOT MATCHED THEN
+	INSERT (ProductName, CategoryID, UnitPrice, Discontinued)
+	VALUES (S.ProductName, S.CategoryID, S.UnitPrice, S.Discontinued);
+```
+
+We can delete data from a table, however we need to be careful, if we don't specify a WHERE clause we may delete a lot of data!
+
+
+```sql
+DELETE FROM Sales.OrderDetails
+WHERE orderid = 10248;
+```
+
+There is an overhead with this approach, since SQL Server will record this transaction.  If we are deleting a whole table and wish to deallocate the entire table space, we are based to use TRUNCATE.  TRUNCATE TABLE Will fail if the table is referenced by a foreign key constraint in another table, the same will happen with the DELETE command.  The table definition remains, but all the data is removed and the space reallocated.  This is often used in staging tables, so we might load new data in to a staging table, then use the MERGE command for your target table, then empty the staging table but keep the strucutre, so we use TRUNCATE.  
+
+So if we wanted to add a value to where a value is currently NULL, for instance to state that no notes were recorded, we can do this as:
+
+
+```sql
+UPDATE SalesLT.CallLog
+SET Notes = 'No notes'
+WHERE Notes IS NULL;
+```
+
+Or we can update multiple columns, in the following example we set two empty strings using '' - note this does it for the ENTIRE table, as there is no WHERE clause.
+
+
+```sql
+UPDATE SalesLT.CallLog
+SET SalesPerson = '', PhoneNumber = '';
+```
+
+Now we want to re-add the data just deleted, using a query, getting Sales Person and Phone Number from the customer table, where the CustomerID matches.
+
+
+```sql
+UPDATE SalesLT.CallLog
+SET SalesPerson = c.SalesPerson, PhoneNumber = c.Phone
+FROM SalesLT.Customer AS c
+WHERE c.CustomerID = SalesLT.CallLog.CustomerID;
+```
+
+We might want to archive off then delete anything older than this week.  This can be achived by using DELETE and WHERE.
+
+
+```sql
+DELETE FROM SalesLT.CallLog
+WHERE CallTime < DATEADD(dd, -7, GETDATE());
+```
+
+Or if we want to complete wipe the call log table we use TRUNCATE.
+
+
+```sql
+TRUNCATE TABLE SalesLT.CallLog;
+```
+
+** Key Points **
+* Use the UPDATE statement to modify the values of one or more columns in specified rows of a table.  
+* Use the DELETE statement to delete specified rows in a table.  
+* Use the MERGE statement to insert, update, and delete rows in a target table based on data in a source table.  
+
+### Lab Exercises
+
+AdventureWorks has started selling the new product - LED Lights. Insert it into the SalesLT.Product table, using default or NULL values for unspecified columns.  Once you've inserted the product, run SELECT SCOPE_IDENTITY(); to get the last identity value that was inserted.
+Add a query to view the row for the product in the SalesLT.Product table.
+
+
+```sql
+INSERT INTO SalesLT.Product (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
+VALUES
+('LED Lights', 'LT-L123', 2.56, 12.99, 37, GETDATE());
+
+SELECT SCOPE_IDENTITY();
+
+SELECT * FROM SalesLT.Product
+WHERE ProductID = SCOPE_IDENTITY();
+```
+
+Insert the two new products with the appropriate ProductCategoryID value, based on the product details above.
+
+Finish the query to join the SalesLT.Product and SalesLT.ProductCategory tables. That way, you can verify that the data has been inserted. Make sure to use the aliases provided, and default column names elsewhere.
+
+
+```sql
+INSERT INTO SalesLT.ProductCategory (ParentProductCategoryID, Name)
+VALUES
+(4, 'Bells and Horns');
+
+INSERT INTO SalesLT.Product (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
+VALUES
+('Bicycle Bell', 'BB-RING', 2.47, 4.99, IDENT_CURRENT('SalesLT.ProductCategory'), GETDATE()),
+('Bicycle Horn', 'BB-PARP', 1.29, 3.75, IDENT_CURRENT('SalesLT.ProductCategory'), GETDATE());
+
+SELECT c.Name As Category, p.Name AS Product
+FROM SalesLT.Product AS p
+JOIN SalesLT.ProductCategory as c ON p.ProductCategoryID = c.ProductCategoryID
+WHERE p.ProductCategoryID = IDENT_CURRENT('SalesLT.ProductCategory');
+```
+
+You must now update the records you have previously inserted to reflect the correct pricing.  The sales manager at AdventureWorks has mandated a 10% price increase for all products in the Bells and Horns category. Update the rows in the SalesLT.Product table for these products to increase their price by 10%.
+
+
+```sql
+UPDATE SalesLT.Product
+SET ListPrice = ListPrice * 1.1
+WHERE ProductCategoryID =
+  (SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+```
+
+The new LED lights you inserted in the previous challenge are to replace all previous light products.  Update the SalesLT.Product table to set the DiscontinuedDate to today's date for all products in the Lights category (ProductCategoryID 37) other than the LED Lights product you inserted previously.  So we delete records from the SalesLT.Product table first then delete records from the SalesLT.ProductCategory table.
+
+
+```sql
+DELETE FROM SalesLT.Product
+WHERE ProductCategoryID =
+	(SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+
+DELETE FROM SalesLT.ProductCategory
+WHERE ProductCategoryID =
+	(SELECT ProductCategoryID FROM SalesLT.ProductCategory WHERE Name = 'Bells and Horns');
+```
+
+
+
+```sql
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductCategoryID = 37 AND ProductNumber <> 'LT-L123';
+```
+
+The Bells and Horns category has not been successful and it must be deleted from the database.  Delete the records for the Bells and Horns category and its products. You must ensure that you delete the records from the tables in the correct order to avoid a foreign-key constraint violation.
+
+## Programming with Transact-SQL
+
+We will start looking at procedural logic in this section.  
+
+### Batches
+
+Batches are sets of commands to to SQL Server as a unit.  We can seperate out elements using the GO command, which will send that batch.  GO is not a T-SQL command, it interpretor which uses the GO command to send that batch.
+
+### Comments
+
+We can add a code block using /* Comment */ for multiple lines or a comment block, this can come in useful to explain what the code is for or why you are doing something a certain way.
+
+### Variables
+
+Variables - usually single scalar values - can be used for many things. We delare the variable, give it a data type, then initialise it with a value if you like, or assign a value later.  They are declaring using DECLARE @color nvarchar(15)
+
+
+```sql
+DECLARE @City VARCHAR(20)='Toronto';
+```
+
+But rather than declaring a variables value, we can have a variable which receives something e.g. the results of a select query.
+
+
+```sql
+DECLARE @Result money
+SELECT @Result=MAX(TotalDue)
+FROM SalesLT.SalesOrderHeader
+
+PRINT @Result
+```
+
+** Key Points **
+* A batch defines a group of Transact-SQL command submitted by a client application for execution. Some commands can only be executed at the start of a new batch, and variable values cannot span batches.  
+* Use comments to document your Transact-SQL code. Inline comments are prefixed by --, and multi-line comment blocks are enclosed in /* and */.  
+* Declare variables by using the DECLARE keyword, specifying a name (prefixed with @) and a data type. You can optionally assign an initial value.   
+* Assign values to variables by using the SET keyword or in a SELECT statement. 
+
+### Conditional Branching
+
+An IF statement is one such an example, do one thing or something else or indeed nothing.  We can go further using IF and ELSE. We can also use this for providing messages, as shown below where we print a message if the row is <1 i.e. it is not found.
+
+It is not neccessary to add a BEGIN adn END in all cases, but it can be easier to read and helps when possibly expanding the IF list later.
+
+
+```sql
+UPDATE SalesLT.Product
+SET DiscontinuedDate=getdate()
+WHERE ProductID=1;
+
+IF @@ROWCOUNT<1
+BEGIN
+	PRINT 'Product was not found'
+END
+ELSE
+BEGIN
+	PRINT 'Product Updated'
+END
+```
+
+** Key Points **
+* Use the IF keyword to execute a task based on the results of a conditional test.  
+* Use an ELSE clause if you need to execute an alternative task if the conditional test returns false.  
+* Enclose mulitple statements in an IF or ELSE clause between BEGIN and END keywords.
+
+### Looping
+
+Typically in SQL Server we don't want to loop through our data, we work on sets of data, as looping can be slow, so the ideal is to work with sets.  A loop will end where a condition (predicate) evaluates to FALSE or unknown.  Either we have a BREAK which stops everything or continue, which will move on to the next set of code.  So in the example below 5 rows will be affected, as we set the counter as <= 5, adding a row.  Looping is best used when you might need to check for something, where we don't know how many times we might need to do something, a situation which is not that common in SQL Server.
+
+
+```sql
+DECLARE @Counter int=1
+
+WHILE @Counter <=5
+
+BEGIN
+	INSERT SalesLT.DemoTable(Description)
+	VALUES ('ROW '+CONVERT(varchar(5),@Counter))
+	SET @Counter=@Counter+1
+END
+
+SELECT Description FROM SalesLT.DemoTable
+```
+
+** Key Points **
+
+* Use a WHILE loop if you need to repeat one or more statements until a specified condition is true.  
+* Use BREAK and CONTINUE to exit or restart the loop.  
+* Avoid using loops to iteratively update or retrieve single records - in most cases, you should use set-based operations to retrieve and modify data.
+
+### Stored Procedures
+
+This is encapsulated a block of code in to a named block. They are setup to take parameters as inputs and can use conidtional branching (IF ELSE) and other such items.  Sounds an awful lot like a function in R.  In the example below, if we don't specify a value (the @CategoryID) then we run a query which will select all the products (the IF element).  If I do specify a category, then return the products in the category (ELSE).  
+
+
+```sql
+CREATE PROCEDURE SalesLT.GetProductsByCategory (@CategoryID INT = NULL)
+AS
+IF @CategoryID IS NULL
+	SELECT ProductID, Name, Color, Size, ListPrice
+	FROM SalesLT.Product
+ELSE
+	SELECT ProductID, Name, Color, Size, ListPrice
+	FROM SalesLT.Product
+	WHERE ProductCategoryID = @CategoryID;
+```
+
+The first time around, the object - the stored proceedure - will be created.  To use it, we must use an EXEC or EXECUTE (UTE is optional) statement.  
+
+
+```sql
+EXEC SalesLT.GetProductsByCategory
+```
+
+If we want to pass a paramter e.g. category 6, we do a similar exercise.
+
+
+```sql
+EXEC SalesLT.GetProductsByCategory 6
+```
+
+** Key Points **
+* Use stored procedures to encapsulate Transact-SQL code in a reusable database objects.  
+* You can define parameters for a stored procedure, and use them as variables in the Transact-SQL code it contains.  
+* Stored procedures can return rowsets (usually the results of a SELECT statement). They can also return output parameters, and they always   return a return value, which is used to indicate status.
+
+### Lab Exercises
+
+You want to create reusable scripts that make it easy to insert sales orders. You plan to create a script to insert the order header record, and a separate script to insert order detail records for a specified order header.
+
+Both scripts will make use of variables to make them easy to reuse. Your script to insert an order header must enable users to specify values for the order date, due date, and customer ID.
+
+
+```sql
+DECLARE @OrderDate datetime = GETDATE();
+DECLARE @DueDate datetime = DATEADD(dd, 7, GETDATE());
+DECLARE @CustomerID int = 1;
+
+INSERT INTO SalesLT.SalesOrderHeader (OrderDate, DueDate, CustomerID, ShipMethod)
+VALUES (@OrderDate, @DueDate, @CustomerID, 'CARGO TRANSPORT 5');
+
+PRINT SCOPE_IDENTITY();
+```
+
+As a next step, you want to insert an order detail. The script for this must enable users to specify a sales order ID, a product ID, a quantity, and a unit price.
+
+The script should check if the specified sales order ID exists in the SalesLT.SalesOrderHeader table. This can be done with the EXISTS predicate.
+
+If it does, the code should insert the order details into the SalesLT.SalesOrderDetail table (using default values or NULL for unspecified columns).
+
+If the sales order ID does not exist in the SalesLT.SalesOrderHeader table, the code should print the message 'The order does not exist'.
+
+
+```sql
+-- Code from previous exercise
+DECLARE @OrderDate datetime = GETDATE();
+DECLARE @DueDate datetime = DATEADD(dd, 7, GETDATE());
+DECLARE @CustomerID int = 1;
+INSERT INTO SalesLT.SalesOrderHeader (OrderDate, DueDate, CustomerID, ShipMethod)
+VALUES (@OrderDate, @DueDate, @CustomerID, 'CARGO TRANSPORT 5');
+DECLARE @OrderID int = SCOPE_IDENTITY();
+
+-- Additional script to complete
+DECLARE @ProductID int = 760;
+DECLARE @Quantity int = 1;
+DECLARE @UnitPrice money = 782.99;
+
+IF EXISTS (SELECT * FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID)
+BEGIN
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice)
+	VALUES (@OrderID, @Quantity, @ProductID, @UnitPrice)
+END
+ELSE
+BEGIN
+	PRINT 'The order does not exist'
+END
+```
+
+Adventure Works has determined that the market average price for a bike is $2,000, and consumer research has indicated that the maximum price any customer would be likely to pay for a bike is $5,000.
+
+You must write some Transact-SQL logic that incrementally increases the list price for all bike products by 10% until the average list price for a bike is at least the same as the market average, or until the most expensive bike is priced above the acceptable maximum indicated by the consumer research.
+
+The product categories in the Bikes parent category can be determined from the SalesLT.vGetAllCategories view.
+
+** Key Points **
+
+* The loop should execute only if the average list price of a product in the 'Bikes' parent category is less than the market average.  
+* Update all products that are in the 'Bikes' parent category, increasing the list price by 10%.  
+* Determine the new average and maximum selling price for products that are in the 'Bikes' parent category.  
+* If the new maximum price is greater than or equal to the maximum acceptable price, exit the loop; otherwise continue.  
+
+
+```sql
+DECLARE @MarketAverage money = 2000;
+DECLARE @MarketMax money = 5000;
+DECLARE @AWMax money;
+DECLARE @AWAverage money;
+
+SELECT @AWAverage = AVG(ListPrice), @AWMax = MAX(ListPrice)
+FROM SalesLT.Product
+WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+WHILE @AWAverage < @MarketAverage
+BEGIN
+   UPDATE SalesLT.Product
+   SET ListPrice = ListPrice * 1.1
+   WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+	SELECT @AWAverage = AVG(ListPrice), @AWMax = MAX(ListPrice)
+	FROM SalesLT.Product
+	WHERE ProductCategoryID IN
+	(SELECT DISTINCT ProductCategoryID
+	 FROM SalesLT.vGetAllCategories
+	 WHERE ParentProductCategoryName = 'Bikes');
+
+   IF @AWMax >= @MarketMax
+      END
+   ELSE
+      CONTINUE
+END
+
+PRINT 'New average bike price:' + CONVERT(VARCHAR, @AWAverage);
+PRINT 'New maximum bike price:' + CONVERT(VARCHAR, @AWMax);
+```
+
+## Error Handling and Transactions
+
+You can raise errors yourself because of a condition, and not just some system error.  For instance you can introduce business logic, so whilst a transaction in to the database might in principle be ok, you might not see that some business rules are valide i.e. too high of a discount price for instance.  You can also pass error mesages back to client applications. 
+
+ The errors have different levels of severity from 1 to 25 and includes the line number which caused the error. A line with proceedure will state which procedure or sub-proceedure caused the problem. If the error message is particularly high, SQL Server will also udnertake some certain actions to mitigte some of these problems like disconnect from the server if the disk is corrupt.  A state is also given, which can be useful when seeking assistance for troubleshooting. Within the database error messages are stored in the sys.messages table in the database and you can add custom messages using sp_addmessage to this table (note this is for SQL Server and not Azure).  It is better and more 'current' to throw custom error messages within your code, rather than in the db table, and this approach will work with SQL on Azure.
+
+### Raising or Throwing Errors
+
+if you wish to raise an error you can do so using the RAISERROR command - this works in both SQL Server and Azure.  You can specify the serverity and state when doing so.
+
+Another way of raising errors which is newer syntax, it will in time replace RAISERROR, which is THROW.  Such user defined errors can only be generated for lower levels of severity, so higher level problems don't cause SQL Server to take mitigating actions like disconnecting the server.  The customer error message must be above 50000.
+
+In the following example, the SQL query would run, but we introduce a rule based on business logic which will return an error if no rows are affected by the query.  Nothing has failed, but nothing actually happended.
+
+
+```sql
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductID = 0;
+
+IF @@ROWCOUNT < 1
+	RAISERROR('The product was not found - no products have been updated', 16, 0);
+```
+
+Or we can use the newer THROW command.
+
+
+```sql
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductID = 0;
+
+IF @@ROWCOUNT < 1
+	THROW 50001, 'The product was not found - no products have been updated', 0;
+```
+ 
+** Key Points **
+* System errors have pre-defined numbers, messages, severity levels, and other characteristics that you can use to troubleshoot issues.  
+* You can use RAISERROR and THROW to raise custom errors.  
+
+### Catching and Handling Errors
+
+This is sometimes called stuctured exception handling, where we have a TRY block of code which is something we want to run, then we have a CATCH block of code so that if the TRY code fails we catch and handle that error.  We either deal with the rror and fix it or thrown an error to the compiler.  IF the TRY block code works, no error will be thrown.  There are a number of system global variables we can call for errors depending on what we are trying to catch.  We can throw the original message, or we can throw a custom error. 
+
+In the first example below, we update the product table using the ProductNumber as ProductID divided by the weight.  If the weight is missing, we add 0 in to the divide, which is likely to cause problems since this divides by infinity.  If something does go wrong, we will print an error message of what occured.  No red error text will occur, since the application is correctly running - the rror is captured by the code.
+
+
+```sql
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	PRINT 'The following error occurred:';
+	PRINT ERROR_MESSAGE();
+END CATCH;
+```
+
+Another approach is to return the error to the application, so that it can do it's own error handling.  Here we re THROW the error back to the client application.  This time the error will be returned in red as an error.
+
+
+```sql
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	PRINT 'The following error occurred:';
+	PRINT ERROR_MESSAGE();
+	THROW;
+END CATCH;
+```
+
+Anotehr more advanced way would be to create some variables in the CATCH block and use a stored procedure in the database.  This stored procedure will store the error in to an error log table and throws that error back to the stored procedure.  This means you can transport the strored proceedure across different databases without having to re-write code and still have a consistent way to handle errors.
+
+
+```sql
+BEGIN TRY
+	UPDATE SalesLT.Product
+	SET ProductNumber = ProductID / ISNULL(Weight, 0);
+END TRY
+BEGIN CATCH
+	DECLARE @ErrorLogID as int, @ErrorMsg AS varchar(250);
+	EXECUTE dbo.uspLogError @ErrorLogID OUTPUT;
+	SET @ErrorMsg = 'The update failed because of an error. View error #'
+	                 + CAST(@ErrorLogID AS varchar)
+					 + ' in the error log for details.';
+	THROW 50001, @ErrorMsg, 0;
+END CATCH;
+```
+
+Then we can view the error log if we want.
+
+
+```sql
+SELECT * FROM dbo.ErrorLog;
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-150)5 records
+
+ErrorLogID   ErrorTime             UserName    ErrorNumber   ErrorSeverity   ErrorState  ErrorProcedure    ErrorLine  ErrorMessage                      
+-----------  --------------------  ---------  ------------  --------------  -----------  ---------------  ----------  ----------------------------------
+1            2018-03-14 12:16:08   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+2            2018-03-16 13:25:48   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+3            2018-03-16 13:27:24   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+4            2018-03-16 13:27:33   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+5            2018-03-16 13:27:50   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+
+</div>
+
+** Key Points **
+* Use TRY...CATCH blocks in your Transact-SQL code to catch and handle exceptions.  
+* A common exception handling pattern is to log the error, and then if the operation cannot be completed successfully, throw it (or a new custom error) to the calling application.  
+
+### Transactions
+
+We are concerned about protecting the integrity of the database.  A transaction is a group of tasks, possibly inserting in to multiple tables. 
+A transaction can be ACID 
+
+* Atomic - one unit of work that everythign contributes towards, you can split it up in to seperate parts  
+* Consistent - when the transaction is finished, there won't be any orphaned records or rows
+* Isolated - whilst that transaction is happening, other transactions or queries are not effected, they won't get to see the in flight data  
+* Durable - one finished the data will be stored in the database unless we explicity DELETE it
+
+A transaction must either fully succeed or wholly fail, we cannot have a partial succeed.  So for instance if we add a new order, we might add summary info in to a order header table then all the prodcuts into the order detail table.  We don't want half of this to work - just inserts in to one table - the whole thing, the transaction, must take place for it to be successful.  If for some reason it something doesn't work, perhaps as a consequence for a system fail or network issue, we want the operation to fail not partially succeed or complete.  SQL Server will handle this by itself, you don't need to add any transaction error codes or error handling, it will lock or isolate the data as required.  
+
+However, if there are multiple statements that you want to execute, it is best done as an encapsulated transaction explicitly.  This is done by BEGIN TRANSACTION <some code> then COMMIT TRANSACTION if there is an error will can throw an error and use ROLLBACK TRANSACTION.  These can be nexted TRANSACTIONS which can get complicated.  If you ROLLBACK it will ROLLBACK right back to the beggining - so it is Atomic and Consistent.  Rather than use ROLLBACK you can use XACT_ABORT which will rollback all transactions if an error is encountered.
+
+
+So if we had some code as shown below, this would lead to a record being adding to the order header, but no details being added to the product table, since the product we are trying to add (ProductID 9999) does not exist.  This would lead to an orphaned sales order header.
+
+
+```sql
+BEGIN TRY
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+END TRY
+BEGIN CATCH
+	PRINT ERROR_MESSAGE();
+END CATCH;
+```
+
+So we want to add this code within a single transaction, so if one part fails the whole thing will.  In this instance it wil try to do both parts individually, but the whole thing will fail as the second part - adding in an invalid productID - fails.  So in effect it will undo the transaction - the first part which succeeds adding the order header.  If you have many rows, this can therefore be time consuming as it might try to add 10,000 rows, then fails at a later stage, then has to go back and undo all those 10,000 rows.  So you may want to add some logic at the beggining of the transaction, before this addition and error followed by rollback occurs.
+
+
+```sql
+BEGIN TRY
+  BEGIN TRANSACTION
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+  COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+  BEGIN
+    PRINT XACT_STATE();
+	ROLLBACK TRANSACTION;
+  END
+  PRINT ERROR_MESSAGE();
+  THROW 50001,'An insert failed. The transaction was cancelled.', 0;
+END CATCH;
+```
+
+As previously discussed, we can use XACT_ABORT rather than ROLLBACK.  Again we might want to add some logic at the beggining to check for validity before adding and undoing mutiple
+
+
+```sql
+SET XACT_ABORT ON;
+BEGIN TRY
+  BEGIN TRANSACTION
+	INSERT INTO SalesLT.SalesOrderHeader (DueDate, CustomerID, ShipMethod)
+	VALUES
+	(DATEADD(dd, 7, GETDATE()), 1, 'STD DELIVERY');
+
+	DECLARE @SalesOrderID int = SCOPE_IDENTITY();
+
+	INSERT INTO SalesLT.SalesOrderDetail (SalesOrderID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount)
+	VALUES
+	(@SalesOrderID, 1, 99999, 1431.50, 0.00);
+  COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+  PRINT ERROR_MESSAGE();
+  THROW 50001,'An insert failed. The transaction was cancelled.', 0;
+END CATCH;
+SET XACT_ABORT OFF;
+```
+
+** Key Points **
+* Transactions are used to protect data integrity by ensuring that all data changes within a transaction succeed or fail as a unit.  
+* Individual Transact-SQL statements are inherently treated as transactions, and you can define explicit transactions that encompass mulitple * statements.  
+* Use the BEGIN TRANSACTION, COMMIT TRANSACTION, and ROLLBACK TRANSACTION statements to manage transactions.  
+* Enable the XACT_ABORT option to automatically rollback all transactions if an exception occurs.  
+* Use the @@TRANCOUNT system variable and XACT_STATE system function to determine transaction status.  
+
+### Lab Exercises
+
+You are implementing a Transact-SQL script to delete orders, and you want to handle any errors that occur during the deletion process.
+
+
+```sql
+DECLARE @OrderID int = 0
+
+-- Declare a custom error if the specified order doesn't exist
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+IF NOT NULL (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+BEGIN
+  THROW 50001, @error, 0;
+END
+ELSE
+BEGIN
+  SELECT FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID;
+  DELETE FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID;
+END
+```
+
+Now your code now throws an error if the specified order does not exist. Refine your code to catch this (or any other) error and print the error message to the user interface using the PRINT command. You can use BEGIN TRY, END TRY, BEGIN CATCH and END CATCH for this.
+
+
+```sql
+DECLARE @OrderID int = 71774
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+-- Wrap IF ELSE in a TRY block
+TRY CATCH
+  IF NOT EXISTS (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+  BEGIN
+    THROW 50001, @error, 0
+  END
+  ELSE
+  BEGIN
+    DELETE FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID;
+    DELETE FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID;
+  END
+END CATCH
+-- Add a CATCH block to print out the error
+BEGIN CATCH
+  PRINT ERROR_MESSAGE();
+END CATCH
+```
+
+You have implemented error handling logic in some Transact-SQL code that deletes order details and order headers. However, you are concerned that a failure partway through the process will result in data inconsistency in the form of undeleted order headers for which the order details have been deleted.
+
+Your task is to enhance the code you created in the previous challenge so that the two DELETE statements are treated as a single transactional unit of work.
+
+
+```sql
+DECLARE @OrderID int = 0
+DECLARE @error VARCHAR(25) = 'Order #' + cast(@OrderID as VARCHAR) + ' does not exist';
+
+BEGIN TRY
+  IF NOT EXISTS (SELECT * FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID)
+  BEGIN
+    THROW 50001, @error, 0
+  END
+  ELSE
+  BEGIN
+    BEGIN TRANSACTION
+    DELETE FROM SalesLT.SalesOrderDetail
+    WHERE SalesOrderID = @OrderID;
+    DELETE FROM SalesLT.SalesOrderHeader
+    WHERE SalesOrderID = @OrderID;
+    END TRANSACTION
+  END
+END TRY
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+  BEGIN
+    ROLLBACK TRANSACTION;
+  END
+  ELSE
+  BEGIN
+    PRINT ERROR_MESSAGE();
+  END
+END CATCH
+```
+
+## Final Assessment
+
+### Section 1
+
+Select the quantity per unit for all products in the Products table.
+
+
+```sql
+SELECT QuantityPerUnit
+FROM Products;
+```
+
+Select the unique category IDs from the Products table.
+
+
+```sql
+SELECT DISTINCT CategoryID
+FROM Products;
+```
+
+Select the names of products from the Products table which have more than 20 units left in stock.
+
+
+```sql
+SELECT ProductName
+FROM Products
+WHERE UnitsInStock > 20;
+```
+
+Select the product ID, product name, and unit price of the 10 most expensive products from the Products table.
+
+
+```sql
+SELECT TOP (10) ProductID, ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC;
+```
+
+Select the product ID, product name, and quantity per unit for all products in the Products table. Sort your results alphabetically by product name.
+
+
+```sql
+SELECT ProductID, ProductName, QuantityPerUnit
+FROM Products
+ORDER BY ProductName;
+```
+
+Select the product ID, product name, and unit price of all products in the Products table. Sort your results by number of units in stock, from greatest to least.
+
+Skip the first 10 results and get the next 5 after that.
+
+
+```sql
+SELECT ProductID, ProductName, UnitPrice
+FROM Products
+ORDER BY UnitsInStock DESC
+OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY;
+```
+
+Use STR, CONVERT, and NVARCHAR(30) where appropriate to display the first name, employee ID and birthdate (as Unicode in ISO 8601 format) for each employee in the Employees table.
+
+
+```sql
+SELECT FirstName + ' has an EmployeeID of ' + STR(EmployeeID, 1) + ' and was born ' +
+	   CONVERT(NVARCHAR(30), BirthDate, 126) 
+FROM Employees;
+```
+
+Select from the Orders table.
+
+The first column of your result should be a single string in exactly the following format:
+
+<<ShipName>> is from <<ShipCity or ShipRegion or ShipCountry>>
+
+If there is no ShipCity, then you should select ShipRegion, and if there is no ShipRegion you should select ShipCountry.
+
+
+```sql
+SELECT ShipName + ' is from ' +
+  CASE
+    WHEN ShipCity IS NULL THEN 'ShipRegion'
+    ELSE ShipCity
+  END
+FROM Orders;
+```
+
+The above works, but doesn't properly handle ShipCountry, a better option is to use the COALESCE which returns the first non-null value.  The AS destination is optional, if not specified the column will not have a title.
+
+
+```sql
+SELECT 
+ShipName + ' is from ' + 
+  COALESCE(ShipCity, ShipRegion,ShipCountry) AS destination
+FROM Orders;
+```
+
+Select the ship name and ship postal code from the Orders table. If the postal code is missing, display 'unknown'.  The following answer may be differnt for other dbs or flavours of SQL.
+
+
+```sql
+SELECT ShipName, ISNULL(ShipPostalCode, 'unknown')
+FROM Orders;
+```
+
+Using the Suppliers table, select the company name, and use a simple CASE expression to display 'outdated' if the company has a fax number, or 'modern' if it doesn't. 
+
+
+```sql
+SELECT CompanyName,
+  CASE
+    WHEN Fax IS NOT NULL THEN 'outdated'
+    ELSE 'modern' 
+  END AS Status
+FROM Suppliers;
+```
+
+### Section 2
+
+Get the order ID and unit price for each order by joining the Orders table and the Order Details table.  Note that you need to use [Order Details] since the table name contains whitespace.
+
+
+```sql
+SELECT o.OrderID, od.UnitPrice
+FROM Orders AS o
+INNER JOIN [Order Details] AS od
+ON o.OrderID = od.OrderID;
+```
+
+Get the order ID and first name of the associated employee by joining the Orders and Employees tables.
+
+
+```sql
+SELECT o.OrderID, e.FirstName
+FROM Orders AS o
+INNER JOIN Employees as e
+ON o.EmployeeID = e.EmployeeID;
+```
+
+Get the employee ID and related territory description for each territory an employee is in, by joining the Employees, EmployeeTerritories and Territories tables.
+
+
+```sql
+SELECT e.EmployeeID, t.TerritoryDescription
+FROM Employees AS e
+INNER JOIN EmployeeTerritories AS et
+ON e.EmployeeID = et.EmployeeID
+INNER JOIN Territories AS t
+ON et.TerritoryID = t.TerritoryID;
+```
+
+Select all the different countries from the Customers table and the Suppliers table using UNION.
+
+
+```sql
+SELECT Country
+FROM Customers
+UNION
+SELECT Country
+FROM Suppliers
+ORDER BY Country;
+```
+
+Select all the countries, including duplicates, from the Customers table and the Suppliers table using UNION ALL.
+
+
+```sql
+SELECT Country
+FROM Customers
+UNION ALL
+SELECT Country
+FROM Suppliers
+ORDER BY Country;
+```
+
+Using the Products table, get the unit price of each product, rounded to the nearest dollar.
+
+
+```sql
+SELECT ROUND(UnitPrice, 0)
+FROM Products;
+```
+
+Using the Products table, get the total number of units in stock across all products.
+
+
+```sql
+SELECT SUM(UnitsInStock)
+FROM Products;
+```
+
+Using the Orders table, get the order ID and year of the order by using YEAR(). Alias the year as OrderYear.
+
+
+```sql
+SELECT OrderID, YEAR(OrderDate) AS OrderYear
+FROM Orders;
+```
+
+Using the Orders table, get the order ID and month of the order by using DATENAME(). Alias the month as OrderMonth.
+
+
+```sql
+SELECT OrderID, DATENAME(mm, OrderDate) AS OrderMonth
+FROM Orders;
+```
+
+Use LEFT() to get the first two letters of each region description from the Region table.
+
+
+```sql
+SELECT LEFT(RegionDescription, 2)
+FROM Region;
+```
+
+Using the Suppliers table, select the city and postal code for each supplier, using WHERE and ISNUMERIC() to select only those postal codes which have no letters in them.
+
+
+```sql
+SELECT City, PostalCode
+FROM Suppliers
+WHERE ISNUMERIC(PostalCode) = 1;
+```
+
+Use LEFT() and UPPER() to get the first letter (capitalized) of each region description from the Region table.
+
+
+```sql
+SELECT UPPER(LEFT(RegionDescription, 1))
+FROM Region;
+```
+
+### Section 3
+
+Use a subquery to get the product name and unit price of products from the Products table which have a unit price greater than the average unit price from the Order Details table.
+
+Note that you need to use [Order Details] since the table name contains whitespace.
+
+
+```sql
+SELECT ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice >
+  (SELECT AVG(UnitPrice)
+  FROM [Order Details]);
+```
+
+Select from the Employees and Orders tables. Use a subquery to get the first name and employee ID for employees who were associated with orders which shipped from the USA.
+
+
+```sql
+SELECT FirstName, EmployeeID
+FROM Employees
+WHERE EmployeeID IN 
+  (SELECT DISTINCT(EmployeeID)
+  FROM Orders
+  WHERE ShipCountry = 'USA');
+```
+
+Create a new temporary table called ProductNames which has one field called ProductName (a VARCHAR of max length 40). Insert into this table the names of every product from the Products table. Select all columns from the ProductNames table you created.
+
+
+```sql
+CREATE TABLE #ProductNames
+(ProductName VARCHAR(40))
+
+INSERT INTO #ProductNames
+SELECT ProductName
+FROM Products
+
+SELECT * 
+FROM #ProductNames;
+```
+
+### Section 4
+
+Use CHOOSE() and MONTH() to get the season in which each order was shipped from the Orders table. You should select the order ID, shipped date, and then the season aliased as ShippedSeason. Be careful to filter out any NULL shipped dates.
+
+
+```sql
+SELECT OrderID, ShippedDate,
+  CHOOSE (MONTH(ShippedDate), 'Winter', 'Winter', 'Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn',     'Winter') AS ShippedSeason
+FROM Orders
+WHERE ShippedDate IS NOT NULL;
+```
+
+Using the Suppliers table, select the company name and use a simple IIF expression to display 'outdated' if a company has a fax number, or 'modern' if it doesn't. Alias the result of the IIF expression to Status.
+
+
+```sql
+SELECT CompanyName, 
+IIF(FAX IS NOT NULL, 'outdated', 'modern') AS Status
+FROM Suppliers;
+```
+
+Select from the Customers, Orders, and Order Details tables. Note that you need to use [Order Details] since the table name contains whitespace.
+
+Use GROUP BY and ROLLUP() to get the total quantity ordered by all countries, while maintaining the total per country in your result set.
+
+Your first column should be the country, and the second column the total quantity ordered by that country, aliased as TotalQuantity.
+
+
+```sql
+SELECT c.Country, SUM(od.Quantity) AS TotalQuantity
+FROM Customers AS c
+JOIN Orders as o
+ON c.CustomerID = o.CustomerID
+JOIN [Order Details] AS od
+ON o.OrderID = od.OrderID
+GROUP BY ROLLUP (c.Country);
+```
+
+From the Customers table, use GROUP BY to select the country, contact title, and count of that contact title aliased as Count, grouped by country and contact title (in that order).
+
+Then use CASE WHEN, GROUPING_ID(), and ROLLUP() to add a column called Legend, which shows one of two things:
+
+When the GROUPING_ID is 0, show '' (i.e., nothing)
+When the GROUPING_ID is 1, show Subtotal for << Country >>'
+
+
+```sql
+SELECT Country, ContactTitle, COUNT(ContactTitle) AS Count,
+  CASE
+    WHEN GROUPING_ID(Country, ContactTitle) = 0 THEN ''
+    WHEN GROUPING_ID(Country, ContactTitle) = 1 THEN 'Subtotal for ' + Country
+  END AS Legend
+FROM Customers
+GROUP BY ROLLUP (Country, ContactTitle);
+```
+
+Convert the following query to be pivoted, using PIVOT().
+
+> SELECT CategoryID, AVG(UnitPrice)
+  FROM Products
+  GROUP BY CategoryID;
+
+Note the first part of the answer defines the item that appears in the row, the second 'Per Category' is the table title.
+
+
+```sql
+SELECT 'Average Unit Price' AS 'Per Category', 
+[1], [2], [3], [4], [5], [6], [7], [8]
+FROM
+(
+    SELECT CategoryID, UnitPrice
+    FROM Products) 
+    AS SourceTable
+PIVOT
+(
+    AVG(UnitPrice)
+    FOR CategoryID IN ([1], [2], [3], [4], [5], [6], [7], [8])) 
+    AS PivotTable;
+```
+
+So we go from long to wide format as illustrated below.
+
+<div class="figure">
+<img src="images/TSQL/PivotAnswerS4Q5.png" alt="Pivot Answer Section 4 Question 5" width="1252" />
+<p class="caption">(\#fig:Pivot Answer)Pivot Answer Section 4 Question 5</p>
+</div>
+
+Insert into the Region table the region ID 5 and the description 'Space'.
+
+Then, in a second query, select the newly inserted data from the table using a WHERE clause.
+
+
+```sql
+INSERT INTO Region
+VALUES
+(5, 'Space');
+
+SELECT *
+FROM Region
+WHERE RegionID = 5;
+```
+
+Update the region descriptions in the Region table to be all uppercase, using SET and UPPER().
+
+Next, select all data from the table to view your updates.
+
+
+```sql
+UPDATE Region
+SET RegionDescription = UPPER(RegionDescription);
+
+SELECT *
+FROM Region;
+```
+
+Declare a custom region @region called 'Space', of type NVARCHAR(25).
+
+Use IF NOT EXISTS, ELSE, and BEGIN..END to throw an error message 'Error!' if @region is not in the Region table. Do this check using SELECT *.
+
+If the specified description does exist, you should select all columns for that region from the Region table.
+
+
+```sql
+DECLARE @region AS NVARCHAR(25) = 'Space';
+
+TRY CATCH
+IF NOT EXISTS (SELECT * FROM Region WHERE RegionDescription = @region)
+  BEGIN
+    PRINT 'Error!'
+  END
+  ELSE
+  BEGIN
+    SELECT * FROM Region;
+  END
+END CATCH;
+```
+

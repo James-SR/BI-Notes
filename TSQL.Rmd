@@ -1818,8 +1818,7 @@ TRUNCATE TABLE SalesLT.CallLog;
 AdventureWorks has started selling the new product - LED Lights. Insert it into the SalesLT.Product table, using default or NULL values for unspecified columns.  Once you've inserted the product, run SELECT SCOPE_IDENTITY(); to get the last identity value that was inserted.
 Add a query to view the row for the product in the SalesLT.Product table.
 
-```{sql connection=con}
--- Finish the INSERT statement
+```{sql connection=con, eval = FALSE}
 INSERT INTO SalesLT.Product (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
 VALUES
 ('LED Lights', 'LT-L123', 2.56, 12.99, 37, GETDATE());
