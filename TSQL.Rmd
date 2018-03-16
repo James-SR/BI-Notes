@@ -2473,3 +2473,111 @@ SELECT CompanyName,
   END AS Status
 FROM Suppliers;
 ```
+
+### Section 2
+
+Get the order ID and unit price for each order by joining the Orders table and the Order Details table.  Note that you need to use [Order Details] since the table name contains whitespace.
+
+```{sql connection=con, eval = FALSE}
+SELECT o.OrderID, od.UnitPrice
+FROM Orders AS o
+INNER JOIN [Order Details] AS od
+ON o.OrderID = od.OrderID;
+```
+
+Get the order ID and first name of the associated employee by joining the Orders and Employees tables.
+
+```{sql connection=con, eval = FALSE}
+SELECT o.OrderID, e.FirstName
+FROM Orders AS o
+INNER JOIN Employees as e
+ON o.EmployeeID = e.EmployeeID;
+```
+
+Get the employee ID and related territory description for each territory an employee is in, by joining the Employees, EmployeeTerritories and Territories tables.
+
+```{sql connection=con, eval = FALSE}
+SELECT e.EmployeeID, t.TerritoryDescription
+FROM Employees AS e
+INNER JOIN EmployeeTerritories AS et
+ON e.EmployeeID = et.EmployeeID
+INNER JOIN Territories AS t
+ON et.TerritoryID = t.TerritoryID;
+```
+
+Select all the different countries from the Customers table and the Suppliers table using UNION.
+
+```{sql connection=con, eval = FALSE}
+SELECT Country
+FROM Customers
+UNION
+SELECT Country
+FROM Suppliers
+ORDER BY Country;
+```
+
+Select all the countries, including duplicates, from the Customers table and the Suppliers table using UNION ALL.
+
+```{sql connection=con, eval = FALSE}
+SELECT Country
+FROM Customers
+UNION ALL
+SELECT Country
+FROM Suppliers
+ORDER BY Country;
+```
+
+Using the Products table, get the unit price of each product, rounded to the nearest dollar.
+
+```{sql connection=con, eval = FALSE}
+SELECT ROUND(UnitPrice, 0)
+FROM Products;
+```
+
+Using the Products table, get the total number of units in stock across all products.
+
+```{sql connection=con, eval = FALSE}
+SELECT SUM(UnitsInStock)
+FROM Products;
+```
+
+Using the Orders table, get the order ID and year of the order by using YEAR(). Alias the year as OrderYear.
+
+```{sql connection=con, eval = FALSE}
+SELECT OrderID, YEAR(OrderDate) AS OrderYear
+FROM Orders;
+```
+
+Using the Orders table, get the order ID and month of the order by using DATENAME(). Alias the month as OrderMonth.
+
+```{sql connection=con, eval = FALSE}
+SELECT OrderID, DATENAME(mm, OrderDate) AS OrderMonth
+FROM Orders;
+```
+
+Use LEFT() to get the first two letters of each region description from the Region table.
+
+```{sql connection=con, eval = FALSE}
+SELECT LEFT(RegionDescription, 2)
+FROM Region;
+```
+
+Using the Suppliers table, select the city and postal code for each supplier, using WHERE and ISNUMERIC() to select only those postal codes which have no letters in them.
+
+```{sql connection=con, eval = FALSE}
+SELECT City, PostalCode
+FROM Suppliers
+WHERE ISNUMERIC(PostalCode) = 1;
+```
+
+Use LEFT() and UPPER() to get the first letter (capitalized) of each region description from the Region table.
+
+```{sql connection=con, eval = FALSE}
+SELECT UPPER(LEFT(RegionDescription, 1))
+FROM Region;
+```
+
+### Section 3
+
+
+### Section 4
