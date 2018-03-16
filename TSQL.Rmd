@@ -846,7 +846,7 @@ FROM SalesLT.Product;
 
 Logical functions test if someting is true or not i.e. traditional boolean. But we can use logical functions as filters by using CHOOSE for example, you could use IIF which is also a logical, or we could use CASE to achieve the same result.  
 
-An exmaple might be if we want to return some numeric sizes, for instance if we have a table of data with different size formats:
+An example might be if we want to return some numeric sizes, for instance if we have a table of data with different size formats:
 
 ```{sql connection=con}
 SELECT Name, Size
@@ -863,7 +863,7 @@ WHERE ISNUMERIC(Size) = 1;
 Or we might want to assign a value to something, like a product type of bike to certain values and other to everything else.
 
 ```{sql connection=con}
-SELECT Name, IIF(ProductCategoryID IN (5,6,7), 'Bike', 'Other') ProductType
+SELECT Name, IIF(ProductCategoryID IN (5,6,7), 'Bike', 'Other') AS ProductType
 FROM SalesLT.Product;
 ```
 
@@ -2579,5 +2579,168 @@ FROM Region;
 
 ### Section 3
 
+Use a subquery to get the product name and unit price of products from the Products table which have a unit price greater than the average unit price from the Order Details table.
+
+Note that you need to use [Order Details] since the table name contains whitespace.
+
+```{sql connection=con, eval = FALSE}
+SELECT ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice >
+  (SELECT AVG(UnitPrice)
+  FROM [Order Details]);
+```
+
+Select from the Employees and Orders tables. Use a subquery to get the first name and employee ID for employees who were associated with orders which shipped from the USA.
+
+```{sql connection=con, eval = FALSE}
+SELECT FirstName, EmployeeID
+FROM Employees
+WHERE EmployeeID IN 
+  (SELECT DISTINCT(EmployeeID)
+  FROM Orders
+  WHERE ShipCountry = 'USA');
+```
+
+Create a new temporary table called ProductNames which has one field called ProductName (a VARCHAR of max length 40). Insert into this table the names of every product from the Products table. Select all columns from the ProductNames table you created.
+
+```{sql connection=con, eval = FALSE}
+CREATE TABLE #ProductNames
+(ProductName VARCHAR(40))
+
+INSERT INTO #ProductNames
+SELECT ProductName
+FROM Products
+
+SELECT * 
+FROM #ProductNames;
+```
 
 ### Section 4
+
+Use CHOOSE() and MONTH() to get the season in which each order was shipped from the Orders table. You should select the order ID, shipped date, and then the season aliased as ShippedSeason. Be careful to filter out any NULL shipped dates.
+
+```{sql connection=con, eval = FALSE}
+SELECT OrderID, ShippedDate,
+  CHOOSE (MONTH(ShippedDate), 'Winter', 'Winter', 'Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn',     'Winter') AS ShippedSeason
+FROM Orders
+WHERE ShippedDate IS NOT NULL;
+```
+
+Using the Suppliers table, select the company name and use a simple IIF expression to display 'outdated' if a company has a fax number, or 'modern' if it doesn't. Alias the result of the IIF expression to Status.
+
+```{sql connection=con, eval = FALSE}
+SELECT CompanyName, 
+IIF(FAX IS NOT NULL, 'outdated', 'modern') AS Status
+FROM Suppliers;
+```
+
+Select from the Customers, Orders, and Order Details tables. Note that you need to use [Order Details] since the table name contains whitespace.
+
+Use GROUP BY and ROLLUP() to get the total quantity ordered by all countries, while maintaining the total per country in your result set.
+
+Your first column should be the country, and the second column the total quantity ordered by that country, aliased as TotalQuantity.
+
+```{sql connection=con, eval = FALSE}
+SELECT c.Country, SUM(od.Quantity) AS TotalQuantity
+FROM Customers AS c
+JOIN Orders as o
+ON c.CustomerID = o.CustomerID
+JOIN [Order Details] AS od
+ON o.OrderID = od.OrderID
+GROUP BY ROLLUP (c.Country);
+```
+
+From the Customers table, use GROUP BY to select the country, contact title, and count of that contact title aliased as Count, grouped by country and contact title (in that order).
+
+Then use CASE WHEN, GROUPING_ID(), and ROLLUP() to add a column called Legend, which shows one of two things:
+
+When the GROUPING_ID is 0, show '' (i.e., nothing)
+When the GROUPING_ID is 1, show Subtotal for << Country >>'
+
+```{sql connection=con, eval = FALSE}
+SELECT Country, ContactTitle, COUNT(ContactTitle) AS Count,
+  CASE
+    WHEN GROUPING_ID(Country, ContactTitle) = 0 THEN ''
+    WHEN GROUPING_ID(Country, ContactTitle) = 1 THEN 'Subtotal for ' + Country
+  END AS Legend
+FROM Customers
+GROUP BY ROLLUP (Country, ContactTitle);
+```
+
+Convert the following query to be pivoted, using PIVOT().
+
+> SELECT CategoryID, AVG(UnitPrice)
+  FROM Products
+  GROUP BY CategoryID;
+
+Note the first part of the answer defines the item that appears in the row, the second 'Per Category' is the table title.
+
+```{sql connection=con, eval = FALSE}
+SELECT 'Average Unit Price' AS 'Per Category', 
+[1], [2], [3], [4], [5], [6], [7], [8]
+FROM
+(
+    SELECT CategoryID, UnitPrice
+    FROM Products) 
+    AS SourceTable
+PIVOT
+(
+    AVG(UnitPrice)
+    FOR CategoryID IN ([1], [2], [3], [4], [5], [6], [7], [8])) 
+    AS PivotTable;
+```
+
+So we go from long to wide format as illustrated below.
+
+```{r Pivot Answer, echo = FALSE, fig.cap='Pivot Answer Section 4 Question 5'}
+knitr::include_graphics("images/TSQL/PivotAnswerS4Q5.png")
+```
+
+Insert into the Region table the region ID 5 and the description 'Space'.
+
+Then, in a second query, select the newly inserted data from the table using a WHERE clause.
+
+```{sql connection=con, eval = FALSE}
+INSERT INTO Region
+VALUES
+(5, 'Space');
+
+SELECT *
+FROM Region
+WHERE RegionID = 5;
+```
+
+Update the region descriptions in the Region table to be all uppercase, using SET and UPPER().
+
+Next, select all data from the table to view your updates.
+
+```{sql connection=con, eval = FALSE}
+UPDATE Region
+SET RegionDescription = UPPER(RegionDescription);
+
+SELECT *
+FROM Region;
+```
+
+Declare a custom region @region called 'Space', of type NVARCHAR(25).
+
+Use IF NOT EXISTS, ELSE, and BEGIN..END to throw an error message 'Error!' if @region is not in the Region table. Do this check using SELECT *.
+
+If the specified description does exist, you should select all columns for that region from the Region table.
+
+```{sql connection=con, eval = FALSE}
+DECLARE @region AS NVARCHAR(25) = 'Space';
+
+TRY CATCH
+IF NOT EXISTS (SELECT * FROM Region WHERE RegionDescription = @region)
+  BEGIN
+    PRINT 'Error!'
+  END
+  ELSE
+  BEGIN
+    SELECT * FROM Region;
+  END
+END CATCH;
+```
+
