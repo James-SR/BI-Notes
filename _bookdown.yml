@@ -1,6 +1,6 @@
 book_filename: "BI-Notes"
 repo: https://github.com/James-SR/BI-Notes
 output_dir: docs
-rmd_files: ["index.Rmd", "TSQL.Rmd"]
+rmd_files: ["index.Rmd", "TSQL.Rmd", "SLinRClassification.Rmd"]
 clean: [packages.bib, bookdown.bbl]
 new_session: yes
