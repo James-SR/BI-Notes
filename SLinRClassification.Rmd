@@ -111,3 +111,27 @@ kNN models calculate distance, therefore kNN assumes the data is in numeric form
 
 When we then introduce another variable - the original RGB 0-255 and shape 0-1 - we can have problems as they are on different scales.  The variables with a larger scale can have a disproportionate effect on the calculation of distance, therefore we need to normalise the data.  So we change our RGB vlues to go in to the range of 0 to 1.  To do this you could create a function yourself, or use one which is included in some packages like caret.
 
+## Naive Bayes
+
+Bayes proposed rules for estimating probabilties in light of historic data.  This section will look at applying these methods to phone data to help forecast action.  We take the number of times and event happened / all possible events (how many times it could of occured). But we should also incorporate other variables, like time of day, to give a single probability estimate.  This therefore becomes the joint probability P(A and B) e.g. P(work and evening) = 1%, P(work and afternoon) = 20%.
+
+We also have the conditional probability P(A¦B) = P(A and B) / P(B) = P (work ¦ evening) = 1/25 = 4% or P (work ¦ afternoon) = 20/25 = 80%.  WE can do these calculations using the the naivebayes package in R.
+
+The where9am data frame contains 91 days (thirteen weeks) worth of data in which Brett recorded his location at 9am each day as well as whether the daytype was a weekend or weekday.
+
+```{r}
+#TEMP CODE
+# Compute P(A) 
+p_A <- nrow(subset(where9am, location == 'office'))
+
+# Compute P(B)
+p_B <- nrow(subset(where9am, daytype == 'weekday'))
+
+# Compute the observed P(A and B)
+p_AB <- nrow(subset(where9am, location == 'office' & daytype == 'weekday'))
+
+# Compute P(A | B)
+p_A_given_B <- p_AB / p_B
+p_A_given_B
+```
+
