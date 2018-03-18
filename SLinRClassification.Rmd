@@ -22,7 +22,9 @@ First let us load the data.
 #Load the signs database
 # signs_temp <-  read.csv("../files/SLinRClassification/knn_traffic_signs.csv", stringsAsFactors = FALSE)
 
-
+#Load the locations and where9am data
+locations <-  read.csv("./files/SLinRClassification/locations.csv", stringsAsFactors = FALSE)
+where9am <- subset(locations, hour == 9)
 ```
 
 After several trips with a human behind the wheel, it is time for the self-driving car to attempt the test course alone.
@@ -120,18 +122,39 @@ We also have the conditional probability P(AÂ¦B) = P(A and B) / P(B) = P (work Â
 The where9am data frame contains 91 days (thirteen weeks) worth of data in which Brett recorded his location at 9am each day as well as whether the daytype was a weekend or weekday.
 
 ```{r}
-#TEMP CODE
 # Compute P(A) 
-p_A <- nrow(subset(where9am, location == 'office'))
+p_A <- nrow(subset(where9am, location == 'office')) / nrow(where9am)
 
 # Compute P(B)
-p_B <- nrow(subset(where9am, daytype == 'weekday'))
+p_B <- nrow(subset(where9am, daytype == 'weekday')) / nrow(where9am)
 
 # Compute the observed P(A and B)
-p_AB <- nrow(subset(where9am, location == 'office' & daytype == 'weekday'))
+p_AB <- nrow(subset(where9am, location == 'office' & daytype == 'weekday')) / nrow(where9am)
 
-# Compute P(A | B)
+# Compute then print P(A | B)
 p_A_given_B <- p_AB / p_B
 p_A_given_B
 ```
 
+Next we can use th naive bayes model to predict Brett's location and two different times and days - 9am on a Thursday and 9 am on a Saturday.
+```{r}
+# Setup our variables for prediction
+days <- data.frame(daytype = factor(c("weekday","weekend")))
+thursday9am <- subset(days, daytype == 'weekday')
+saturday9am <- subset(days, daytype == 'weekend')
+
+# Load the naivebayes package
+library(naivebayes)
+
+# Build the location prediction model
+locmodel <- naive_bayes(location ~ daytype, data = where9am)
+
+# Predict Thursday's 9am location
+predict(locmodel, thursday9am)
+
+# Predict Saturdays's 9am location
+predict(locmodel, saturday9am)
+
+```
+
+Brett is most likely at the office at 9am on a Thursday, but at home at the same time on a Saturday.  Note that the structure of the variables and their levels matter, for instance if we had a factor variable with just one level and not all possible levels e.g. saturday9am with a daytype of weekend but a factor variable with only the level observed (weekend) and not including the other possability of weekday in the factor levels, we would get a different result - a result of office. So data structure is important.
