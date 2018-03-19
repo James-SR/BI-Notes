@@ -158,3 +158,69 @@ predict(locmodel, saturday9am)
 ```
 
 Brett is most likely at the office at 9am on a Thursday, but at home at the same time on a Saturday.  Note that the structure of the variables and their levels matter, for instance if we had a factor variable with just one level and not all possible levels e.g. saturday9am with a daytype of weekend but a factor variable with only the level observed (weekend) and not including the other possability of weekday in the factor levels, we would get a different result - a result of office. So data structure is important.
+
+We can examine the _a priori_ (overall) probabilities just by examing the model and some of it's sub-components.
+
+```{r}
+locmodel$tables$daytype
+locmodel$prior
+```
+
+We can then compare these probabilities to those we obtain when using a model.
+
+```{r}
+# Obtain the predicted probabilities for Thursday at 9am
+predict(locmodel, thursday9am, type = "prob")
+
+# Obtain the predicted probabilities for Saturday at 9am
+predict(locmodel, saturday9am, type = "prob")
+```
+
+So on a Saturday there is 0% chance Brett is at the office and a 100% chance he is at home.
+
+In Bayesian statistics, we say that independent events occur when knowing the outcome of one event does not help predict the other.  For example, knowing if it's raining in London doesn't help you predict the weather in Manchester. The weather events in the two cities are independent of each other.
+
+### Putting the Naivety in Naive Bayes
+
+With simple conditions where we have one predictor, daytime of the week, the conditional probability is based on the overlap between the two events.  As we add more events, the degree of overlap illistrated through Venn diagrams can become complex and messy.  The computer will find it inefficient to calculate the overlap, so the computer uses a shortcut to calculate the conditional probability we hope to compute.  
+
+Instead of looking for the intersection between all possible events, the computer will make a naive assumption about the data, it assumes that the events are independent. When this occurs, the joint probability can be calculated by mutiplying the individual probabilities. So simpler calculations can be performed based on limited intersections mutiplied together.
+
+One of the problems with this approach is that when an event has not been previously observed - such as going to work on a weekend - we immediatly get calculation problems, since this individual probability is zero, so the results become zero despite how many other conditions in the caulaution may be likely.  The solution is to add a small amount, such as 1%, to all the individual components - we call this the Laplace correction. So there will be at least some predicted probability, even if it has never been seen before.
+
+Next we will build a more complicated model using the locations data, which is similar to the where9am data but contains 24hours of data recorded at hourly intervals over 13 weeks and also contains other variables such as hour type.
+
+```{r}
+head(locations, n = 10)
+```
+
+Then we setup our variables to be predicted
+
+```{r}
+weekday_afternoon <- locations[13,c(4,6,7)]
+weekday_evening <- locations[19,c(4,6,7)]
+```
+
+Then we build our mutiple variable model and predict 
+
+```{r}
+# Build a NB model of location
+locmodel <- naive_bayes(location ~ daytype + hourtype, data = locations)
+
+# Predict Brett's location on a weekday afternoon
+predict(locmodel, weekday_afternoon)
+
+# Predict Brett's location on a weekday evening
+predict(locmodel, weekday_evening)
+```
+
+Or with probabilities
+
+```{r}
+# Predict Brett's location on a weekday afternoon
+predict(locmodel, weekday_afternoon, type = "prob")
+
+# Predict Brett's location on a weekday evening
+predict(locmodel, weekday_evening, type = "prob")
+```
+
