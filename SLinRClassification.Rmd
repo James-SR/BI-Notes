@@ -20,7 +20,7 @@ First let us load the data.
 
 ```{r}
 #Load the signs database
-# signs_temp <-  read.csv("../files/SLinRClassification/knn_traffic_signs.csv", stringsAsFactors = FALSE)
+# signs_temp <-  read.csv("./files/SLinRClassification/knn_traffic_signs.csv", stringsAsFactors = FALSE)
 
 #Load the locations and where9am data
 locations <-  read.csv("./files/SLinRClassification/locations.csv", stringsAsFactors = FALSE)
@@ -249,4 +249,27 @@ We can bin numeric data - like age bands - to make Bayes handle the data better.
 ## Logistic regression - binary predictions with regression
 
 Regression models are one of the commonest forms of machine learning.  If we have a binary outcome (1 or 0), using a standard regression may result in results either above or below this range.  With logistic regression, we create a curve, a logistic function (s curve).  Our result therfore becomes a probability between 0 and 1.  We can caulate this using a glm model, setting the family to binomial, which we can then use in the predict model.  If we use the type = "response" argument with predict, we get the predicted probabilites rather than the default log-odds.  WE then use these probabilites and set some parameters using an ifelse statement e.g. if the predicted probability is greater than 50%, then we might say that is a 1 e.g. pred <- ifelse(prob >0.5, 1, 0). 
+
+The donors dataset contains 93,462 examples of people mailed in a fundraising solicitation for paralyzed military veterans. The donated column is 1 if the person made a donation in response to the mailing and 0 otherwise.  The remaining columns are features of the prospective donors that may influence their donation behavior - the independent variables.
+
+```{r}
+
+# Load the data
+donors <- read.csv("./files/SLinRClassification/donors.csv", stringsAsFactors = TRUE)
+
+# Examine the dataset to identify potential independent variables
+str(donors)
+
+# Explore the dependent variable
+table(donors$donated)
+
+# Build the donation model
+donation_model <- glm(donated ~ bad_address + interest_religion + interest_veterans, 
+                      data = donors, family = "binomial")
+
+# Summarize the model results
+summary(donation_model)
+
+```
+
 
