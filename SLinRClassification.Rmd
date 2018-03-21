@@ -272,4 +272,109 @@ summary(donation_model)
 
 ```
 
+We can anow apply this model.  Remember that the default output is the log-odds of an outcome, so we need to use type = "response" to convert this to a probability.
 
+```{r}
+# Estimate the donation probability
+donors$donation_prob <- predict(donation_model, type = "response")
+
+# Find the donation probability of the average prospect
+mean(donors$donated)
+
+# Predict a donation if probability of donation is greater than average (0.0504)
+donors$donation_pred <- ifelse(donors$donation_prob > 0.0504, 1, 0)
+
+# Calculate the model's accuracy
+mean(donors$donation_pred == donors$donated)
+```
+
+So the model appears to be accurate - circa 80%.  But, the outcome of interest is quite rare (the second element above, the mean) is only around 5%, so had the model predicted not donated for every person, it would have been accurate 95% of the time.
+
+To visual;ise this trade off between positive and negative predictions we can use an ROC curve.  With an ROC curve we want to be away from the diagonal (an Area Under the Curve or AUC of 0.5) and towards the top left hand corner (top left would be an AUC of 1.0).  But as curves of different shapes/gradients can have the same AUC, we should also look at the curve as well as the AUC value. 
+
+Next we can plot an ROC and calculate the AUC for our model.
+
+```{r}
+# Load the pROC package
+library(pROC)
+
+# Create a ROC curve
+ROC <- roc(donors$donated, donors$donation_prob)
+
+# Plot the ROC curve
+plot(ROC, col = "blue")
+
+# Calculate the area under the curve (AUC)
+auc(ROC)
+```
+
+With the line almost on the diagonal and an AUC of just over 0.5 our model isn't doing much better than making predictions at random.
+
+### Dummy variables, missing data, and interactions
+
+All of the variables in a regression analysis must be numeric e.g. all categorical data must be represented as a number. With missing data, we can no longer use this information to make predictions.  
+
+We use dummy variables - also sometimes called one hot encoding - for logistic regression.  The GLM function will automatically convert factor type variables in to dummy vars used in the model.  We just use the factor function to the data first, if the data/variable is not already a factor. 
+
+If we have missing data, our model will automatically exclude these cases (rows) in the model.  You can create a categorical variable option (a factor level) for missing e.g. low, medium, high and missing.  However for numerical data we have more options, perhaps we might use the mean or median, or build a more complex model if we like to impute this missing variable.  Either way, it is a good idea to add a column/variable to indicate if a variable was imputed.  Sometimes, this missing_var (1 = yes) can become an important predictor in a model.
+
+An interaction effect considers that certain variables, when combined, may have more of an influence together than the sum of their individual components.  The combination may strenthen, weaken or completly eliminate the strength of the individual predictors.  In the model function, we can use the multiplication symbol (*) to indicate an interaction.  The result will include individual components as well as combined effects.
+
+In the next example, we classify a variable as a factor (wealth_rating), then set the reference category for the variable to Medium and finally build a model with this variable.
+
+```{r}
+# Convert the wealth rating to a factor
+donors$wealth_rating <- factor(donors$wealth_rating, levels = c(0,1,2,3), labels = c("Unknown", "Low", "Medium", "High"))
+
+# Use relevel() to change reference category
+donors$wealth_rating <- relevel(donors$wealth_rating, ref = "Medium")
+
+# See how our factor coding impacts the model
+summary(glm(donated ~ wealth_rating, data = donors, family = "binomial"))
+```
+
+As mentioned before, in cases where a variable is NA, R will exclude these cases when building a model.  Therefore we should try and attempt to handle such cases, one option is imputation as shown below.  We also create a new variable to indicate whether the age value was imputed, as a missing value can be an indicator of something more meaningful going on, it could be related to the outcome.
+
+```{r}
+# Find the average age among non-missing values
+summary(donors$age)
+
+# Impute missing age values with mean(age)
+donors$imputed_age <- ifelse(is.na(donors$age), round(mean(donors$age, na.rm = TRUE),2), donors$age)
+
+# Create missing value indicator for age
+donors$missing_age <- ifelse(is.na(donors$age),1,0)
+```
+
+Donors that haven given both recently and frequently may be especially likely to give again; in other words, the combined impact of recency and frequency may be greater than the sum of the separate effects.  In Marketing terms this is known as the RFM Model (recency, freqeuncy and money).
+
+Because these predictors together have a greater impact on the dependent variable, their joint effect must be modeled as an interaction.
+
+```{r}
+# Build a recency, frequency, and money (RFM) model
+rfm_model <- glm(donated ~ money + recency * frequency, data = donors, family = "binomial")
+
+# Summarize the RFM model to see how the parameters were coded
+summary(rfm_model)
+
+# Compute predicted probabilities for the RFM model
+rfm_prob <- predict(rfm_model, type = "response")
+
+# Plot the ROC curve and find AUC for the new model
+library(pROC)
+ROC <- roc(donors$donated, rfm_prob)
+plot(ROC, col = "red")
+auc(ROC)
+```
+
+### Automatic feature selection
+
+So far we have been selecting which variables to put in our model manually ourselves.  We've had to logically build our model using some fundraising knowledge, thinking about what variables may influence donations.  There is a process to speed this up using automatic feature selection called stepwise feature selection.
+
+Stepwise feature selection builds a model each variable at a time and sees which predictor adds value to the final model.  Backward deletion begins with a model containing all the features, then variables are deleted as long as the removal of a variable does not negatively impact the models overall ability to predict the outcome.  At each step, the predictor that impacts the model the least is removed.
+
+Forward stepwise selection does this in reverse, starting with no predictors, then adding in each predictor by first assessing each predictor to determine which has the greatest ability to predict the outcome at each step and adding that predictor, then re-assessing all remaining predictors.
+
+The results of a forward and backward stepwise process can result in different results AND neither may be the best possible model.  This process coul be accused asbeing akin to p-hacking and violates some of our science principles, namely to generate then test a hypothesis - it is atheortical as there is no theory about how things work.  But if the goal is prediction, this might not be such a great concern.  But it might be best to consider stepwise regression as a tool to start from.  
+
+It is perhaps useful when we lack subject matter expertise and wish to try and find the or some of the most important features which help to predict the outcome of interest.
