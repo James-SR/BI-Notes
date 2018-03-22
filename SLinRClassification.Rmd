@@ -377,4 +377,49 @@ Forward stepwise selection does this in reverse, starting with no predictors, th
 
 The results of a forward and backward stepwise process can result in different results AND neither may be the best possible model.  This process coul be accused asbeing akin to p-hacking and violates some of our science principles, namely to generate then test a hypothesis - it is atheortical as there is no theory about how things work.  But if the goal is prediction, this might not be such a great concern.  But it might be best to consider stepwise regression as a tool to start from.  
 
+To run stepwise, we set our null model, then our full model, then use step to iteratie either forward or backward between these models.
+
+```{r}
+# Specify a null model with no predictors
+null_model <- glm(donated ~ 1, data = donors, family = "binomial")
+
+# Specify the full model using all of the potential predictors
+full_model <- glm(donated ~ ., data = donors, family = "binomial")
+
+# Use a forward stepwise algorithm to build a parsimonious model
+step_model <- step(null_model, scope = list(lower = null_model, upper = full_model), direction = "forward")
+
+# Estimate the stepwise donation probability
+step_prob <- predict(step_model, type = "response")
+
+# Plot the ROC of the stepwise model
+library(pROC)
+ROC <- roc(donors$donated, step_prob)
+plot(ROC, col = "red")
+auc(ROC)
+```
+
 It is perhaps useful when we lack subject matter expertise and wish to try and find the or some of the most important features which help to predict the outcome of interest.
+
+## Classification Trees
+
+Also known as decisions trees break down data in to a serious of steps or questions (if else) then help to define action.  The goal is to model predictors against an outcome of interest.  If someone is applying for a loan, we can use past data to determine and build a tree that helps to determine how probable it is that new applicant will repay the debt.  
+
+One of those most common R packages is rpart where the part stands for recursive partitioning.  There is a good description of how this works in practice in the [Introduction to Tree Based Methods from ISL](https://www.youtube.com/watch?v=6ENTbK3yQUQ).
+
+The loans dataset contains 11,312 randomly-selected people who were applied for and later received loans from Lending Club, a US-based peer-to-peer lending company.
+
+You will use a decision tree to try to learn patterns in the outcome of these loans (either repaid or default) based on the requested loan amount and credit score at the time of application.
+
+```{r}
+#Load the loans data and subset to just those randomly selected rows
+loans_full <-  read.csv("./files/SLinRClassification/loans.csv", stringsAsFactors = TRUE)
+loans <- subset(loans_full, keep == 1)
+
+# Record default to our variable of interest outcome
+library(car)
+loans$outcome <- recode(loans$default,"0='repaid'")
+loans$outcome <- recode(loans$default,"1='default'")
+
+```
+
