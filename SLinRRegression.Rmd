@@ -1,0 +1,13 @@
+# Supervised Learning In R Regression
+***
+Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Classification' by Nina Zumel and John Mount.
+
+**_Course Handouts_**
+
+* [Part 1 - What is Regression?](./files/SLinRRegression/chapter1.pdf)
+
+
+**_Other useful links_**
+* []()
+
+## What is Regression?

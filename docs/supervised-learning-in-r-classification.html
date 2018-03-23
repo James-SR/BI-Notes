@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>BI Notes</title>
+  <meta name="description" content="Study notes taken from BI courses and self learning.">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="BI Notes" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://github.com/James-SR/BI-Notes" />
+  
+  <meta property="og:description" content="Study notes taken from BI courses and self learning." />
+  <meta name="github-repo" content="James-SR/BI-Notes" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="BI Notes" />
+  
+  <meta name="twitter:description" content="Study notes taken from BI courses and self learning." />
+  
+
+<meta name="author" content="James Solomon-Rounce">
+
+
+<meta name="date" content="2018-03-23">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="querying-data-with-transact-sql.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Business Intelligence Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html"><i class="fa fa-check"></i><b>1</b> Querying Data with Transact-SQL</a><ul>
+<li class="chapter" data-level="1.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#introduction-to-transact-sql"><i class="fa fa-check"></i><b>1.1</b> Introduction to Transact-SQL</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#data-types"><i class="fa fa-check"></i><b>1.1.1</b> Data Types</a></li>
+<li class="chapter" data-level="1.1.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#working-with-nulls"><i class="fa fa-check"></i><b>1.1.2</b> Working with NULLs</a></li>
+<li class="chapter" data-level="1.1.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises"><i class="fa fa-check"></i><b>1.1.3</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#querying-tables-with-select"><i class="fa fa-check"></i><b>1.2</b> Querying Tables with SELECT</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#removing-duplicates"><i class="fa fa-check"></i><b>1.2.1</b> Removing Duplicates</a></li>
+<li class="chapter" data-level="1.2.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#sorting-results"><i class="fa fa-check"></i><b>1.2.2</b> Sorting Results</a></li>
+<li class="chapter" data-level="1.2.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#paging-through-results"><i class="fa fa-check"></i><b>1.2.3</b> Paging through results</a></li>
+<li class="chapter" data-level="1.2.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#filtering-and-using-predicates"><i class="fa fa-check"></i><b>1.2.4</b> Filtering and Using Predicates</a></li>
+<li class="chapter" data-level="1.2.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-1"><i class="fa fa-check"></i><b>1.2.5</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#querying-tables-with-joins"><i class="fa fa-check"></i><b>1.3</b> Querying Tables with Joins</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#inner-joins"><i class="fa fa-check"></i><b>1.3.1</b> INNER Joins</a></li>
+<li class="chapter" data-level="1.3.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#outer-joins"><i class="fa fa-check"></i><b>1.3.2</b> OUTER Joins</a></li>
+<li class="chapter" data-level="1.3.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#cross-joins"><i class="fa fa-check"></i><b>1.3.3</b> Cross Joins</a></li>
+<li class="chapter" data-level="1.3.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#self-joins"><i class="fa fa-check"></i><b>1.3.4</b> Self Joins</a></li>
+<li class="chapter" data-level="1.3.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-2"><i class="fa fa-check"></i><b>1.3.5</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#using-set-operators"><i class="fa fa-check"></i><b>1.4</b> Using Set Operators</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#intersect-and-except-queries"><i class="fa fa-check"></i><b>1.4.1</b> INTERSECT and EXCEPT Queries</a></li>
+<li class="chapter" data-level="1.4.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-3"><i class="fa fa-check"></i><b>1.4.2</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#using-functions-and-aggregating-data"><i class="fa fa-check"></i><b>1.5</b> Using Functions and Aggregating Data</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#scalar-functions"><i class="fa fa-check"></i><b>1.5.1</b> Scalar Functions</a></li>
+<li class="chapter" data-level="1.5.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#logical-functions"><i class="fa fa-check"></i><b>1.5.2</b> Logical Functions</a></li>
+<li class="chapter" data-level="1.5.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#window-functions"><i class="fa fa-check"></i><b>1.5.3</b> Window Functions</a></li>
+<li class="chapter" data-level="1.5.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#aggregate-functions"><i class="fa fa-check"></i><b>1.5.4</b> Aggregate Functions</a></li>
+<li class="chapter" data-level="1.5.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#filtering-groups"><i class="fa fa-check"></i><b>1.5.5</b> Filtering Groups</a></li>
+<li class="chapter" data-level="1.5.6" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-4"><i class="fa fa-check"></i><b>1.5.6</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#sub-queries-and-apply"><i class="fa fa-check"></i><b>1.6</b> Sub-queries and Apply</a><ul>
+<li class="chapter" data-level="1.6.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#self-contained-or-correlated-query"><i class="fa fa-check"></i><b>1.6.1</b> Self Contained or Correlated Query</a></li>
+<li class="chapter" data-level="1.6.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#the-apply-operator"><i class="fa fa-check"></i><b>1.6.2</b> The Apply Operator</a></li>
+<li class="chapter" data-level="1.6.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-5"><i class="fa fa-check"></i><b>1.6.3</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#using-table-expressions"><i class="fa fa-check"></i><b>1.7</b> Using Table Expressions</a><ul>
+<li class="chapter" data-level="1.7.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#views"><i class="fa fa-check"></i><b>1.7.1</b> Views</a></li>
+<li class="chapter" data-level="1.7.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#using-temporary-tables-and-table-variables"><i class="fa fa-check"></i><b>1.7.2</b> Using Temporary Tables and Table Variables</a></li>
+<li class="chapter" data-level="1.7.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#table-value-functions-tvf"><i class="fa fa-check"></i><b>1.7.3</b> Table Value Functions (TVF)</a></li>
+<li class="chapter" data-level="1.7.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#derived-tables"><i class="fa fa-check"></i><b>1.7.4</b> Derived Tables</a></li>
+<li class="chapter" data-level="1.7.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#using-common-table-expressions-ctes"><i class="fa fa-check"></i><b>1.7.5</b> Using Common Table Expressions (CTEs)</a></li>
+<li class="chapter" data-level="1.7.6" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-6"><i class="fa fa-check"></i><b>1.7.6</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#grouping-sets-and-pivoting-data"><i class="fa fa-check"></i><b>1.8</b> Grouping Sets and Pivoting Data</a><ul>
+<li class="chapter" data-level="1.8.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#pivoting-data"><i class="fa fa-check"></i><b>1.8.1</b> Pivoting Data</a></li>
+<li class="chapter" data-level="1.8.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-7"><i class="fa fa-check"></i><b>1.8.2</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.9" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#modifying-data"><i class="fa fa-check"></i><b>1.9</b> Modifying Data</a><ul>
+<li class="chapter" data-level="1.9.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#updating-and-deleting-data"><i class="fa fa-check"></i><b>1.9.1</b> Updating and Deleting Data</a></li>
+<li class="chapter" data-level="1.9.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-8"><i class="fa fa-check"></i><b>1.9.2</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.10" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#programming-with-transact-sql"><i class="fa fa-check"></i><b>1.10</b> Programming with Transact-SQL</a><ul>
+<li class="chapter" data-level="1.10.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#batches"><i class="fa fa-check"></i><b>1.10.1</b> Batches</a></li>
+<li class="chapter" data-level="1.10.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#comments"><i class="fa fa-check"></i><b>1.10.2</b> Comments</a></li>
+<li class="chapter" data-level="1.10.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#variables"><i class="fa fa-check"></i><b>1.10.3</b> Variables</a></li>
+<li class="chapter" data-level="1.10.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#conditional-branching"><i class="fa fa-check"></i><b>1.10.4</b> Conditional Branching</a></li>
+<li class="chapter" data-level="1.10.5" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#looping"><i class="fa fa-check"></i><b>1.10.5</b> Looping</a></li>
+<li class="chapter" data-level="1.10.6" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#stored-procedures"><i class="fa fa-check"></i><b>1.10.6</b> Stored Procedures</a></li>
+<li class="chapter" data-level="1.10.7" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-9"><i class="fa fa-check"></i><b>1.10.7</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.11" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#error-handling-and-transactions"><i class="fa fa-check"></i><b>1.11</b> Error Handling and Transactions</a><ul>
+<li class="chapter" data-level="1.11.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#raising-or-throwing-errors"><i class="fa fa-check"></i><b>1.11.1</b> Raising or Throwing Errors</a></li>
+<li class="chapter" data-level="1.11.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#catching-and-handling-errors"><i class="fa fa-check"></i><b>1.11.2</b> Catching and Handling Errors</a></li>
+<li class="chapter" data-level="1.11.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#transactions"><i class="fa fa-check"></i><b>1.11.3</b> Transactions</a></li>
+<li class="chapter" data-level="1.11.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#lab-exercises-10"><i class="fa fa-check"></i><b>1.11.4</b> Lab Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="1.12" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#final-assessment"><i class="fa fa-check"></i><b>1.12</b> Final Assessment</a><ul>
+<li class="chapter" data-level="1.12.1" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#section-1"><i class="fa fa-check"></i><b>1.12.1</b> Section 1</a></li>
+<li class="chapter" data-level="1.12.2" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#section-2"><i class="fa fa-check"></i><b>1.12.2</b> Section 2</a></li>
+<li class="chapter" data-level="1.12.3" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#section-3"><i class="fa fa-check"></i><b>1.12.3</b> Section 3</a></li>
+<li class="chapter" data-level="1.12.4" data-path="querying-data-with-transact-sql.html"><a href="querying-data-with-transact-sql.html#section-4"><i class="fa fa-check"></i><b>1.12.4</b> Section 4</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html"><i class="fa fa-check"></i><b>2</b> Supervised Learning In R Classification</a><ul>
+<li class="chapter" data-level="2.1" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#k-nearest-neighbors-knn"><i class="fa fa-check"></i><b>2.1</b> k-Nearest Neighbors (kNN)</a></li>
+<li class="chapter" data-level="2.2" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#naive-bayes"><i class="fa fa-check"></i><b>2.2</b> Naive Bayes</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#putting-the-naivety-in-naive-bayes"><i class="fa fa-check"></i><b>2.2.1</b> Putting the Naivety in Naive Bayes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#applying-naive-bayes-nb-to-other-problems"><i class="fa fa-check"></i><b>2.2.2</b> Applying Naive Bayes (NB) to other problems</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#logistic-regression---binary-predictions-with-regression"><i class="fa fa-check"></i><b>2.3</b> Logistic regression - binary predictions with regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#dummy-variables-missing-data-and-interactions"><i class="fa fa-check"></i><b>2.3.1</b> Dummy variables, missing data, and interactions</a></li>
+<li class="chapter" data-level="2.3.2" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#automatic-feature-selection"><i class="fa fa-check"></i><b>2.3.2</b> Automatic feature selection</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#classification-trees"><i class="fa fa-check"></i><b>2.4</b> Classification Trees</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="supervised-learning-in-r-classification.html"><a href="supervised-learning-in-r-classification.html#tending-to-classification-trees"><i class="fa fa-check"></i><b>2.4.1</b> Tending to classification trees</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BI Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="supervised-learning-in-r-classification" class="section level1">
+<h1><span class="header-section-number">2</span> Supervised Learning In R Classification</h1>
+<hr />
+<p>Notes taken during/inspired by the DataCamp course ‘Supervised Learning In R Classification’ by Brett Lantz.</p>
+<p><strong><em>Course Handouts</em></strong></p>
+<ul>
+<li><a href="./files/SLinRClassification/chapter1.pdf">Part 1 - k-Nearest Neighbors (kNN)</a></li>
+<li><a href="./files/SLinRClassification/chapter2.pdf">Part 2 - Naive Bayes</a></li>
+<li><a href="./files/SLinRClassification/chapter3.pdf">Part 3 - Logistic Regression</a></li>
+<li><a href="./files/SLinRClassification/chapter3.pdf">Part 4 - Classification Trees</a></li>
+</ul>
+<p><strong><em>Other useful links</em></strong> * <a href="https://www.youtube.com/watch?v=6ENTbK3yQUQ">Introduction to Tree Based Methods from ISL</a></p>
+<div id="k-nearest-neighbors-knn" class="section level2">
+<h2><span class="header-section-number">2.1</span> k-Nearest Neighbors (kNN)</h2>
+<p>Machine Learning uses computers to turn data in to insight and action. This course looks at supervised learning, where we train the machine to learn from prior examples. When the concept to be learned is a set of categories, the objective is classification. In autonomous driving, we may want our car to undertake some action, like brake, when certain roads signs are observed. After a period of time observing a drivers behaviour, the computer will build a database of signs and appropriate responses. Some if one stop sign is observed, it will try and place where this sign is in relation to other signs it has seen before, then determine what type or class the sign is and do the appropriate action.</p>
+<p>To do this, it calculates the distance between the new sign and past signs, using co-ordinates in feature space. For instance, signs could be classified in three dimensions using RGB, then signs of a similar colour will be located together. Distance is then measured based on the signs location in the co-ordinate space. We could for instance measure Euclidean distance, which is used by many NN algorithms, and can be done in R using the knn function.</p>
+<p>First let us load the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the signs data </span>
+traffic_signs &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;./files/SLinRClassification/knn_traffic_signs.csv&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+signs &lt;-<span class="st"> </span><span class="kw">subset</span>(traffic_signs, sample <span class="op">==</span><span class="st"> &quot;train&quot;</span>)
+signs<span class="op">$</span>id &lt;-<span class="st"> </span><span class="ot">NULL</span>
+signs<span class="op">$</span>sample &lt;-<span class="st"> </span><span class="ot">NULL</span>
+signs_test &lt;-<span class="st"> </span><span class="kw">subset</span>(traffic_signs, sample <span class="op">==</span><span class="st"> &quot;test&quot;</span>)
+signs_test<span class="op">$</span>id &lt;-<span class="st"> </span><span class="ot">NULL</span>
+signs_test<span class="op">$</span>sample &lt;-<span class="st"> </span><span class="ot">NULL</span>
+
+<span class="kw">library</span>(class)
+next_sign &lt;-<span class="st"> </span>signs[<span class="dv">146</span>,]
+signs     &lt;-<span class="st"> </span>signs[<span class="dv">1</span><span class="op">:</span><span class="dv">145</span>,]
+sign_types &lt;-<span class="st"> </span>signs<span class="op">$</span>sign_type
+signs_actual &lt;-<span class="st"> </span>signs_test<span class="op">$</span>sign_type
+<span class="kw">rm</span>(traffic_signs)
+
+<span class="co">#Load the locations and where9am data</span>
+locations &lt;-<span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;./files/SLinRClassification/locations.csv&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+where9am &lt;-<span class="st"> </span><span class="kw">subset</span>(locations, hour <span class="op">==</span><span class="st"> </span><span class="dv">9</span>)</code></pre></div>
+<p>After several trips with a human behind the wheel, it is time for the self-driving car to attempt the test course alone.</p>
+<p>As it begins to drive away, its camera captures an image.LEt’s write some code so that a kNN classifier helps the car recognize the sign.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the &#39;class&#39; package</span>
+<span class="kw">library</span>(class)
+
+<span class="co"># Create a vector of labels</span>
+sign_types &lt;-<span class="st"> </span>signs<span class="op">$</span>sign_type
+
+<span class="co"># Classify the next sign observed - the first column of the signs dataset is removed as the class is specified in the cl = vector</span>
+<span class="kw">knn</span>(<span class="dt">train =</span> signs[<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> next_sign, <span class="dt">cl =</span> sign_types)</code></pre></div>
+<p>Each previously observed street sign was divided into a 4x4 grid, and the red, green, and blue level for each of the 16 center pixels is recorded. The result is a dataset that records the sign_type as well as 16 x 3 = 48 color properties of each sign.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Examine the structure of the signs dataset</span>
+<span class="kw">str</span>(signs)</code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    145 obs. of  49 variables:
+##  $ sign_type: chr  &quot;pedestrian&quot; &quot;pedestrian&quot; &quot;pedestrian&quot; &quot;pedestrian&quot; ...
+##  $ r1       : int  155 142 57 22 169 75 136 149 13 123 ...
+##  $ g1       : int  228 217 54 35 179 67 149 225 34 124 ...
+##  $ b1       : int  251 242 50 41 170 60 157 241 28 107 ...
+##  $ r2       : int  135 166 187 171 231 131 200 34 5 83 ...
+##  $ g2       : int  188 204 201 178 254 89 203 45 21 61 ...
+##  $ b2       : int  101 44 68 26 27 53 107 1 11 26 ...
+##  $ r3       : int  156 142 51 19 97 214 150 155 123 116 ...
+##  $ g3       : int  227 217 51 27 107 144 167 226 154 124 ...
+##  $ b3       : int  245 242 45 29 99 75 134 238 140 115 ...
+##  $ r4       : int  145 147 59 19 123 156 171 147 21 67 ...
+##  $ g4       : int  211 219 62 27 147 169 218 222 46 67 ...
+##  $ b4       : int  228 242 65 29 152 190 252 242 41 52 ...
+##  $ r5       : int  166 164 156 42 221 67 171 170 36 70 ...
+##  $ g5       : int  233 228 171 37 236 50 158 191 60 53 ...
+##  $ b5       : int  245 229 50 3 117 36 108 113 26 26 ...
+##  $ r6       : int  212 84 254 217 205 37 157 26 75 26 ...
+##  $ g6       : int  254 116 255 228 225 36 186 37 108 26 ...
+##  $ b6       : int  52 17 36 19 80 42 11 12 44 21 ...
+##  $ r7       : int  212 217 211 221 235 44 26 34 13 52 ...
+##  $ g7       : int  254 254 226 235 254 42 35 45 27 45 ...
+##  $ b7       : int  11 26 70 20 60 44 10 19 25 27 ...
+##  $ r8       : int  188 155 78 181 90 192 180 221 133 117 ...
+##  $ g8       : int  229 203 73 183 110 131 211 249 163 109 ...
+##  $ b8       : int  117 128 64 73 9 73 236 184 126 83 ...
+##  $ r9       : int  170 213 220 237 216 123 129 226 83 110 ...
+##  $ g9       : int  216 253 234 234 236 74 109 246 125 74 ...
+##  $ b9       : int  120 51 59 44 66 22 73 59 19 12 ...
+##  $ r10      : int  211 217 254 251 229 36 161 30 13 98 ...
+##  $ g10      : int  254 255 255 254 255 34 190 40 27 70 ...
+##  $ b10      : int  3 21 51 2 12 37 10 34 25 26 ...
+##  $ r11      : int  212 217 253 235 235 44 161 34 9 20 ...
+##  $ g11      : int  254 255 255 243 254 42 190 44 23 21 ...
+##  $ b11      : int  19 21 44 12 60 44 6 35 18 20 ...
+##  $ r12      : int  172 158 66 19 163 197 187 241 85 113 ...
+##  $ g12      : int  235 225 68 27 168 114 215 255 128 76 ...
+##  $ b12      : int  244 237 68 29 152 21 236 54 21 14 ...
+##  $ r13      : int  172 164 69 20 124 171 141 205 83 106 ...
+##  $ g13      : int  235 227 65 29 117 102 142 229 125 69 ...
+##  $ b13      : int  244 237 59 34 91 26 140 46 19 9 ...
+##  $ r14      : int  172 182 76 64 188 197 189 226 85 102 ...
+##  $ g14      : int  228 228 84 61 205 114 171 246 128 67 ...
+##  $ b14      : int  235 143 22 4 78 21 140 59 21 6 ...
+##  $ r15      : int  177 171 82 211 125 123 214 235 85 106 ...
+##  $ g15      : int  235 228 93 222 147 74 221 252 128 69 ...
+##  $ b15      : int  244 196 17 78 20 22 201 67 21 9 ...
+##  $ r16      : int  22 164 58 19 160 180 188 237 83 43 ...
+##  $ g16      : int  52 227 60 27 183 107 211 254 125 29 ...
+##  $ b16      : int  53 237 60 29 187 26 227 53 19 11 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Count the number of signs of each type</span>
+<span class="kw">table</span>(signs<span class="op">$</span>sign_type)</code></pre></div>
+<pre><code>## 
+## pedestrian      speed       stop 
+##         46         49         50</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Check r10&#39;s average red level by sign type</span>
+<span class="kw">aggregate</span>(r10 <span class="op">~</span><span class="st"> </span>sign_type, <span class="dt">data =</span> signs, mean)</code></pre></div>
+<pre><code>##    sign_type       r10
+## 1 pedestrian 113.71739
+## 2      speed  80.63265
+## 3       stop 131.98000</code></pre>
+<p>Next we want to try and see how well the predict signs match the actual signs classified by a human. We will also create a confusion matrix to see where it worked and a accuracy measure.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use kNN to identify the test road signs</span>
+sign_types &lt;-<span class="st"> </span>signs<span class="op">$</span>sign_type
+signs_pred &lt;-<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> signs[<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> test_signs[<span class="op">-</span><span class="dv">1</span>], <span class="dt">cl =</span> sign_types)
+
+<span class="co"># Create a confusion matrix of the actual versus predicted values</span>
+signs_actual &lt;-<span class="st"> </span>test_signs<span class="op">$</span>sign_type
+<span class="kw">table</span>(signs_pred, signs_actual)
+
+<span class="co"># Compute the accuracy</span>
+<span class="kw">mean</span>(signs_pred <span class="op">==</span><span class="st"> </span>signs_actual)</code></pre></div>
+<p>When we use kNN, the K signifies the number of neighbours to consider when making the classification. Unless specified, R will use k = 1 i.e. it will only consider the nearest neighbour. However, as other elements, such as road sign background and lighting, might cause an incorrect road sign to be the nearest based on such factors, this can cause problems. If we use a greater value for K, there is in effect a vote from the nearest neighbours (k) on which sign is the most likely. In the case of a tie, the winner is typically set by random. Setting a high value for K isn’t always the best approach, as it can introduce noise in to a pattern. Setting a low value for k might enable it to identify more subtle patterns, but may lead to overfitting and errors.</p>
+<p>** Some people suggest setting K to the square root of the number of observations in the training data ** So if we observed 100 road signs, we would set k to 10. A better approach would be to set k to mutiple values, then run the model against some unseen (test) data and see how it performs.</p>
+<p>In the following example we set k = 1 (default), 7 then 15 and compare the levels of accuracy.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute the accuracy of the baseline model (default k = 1)</span>
+k_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> signs[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> signs_test[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">cl =</span> signs[,<span class="dv">1</span>])
+<span class="kw">mean</span>(k_<span class="dv">1</span> <span class="op">==</span><span class="st"> </span>signs_actual)
+
+<span class="co"># Modify the above to set k = 7</span>
+k_<span class="dv">7</span> &lt;-<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> signs[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> signs_test[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">cl =</span> signs[,<span class="dv">1</span>], <span class="dt">k =</span> <span class="dv">7</span>)
+<span class="kw">mean</span>(k_<span class="dv">7</span> <span class="op">==</span><span class="st"> </span>signs_actual)
+
+<span class="co"># Set k = 15 and compare to the above</span>
+k_<span class="dv">15</span> &lt;-<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> signs[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> signs_test[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">cl =</span> signs[,<span class="dv">1</span>], <span class="dt">k =</span> <span class="dv">15</span>)
+<span class="kw">mean</span>(k_<span class="dv">15</span> <span class="op">==</span><span class="st"> </span>signs_actual)</code></pre></div>
+<p>K = 7 gives the highest level of accuracy.</p>
+<p>When multiple nearest neighbors hold a vote, it can sometimes be useful to examine whether the voters were unanimous or widely separated. There is a option we can set using prob = TRUE parameter to compute the vote proportions for a kNN model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use the prob parameter to get the proportion of votes for the winning class</span>
+sign_pred &lt;-<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> signs[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">test =</span> signs_test[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">cl =</span> signs[,<span class="dv">1</span>], <span class="dt">k =</span> <span class="dv">7</span>, <span class="dt">prob =</span> <span class="ot">TRUE</span>)
+
+<span class="co"># Get the &quot;prob&quot; attribute from the predicted classes</span>
+sign_prob &lt;-<span class="st"> </span><span class="kw">attr</span>(sign_pred, <span class="st">&quot;prob&quot;</span>)
+
+<span class="co"># Examine the first several predictions</span>
+<span class="kw">head</span>(sign_pred)
+
+<span class="co"># Examine the proportion of votes for the winning class</span>
+<span class="kw">head</span>(sign_prob)</code></pre></div>
+<p>kNN models calculate distance, therefore kNN assumes the data is in numeric format e.g. we don’t have yellow we have RGB values. If something cannot be easily converted to a numeric, we can create dummy variables e.g. to indicate the shape such as triangle = 1, square = 0, circle = 0 might be for one particular sign. This dummy set of vars can then be used in distance calculations.</p>
+<p>When we then introduce another variable - the original RGB 0-255 and shape 0-1 - we can have problems as they are on different scales. The variables with a larger scale can have a disproportionate effect on the calculation of distance, therefore we need to normalise the data. So we change our RGB vlues to go in to the range of 0 to 1. To do this you could create a function yourself, or use one which is included in some packages like caret.</p>
+</div>
+<div id="naive-bayes" class="section level2">
+<h2><span class="header-section-number">2.2</span> Naive Bayes</h2>
+<p>Bayes proposed rules for estimating probabilties in light of historic data. This section will look at applying these methods to phone data to help forecast action. We take the number of times and event happened / all possible events (how many times it could of occured). But we should also incorporate other variables, like time of day, to give a single probability estimate. This therefore becomes the joint probability P(A and B) e.g. P(work and evening) = 1%, P(work and afternoon) = 20%.</p>
+<p>We also have the conditional probability P(A¦B) = P(A and B) / P(B) = P (work ¦ evening) = 1/25 = 4% or P (work ¦ afternoon) = 20/25 = 80%. WE can do these calculations using the the naivebayes package in R.</p>
+<p>The where9am data frame contains 91 days (thirteen weeks) worth of data in which Brett recorded his location at 9am each day as well as whether the daytype was a weekend or weekday.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute P(A) </span>
+p_A &lt;-<span class="st"> </span><span class="kw">nrow</span>(<span class="kw">subset</span>(where9am, location <span class="op">==</span><span class="st"> &#39;office&#39;</span>)) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(where9am)
+
+<span class="co"># Compute P(B)</span>
+p_B &lt;-<span class="st"> </span><span class="kw">nrow</span>(<span class="kw">subset</span>(where9am, daytype <span class="op">==</span><span class="st"> &#39;weekday&#39;</span>)) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(where9am)
+
+<span class="co"># Compute the observed P(A and B)</span>
+p_AB &lt;-<span class="st"> </span><span class="kw">nrow</span>(<span class="kw">subset</span>(where9am, location <span class="op">==</span><span class="st"> &#39;office&#39;</span> <span class="op">&amp;</span><span class="st"> </span>daytype <span class="op">==</span><span class="st"> &#39;weekday&#39;</span>)) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(where9am)
+
+<span class="co"># Compute then print P(A | B)</span>
+p_A_given_B &lt;-<span class="st"> </span>p_AB <span class="op">/</span><span class="st"> </span>p_B
+p_A_given_B</code></pre></div>
+<pre><code>## [1] 0.6</code></pre>
+<p>Next we can use th naive bayes model to predict Brett’s location and two different times and days - 9am on a Thursday and 9 am on a Saturday.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setup our variables for prediction</span>
+days &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">daytype =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;weekday&quot;</span>,<span class="st">&quot;weekend&quot;</span>)))
+thursday9am &lt;-<span class="st"> </span><span class="kw">subset</span>(days, daytype <span class="op">==</span><span class="st"> &#39;weekday&#39;</span>)
+saturday9am &lt;-<span class="st"> </span><span class="kw">subset</span>(days, daytype <span class="op">==</span><span class="st"> &#39;weekend&#39;</span>)
+
+<span class="co"># Load the naivebayes package</span>
+<span class="kw">library</span>(naivebayes)</code></pre></div>
+<pre><code>## Warning: package &#39;naivebayes&#39; was built under R version 3.4.3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build the location prediction model</span>
+locmodel &lt;-<span class="st"> </span><span class="kw">naive_bayes</span>(location <span class="op">~</span><span class="st"> </span>daytype, <span class="dt">data =</span> where9am)
+
+<span class="co"># Predict Thursday&#39;s 9am location</span>
+<span class="kw">predict</span>(locmodel, thursday9am)</code></pre></div>
+<pre><code>## [1] office
+## Levels: appointment campus home office</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict Saturdays&#39;s 9am location</span>
+<span class="kw">predict</span>(locmodel, saturday9am)</code></pre></div>
+<pre><code>## [1] home
+## Levels: appointment campus home office</code></pre>
+<p>Brett is most likely at the office at 9am on a Thursday, but at home at the same time on a Saturday. Note that the structure of the variables and their levels matter, for instance if we had a factor variable with just one level and not all possible levels e.g. saturday9am with a daytype of weekend but a factor variable with only the level observed (weekend) and not including the other possability of weekday in the factor levels, we would get a different result - a result of office. So data structure is important.</p>
+<p>We can examine the <em>a priori</em> (overall) probabilities just by examing the model and some of it’s sub-components.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">locmodel<span class="op">$</span>tables<span class="op">$</span>daytype</code></pre></div>
+<pre><code>##          
+## daytype   appointment    campus      home    office
+##   weekday   1.0000000 1.0000000 0.3658537 1.0000000
+##   weekend   0.0000000 0.0000000 0.6341463 0.0000000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">locmodel<span class="op">$</span>prior</code></pre></div>
+<pre><code>## 
+## appointment      campus        home      office 
+##  0.01098901  0.10989011  0.45054945  0.42857143</code></pre>
+<p>We can then compare these probabilities to those we obtain when using a model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Obtain the predicted probabilities for Thursday at 9am</span>
+<span class="kw">predict</span>(locmodel, thursday9am, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment    campus      home office
+## [1,]  0.01538462 0.1538462 0.2307692    0.6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Obtain the predicted probabilities for Saturday at 9am</span>
+<span class="kw">predict</span>(locmodel, saturday9am, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment campus home office
+## [1,]           0      0    1      0</code></pre>
+<p>So on a Saturday there is 0% chance Brett is at the office and a 100% chance he is at home.</p>
+<p>In Bayesian statistics, we say that independent events occur when knowing the outcome of one event does not help predict the other. For example, knowing if it’s raining in London doesn’t help you predict the weather in Manchester. The weather events in the two cities are independent of each other.</p>
+<div id="putting-the-naivety-in-naive-bayes" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Putting the Naivety in Naive Bayes</h3>
+<p>With simple conditions where we have one predictor, daytime of the week, the conditional probability is based on the overlap between the two events. As we add more events, the degree of overlap illistrated through Venn diagrams can become complex and messy. The computer will find it inefficient to calculate the overlap, so the computer uses a shortcut to calculate the conditional probability we hope to compute.</p>
+<p>Instead of looking for the intersection between all possible events, the computer will make a naive assumption about the data, it assumes that the events are independent. When this occurs, the joint probability can be calculated by mutiplying the individual probabilities. So simpler calculations can be performed based on limited intersections mutiplied together.</p>
+<p>One of the problems with this approach is that when an event has not been previously observed - such as going to work on a weekend - we immediatly get calculation problems, since this individual probability is zero, so the results become zero despite how many other conditions in the caulaution may be likely. The solution is to add a small amount, such as 1%, to all the individual components - we call this the Laplace correction. So there will be at least some predicted probability, even if it has never been seen before.</p>
+<p>Next we will build a more complicated model using the locations data, which is similar to the where9am data but contains 24hours of data recorded at hourly intervals over 13 weeks and also contains other variables such as hour type.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(locations, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
+<pre><code>##    month day   weekday daytype hour hourtype location
+## 1      1   4 wednesday weekday    0    night     home
+## 2      1   4 wednesday weekday    1    night     home
+## 3      1   4 wednesday weekday    2    night     home
+## 4      1   4 wednesday weekday    3    night     home
+## 5      1   4 wednesday weekday    4    night     home
+## 6      1   4 wednesday weekday    5    night     home
+## 7      1   4 wednesday weekday    6  morning     home
+## 8      1   4 wednesday weekday    7  morning     home
+## 9      1   4 wednesday weekday    8  morning     home
+## 10     1   4 wednesday weekday    9  morning   office</code></pre>
+<p>Then we setup our variables to be predicted</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">weekday_afternoon &lt;-<span class="st"> </span>locations[<span class="dv">13</span>,<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">7</span>)]
+weekday_evening &lt;-<span class="st"> </span>locations[<span class="dv">19</span>,<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">7</span>)]
+weekend_afternoon &lt;-<span class="st"> </span>locations[<span class="dv">85</span>,<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">7</span>)]</code></pre></div>
+<p>Then we build our mutiple variable model and predict</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a NB model of location</span>
+locmodel &lt;-<span class="st"> </span><span class="kw">naive_bayes</span>(location <span class="op">~</span><span class="st"> </span>daytype <span class="op">+</span><span class="st"> </span>hourtype, <span class="dt">data =</span> locations)
+
+<span class="co"># Predict Brett&#39;s location on a weekday afternoon</span>
+<span class="kw">predict</span>(locmodel, weekday_afternoon)</code></pre></div>
+<pre><code>## [1] office
+## Levels: appointment campus home office restaurant store theater</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict Brett&#39;s location on a weekday evening</span>
+<span class="kw">predict</span>(locmodel, weekday_evening)</code></pre></div>
+<pre><code>## [1] home
+## Levels: appointment campus home office restaurant store theater</code></pre>
+<p>Or with probabilities</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict Brett&#39;s location on a weekday afternoon</span>
+<span class="kw">predict</span>(locmodel, weekday_afternoon, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment     campus      home    office restaurant       store
+## [1,] 0.004300045 0.08385089 0.2482618 0.5848062 0.07304769 0.005733394
+##      theater
+## [1,]       0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict Brett&#39;s location on a weekday evening</span>
+<span class="kw">predict</span>(locmodel, weekday_evening, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment      campus      home     office restaurant      store
+## [1,] 0.004283788 0.004283788 0.7903588 0.05997303 0.04400138 0.09709919
+##      theater
+## [1,]       0</code></pre>
+<p>Next we will try to predict where Brett would be on a weekend afternoon. Since there are some locations he has never been to before at this time of day e.g. the campus, office or theatre, we will predict probabilities both with and without the Laplace correction. Adding the Laplace correction allows for the small chance that Brett might go to the office on the weekend in the future. Without the Laplace correction, some potential outcomes may be predicted to be impossible.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Observe the predicted probabilities for a weekend afternoon</span>
+<span class="kw">predict</span>(locmodel, weekend_afternoon, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment campus      home office restaurant      store theater
+## [1,]  0.02472535      0 0.8472217      0  0.1115693 0.01648357       0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a new model using the Laplace correction</span>
+locmodel2 &lt;-<span class="st"> </span><span class="kw">naive_bayes</span>(location <span class="op">~</span><span class="st"> </span>daytype <span class="op">+</span><span class="st"> </span>hourtype, <span class="dt">laplace =</span><span class="dv">1</span>, <span class="dt">data =</span> locations)
+
+<span class="co"># Observe the new predicted probabilities for a weekend afternoon</span>
+<span class="kw">predict</span>(locmodel2, weekend_afternoon, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</code></pre></div>
+<pre><code>##      appointment      campus      home      office restaurant      store
+## [1,]  0.01107985 0.005752078 0.8527053 0.008023444  0.1032598 0.01608175
+##          theater
+## [1,] 0.003097769</code></pre>
+</div>
+<div id="applying-naive-bayes-nb-to-other-problems" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Applying Naive Bayes (NB) to other problems</h3>
+<p>NB is useful when attirbutes from multiple factors need to be considered at the same time, then evaluated as a whole, a bit like a Doctor looking at a patient then making a reccomendation. There are some considerations to be aware of whan apply NB to other scenarios.</p>
+<p>Bayes works by calculating conditional probabilites, it builds frequency tables of the number of times a particular condition overlaps with our condition of interest, then the probabilities are multiplied Naively in a chain of events. Each predictor typically comprises a set of categories, numeric data like time of day or age, are difficult without modification. Unstructured text data also causes problems.</p>
+<p>We can bin numeric data - like age bands - to make Bayes handle the data better. Or use quintiles. Text data is best adjusted using the bag of words approach. This in effect creates a table, where each sentenence or document becomes a row, and the columns become some numeric value for the presence of words, usually dummy vars. NB trained with the bag of words approach can be very effective text classifiers.</p>
+</div>
+</div>
+<div id="logistic-regression---binary-predictions-with-regression" class="section level2">
+<h2><span class="header-section-number">2.3</span> Logistic regression - binary predictions with regression</h2>
+<p>Regression models are one of the commonest forms of machine learning. If we have a binary outcome (1 or 0), using a standard regression may result in results either above or below this range. With logistic regression, we create a curve, a logistic function (s curve). Our result therfore becomes a probability between 0 and 1. We can caulate this using a glm model, setting the family to binomial, which we can then use in the predict model. If we use the type = “response” argument with predict, we get the predicted probabilites rather than the default log-odds. WE then use these probabilites and set some parameters using an ifelse statement e.g. if the predicted probability is greater than 50%, then we might say that is a 1 e.g. pred &lt;- ifelse(prob &gt;0.5, 1, 0).</p>
+<p>The donors dataset contains 93,462 examples of people mailed in a fundraising solicitation for paralyzed military veterans. The donated column is 1 if the person made a donation in response to the mailing and 0 otherwise. The remaining columns are features of the prospective donors that may influence their donation behavior - the independent variables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the data</span>
+donors &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;./files/SLinRClassification/donors.csv&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">TRUE</span>)
+
+<span class="co"># Examine the dataset to identify potential independent variables</span>
+<span class="kw">str</span>(donors)</code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    93462 obs. of  13 variables:
+##  $ donated          : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ veteran          : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ bad_address      : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ age              : int  60 46 NA 70 78 NA 38 NA NA 65 ...
+##  $ has_children     : int  0 1 0 0 1 0 1 0 0 0 ...
+##  $ wealth_rating    : int  0 3 1 2 1 0 2 3 1 0 ...
+##  $ interest_veterans: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ interest_religion: int  0 0 0 0 1 0 0 0 0 0 ...
+##  $ pet_owner        : int  0 0 0 0 0 0 1 0 0 0 ...
+##  $ catalog_shopper  : int  0 0 0 0 1 0 0 0 0 0 ...
+##  $ recency          : Factor w/ 2 levels &quot;CURRENT&quot;,&quot;LAPSED&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ frequency        : Factor w/ 2 levels &quot;FREQUENT&quot;,&quot;INFREQUENT&quot;: 1 1 1 1 1 2 2 1 2 2 ...
+##  $ money            : Factor w/ 2 levels &quot;HIGH&quot;,&quot;MEDIUM&quot;: 2 1 2 2 2 2 2 2 2 2 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Explore the dependent variable</span>
+<span class="kw">table</span>(donors<span class="op">$</span>donated)</code></pre></div>
+<pre><code>## 
+##     0     1 
+## 88751  4711</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build the donation model</span>
+donation_model &lt;-<span class="st"> </span><span class="kw">glm</span>(donated <span class="op">~</span><span class="st"> </span>bad_address <span class="op">+</span><span class="st"> </span>interest_religion <span class="op">+</span><span class="st"> </span>interest_veterans, 
+                      <span class="dt">data =</span> donors, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="co"># Summarize the model results</span>
+<span class="kw">summary</span>(donation_model)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = donated ~ bad_address + interest_religion + interest_veterans, 
+##     family = &quot;binomial&quot;, data = donors)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.3480  -0.3192  -0.3192  -0.3192   2.5678  
+## 
+## Coefficients:
+##                   Estimate Std. Error  z value Pr(&gt;|z|)    
+## (Intercept)       -2.95139    0.01652 -178.664   &lt;2e-16 ***
+## bad_address       -0.30780    0.14348   -2.145   0.0319 *  
+## interest_religion  0.06724    0.05069    1.327   0.1847    
+## interest_veterans  0.11009    0.04676    2.354   0.0186 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 37330  on 93461  degrees of freedom
+## Residual deviance: 37316  on 93458  degrees of freedom
+## AIC: 37324
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>We can anow apply this model. Remember that the default output is the log-odds of an outcome, so we need to use type = “response” to convert this to a probability.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Estimate the donation probability</span>
+donors<span class="op">$</span>donation_prob &lt;-<span class="st"> </span><span class="kw">predict</span>(donation_model, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+
+<span class="co"># Find the donation probability of the average prospect</span>
+<span class="kw">mean</span>(donors<span class="op">$</span>donated)</code></pre></div>
+<pre><code>## [1] 0.05040551</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict a donation if probability of donation is greater than average (0.0504)</span>
+donors<span class="op">$</span>donation_pred &lt;-<span class="st"> </span><span class="kw">ifelse</span>(donors<span class="op">$</span>donation_prob <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.0504</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+
+<span class="co"># Calculate the model&#39;s accuracy</span>
+<span class="kw">mean</span>(donors<span class="op">$</span>donation_pred <span class="op">==</span><span class="st"> </span>donors<span class="op">$</span>donated)</code></pre></div>
+<pre><code>## [1] 0.794815</code></pre>
+<p>So the model appears to be accurate - circa 80%. But, the outcome of interest is quite rare (the second element above, the mean) is only around 5%, so had the model predicted not donated for every person, it would have been accurate 95% of the time.</p>
+<p>To visual;ise this trade off between positive and negative predictions we can use an ROC curve. With an ROC curve we want to be away from the diagonal (an Area Under the Curve or AUC of 0.5) and towards the top left hand corner (top left would be an AUC of 1.0). But as curves of different shapes/gradients can have the same AUC, we should also look at the curve as well as the AUC value.</p>
+<p>Next we can plot an ROC and calculate the AUC for our model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the pROC package</span>
+<span class="kw">library</span>(pROC)</code></pre></div>
+<pre><code>## Warning: package &#39;pROC&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
+<pre><code>## 
+## Attaching package: &#39;pROC&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     cov, smooth, var</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create a ROC curve</span>
+ROC &lt;-<span class="st"> </span><span class="kw">roc</span>(donors<span class="op">$</span>donated, donors<span class="op">$</span>donation_prob)
+
+<span class="co"># Plot the ROC curve</span>
+<span class="kw">plot</span>(ROC, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Calculate the area under the curve (AUC)</span>
+<span class="kw">auc</span>(ROC)</code></pre></div>
+<pre><code>## Area under the curve: 0.5102</code></pre>
+<p>With the line almost on the diagonal and an AUC of just over 0.5 our model isn’t doing much better than making predictions at random.</p>
+<div id="dummy-variables-missing-data-and-interactions" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Dummy variables, missing data, and interactions</h3>
+<p>All of the variables in a regression analysis must be numeric e.g. all categorical data must be represented as a number. With missing data, we can no longer use this information to make predictions.</p>
+<p>We use dummy variables - also sometimes called one hot encoding - for logistic regression. The GLM function will automatically convert factor type variables in to dummy vars used in the model. We just use the factor function to the data first, if the data/variable is not already a factor.</p>
+<p>If we have missing data, our model will automatically exclude these cases (rows) in the model. You can create a categorical variable option (a factor level) for missing e.g. low, medium, high and missing. However for numerical data we have more options, perhaps we might use the mean or median, or build a more complex model if we like to impute this missing variable. Either way, it is a good idea to add a column/variable to indicate if a variable was imputed. Sometimes, this missing_var (1 = yes) can become an important predictor in a model.</p>
+<p>An interaction effect considers that certain variables, when combined, may have more of an influence together than the sum of their individual components. The combination may strenthen, weaken or completly eliminate the strength of the individual predictors. In the model function, we can use the multiplication symbol (*) to indicate an interaction. The result will include individual components as well as combined effects.</p>
+<p>In the next example, we classify a variable as a factor (wealth_rating), then set the reference category for the variable to Medium and finally build a model with this variable.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert the wealth rating to a factor</span>
+donors<span class="op">$</span>wealth_rating &lt;-<span class="st"> </span><span class="kw">factor</span>(donors<span class="op">$</span>wealth_rating, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Unknown&quot;</span>, <span class="st">&quot;Low&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;High&quot;</span>))
+
+<span class="co"># Use relevel() to change reference category</span>
+donors<span class="op">$</span>wealth_rating &lt;-<span class="st"> </span><span class="kw">relevel</span>(donors<span class="op">$</span>wealth_rating, <span class="dt">ref =</span> <span class="st">&quot;Medium&quot;</span>)
+
+<span class="co"># See how our factor coding impacts the model</span>
+<span class="kw">summary</span>(<span class="kw">glm</span>(donated <span class="op">~</span><span class="st"> </span>wealth_rating, <span class="dt">data =</span> donors, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>))</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = donated ~ wealth_rating, family = &quot;binomial&quot;, data = donors)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.3320  -0.3243  -0.3175  -0.3175   2.4582  
+## 
+## Coefficients:
+##                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)          -2.91894    0.03614 -80.772   &lt;2e-16 ***
+## wealth_ratingUnknown -0.04373    0.04243  -1.031    0.303    
+## wealth_ratingLow     -0.05245    0.05332  -0.984    0.325    
+## wealth_ratingHigh     0.04804    0.04768   1.008    0.314    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 37330  on 93461  degrees of freedom
+## Residual deviance: 37323  on 93458  degrees of freedom
+## AIC: 37331
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>As mentioned before, in cases where a variable is NA, R will exclude these cases when building a model. Therefore we should try and attempt to handle such cases, one option is imputation as shown below. We also create a new variable to indicate whether the age value was imputed, as a missing value can be an indicator of something more meaningful going on, it could be related to the outcome.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Find the average age among non-missing values</span>
+<span class="kw">summary</span>(donors<span class="op">$</span>age)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##    1.00   48.00   62.00   61.65   75.00   98.00   22546</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Impute missing age values with mean(age)</span>
+donors<span class="op">$</span>imputed_age &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(donors<span class="op">$</span>age), <span class="kw">round</span>(<span class="kw">mean</span>(donors<span class="op">$</span>age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),<span class="dv">2</span>), donors<span class="op">$</span>age)
+
+<span class="co"># Create missing value indicator for age</span>
+donors<span class="op">$</span>missing_age &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(donors<span class="op">$</span>age),<span class="dv">1</span>,<span class="dv">0</span>)</code></pre></div>
+<p>Donors that haven given both recently and frequently may be especially likely to give again; in other words, the combined impact of recency and frequency may be greater than the sum of the separate effects. In Marketing terms this is known as the RFM Model (recency, freqeuncy and money).</p>
+<p>Because these predictors together have a greater impact on the dependent variable, their joint effect must be modeled as an interaction.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a recency, frequency, and money (RFM) model</span>
+rfm_model &lt;-<span class="st"> </span><span class="kw">glm</span>(donated <span class="op">~</span><span class="st"> </span>money <span class="op">+</span><span class="st"> </span>recency <span class="op">*</span><span class="st"> </span>frequency, <span class="dt">data =</span> donors, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="co"># Summarize the RFM model to see how the parameters were coded</span>
+<span class="kw">summary</span>(rfm_model)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = donated ~ money + recency * frequency, family = &quot;binomial&quot;, 
+##     data = donors)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.3696  -0.3696  -0.2895  -0.2895   2.7924  
+## 
+## Coefficients:
+##                                   Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                       -3.01142    0.04279 -70.375   &lt;2e-16 ***
+## moneyMEDIUM                        0.36186    0.04300   8.415   &lt;2e-16 ***
+## recencyLAPSED                     -0.86677    0.41434  -2.092   0.0364 *  
+## frequencyINFREQUENT               -0.50148    0.03107 -16.143   &lt;2e-16 ***
+## recencyLAPSED:frequencyINFREQUENT  1.01787    0.51713   1.968   0.0490 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 37330  on 93461  degrees of freedom
+## Residual deviance: 36938  on 93457  degrees of freedom
+## AIC: 36948
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute predicted probabilities for the RFM model</span>
+rfm_prob &lt;-<span class="st"> </span><span class="kw">predict</span>(rfm_model, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+
+<span class="co"># Plot the ROC curve and find AUC for the new model</span>
+<span class="kw">library</span>(pROC)
+ROC &lt;-<span class="st"> </span><span class="kw">roc</span>(donors<span class="op">$</span>donated, rfm_prob)
+<span class="kw">plot</span>(ROC, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">auc</span>(ROC)</code></pre></div>
+<pre><code>## Area under the curve: 0.5785</code></pre>
+</div>
+<div id="automatic-feature-selection" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Automatic feature selection</h3>
+<p>So far we have been selecting which variables to put in our model manually ourselves. We’ve had to logically build our model using some fundraising knowledge, thinking about what variables may influence donations. There is a process to speed this up using automatic feature selection called stepwise feature selection.</p>
+<p>Stepwise feature selection builds a model each variable at a time and sees which predictor adds value to the final model. Backward deletion begins with a model containing all the features, then variables are deleted as long as the removal of a variable does not negatively impact the models overall ability to predict the outcome. At each step, the predictor that impacts the model the least is removed.</p>
+<p>Forward stepwise selection does this in reverse, starting with no predictors, then adding in each predictor by first assessing each predictor to determine which has the greatest ability to predict the outcome at each step and adding that predictor, then re-assessing all remaining predictors.</p>
+<p>The results of a forward and backward stepwise process can result in different results AND neither may be the best possible model. This process coul be accused asbeing akin to p-hacking and violates some of our science principles, namely to generate then test a hypothesis - it is atheortical as there is no theory about how things work. But if the goal is prediction, this might not be such a great concern. But it might be best to consider stepwise regression as a tool to start from.</p>
+<p>To run stepwise, we set our null model, then our full model, then use step to iteratie either forward or backward between these models.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Specify a null model with no predictors</span>
+null_model &lt;-<span class="st"> </span><span class="kw">glm</span>(donated <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> donors, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="co"># Specify the full model using all of the potential predictors</span>
+full_model &lt;-<span class="st"> </span><span class="kw">glm</span>(donated <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> donors, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="co"># Use a forward stepwise algorithm to build a parsimonious model</span>
+step_model &lt;-<span class="st"> </span><span class="kw">step</span>(null_model, <span class="dt">scope =</span> <span class="kw">list</span>(<span class="dt">lower =</span> null_model, <span class="dt">upper =</span> full_model), <span class="dt">direction =</span> <span class="st">&quot;forward&quot;</span>)</code></pre></div>
+<pre><code>## Start:  AIC=37332.13
+## donated ~ 1</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## + frequency          1    28502 37122
+## + money              1    28621 37241
+## + has_children       1    28705 37326
+## + age                1    28707 37328
+## + imputed_age        1    28707 37328
+## + wealth_rating      3    28704 37328
+## + interest_veterans  1    28709 37330
+## + donation_prob      1    28710 37330
+## + donation_pred      1    28710 37330
+## + catalog_shopper    1    28710 37330
+## + pet_owner          1    28711 37331
+## &lt;none&gt;                    28714 37332
+## + interest_religion  1    28712 37333
+## + recency            1    28713 37333
+## + bad_address        1    28714 37334
+## + veteran            1    28714 37334
+## 
+## Step:  AIC=37024.77
+## donated ~ frequency</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## + money              1    28441 36966
+## + wealth_rating      3    28490 37019
+## + has_children       1    28494 37019
+## + donation_prob      1    28498 37023
+## + interest_veterans  1    28498 37023
+## + catalog_shopper    1    28499 37024
+## + donation_pred      1    28499 37024
+## + age                1    28499 37024
+## + imputed_age        1    28499 37024
+## + pet_owner          1    28499 37024
+## &lt;none&gt;                    28502 37025
+## + interest_religion  1    28501 37026
+## + recency            1    28501 37026
+## + bad_address        1    28502 37026
+## + veteran            1    28502 37027
+## 
+## Step:  AIC=36949.71
+## donated ~ frequency + money</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## + wealth_rating      3    28427 36942
+## + has_children       1    28432 36943
+## + interest_veterans  1    28438 36948
+## + donation_prob      1    28438 36949
+## + catalog_shopper    1    28438 36949
+## + donation_pred      1    28439 36949
+## + age                1    28439 36949
+## + imputed_age        1    28439 36949
+## + pet_owner          1    28439 36949
+## &lt;none&gt;                    28441 36950
+## + interest_religion  1    28440 36951
+## + recency            1    28441 36951
+## + bad_address        1    28441 36951
+## + veteran            1    28441 36952
+## 
+## Step:  AIC=36945.48
+## donated ~ frequency + money + wealth_rating</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## + has_children       1    28416 36937
+## + age                1    28424 36944
+## + imputed_age        1    28424 36944
+## + interest_veterans  1    28424 36945
+## + donation_prob      1    28424 36945
+## + catalog_shopper    1    28425 36945
+## + donation_pred      1    28425 36945
+## &lt;none&gt;                    28427 36945
+## + pet_owner          1    28425 36946
+## + interest_religion  1    28426 36947
+## + recency            1    28427 36947
+## + bad_address        1    28427 36947
+## + veteran            1    28427 36947
+## 
+## Step:  AIC=36938.4
+## donated ~ frequency + money + wealth_rating + has_children</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## + pet_owner          1    28413 36937
+## + donation_prob      1    28413 36937
+## + catalog_shopper    1    28413 36937
+## + interest_veterans  1    28413 36937
+## + donation_pred      1    28414 36938
+## &lt;none&gt;                    28416 36938
+## + interest_religion  1    28415 36939
+## + age                1    28416 36940
+## + imputed_age        1    28416 36940
+## + recency            1    28416 36940
+## + bad_address        1    28416 36940
+## + veteran            1    28416 36940
+## 
+## Step:  AIC=36932.25
+## donated ~ frequency + money + wealth_rating + has_children + 
+##     pet_owner</code></pre>
+<pre><code>## Warning in add1.glm(fit, scope$add, scale = scale, trace = trace, k = k, :
+## using the 70916/93462 rows from a combined fit</code></pre>
+<pre><code>##                     Df Deviance   AIC
+## &lt;none&gt;                    28413 36932
+## + donation_prob      1    28411 36932
+## + interest_veterans  1    28411 36932
+## + catalog_shopper    1    28412 36933
+## + donation_pred      1    28412 36933
+## + age                1    28412 36933
+## + imputed_age        1    28412 36933
+## + recency            1    28413 36934
+## + interest_religion  1    28413 36934
+## + bad_address        1    28413 36934
+## + veteran            1    28413 36934</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Estimate the stepwise donation probability</span>
+step_prob &lt;-<span class="st"> </span><span class="kw">predict</span>(step_model, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+
+<span class="co"># Plot the ROC of the stepwise model</span>
+<span class="kw">library</span>(pROC)
+ROC &lt;-<span class="st"> </span><span class="kw">roc</span>(donors<span class="op">$</span>donated, step_prob)
+<span class="kw">plot</span>(ROC, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">auc</span>(ROC)</code></pre></div>
+<pre><code>## Area under the curve: 0.5849</code></pre>
+<p>It is perhaps useful when we lack subject matter expertise and wish to try and find the or some of the most important features which help to predict the outcome of interest.</p>
+</div>
+</div>
+<div id="classification-trees" class="section level2">
+<h2><span class="header-section-number">2.4</span> Classification Trees</h2>
+<p>Also known as decisions trees break down data in to a serious of steps or questions (if else) then help to define action. The goal is to model predictors against an outcome of interest. If someone is applying for a loan, we can use past data to determine and build a tree that helps to determine how probable it is that new applicant will repay the debt.</p>
+<div class="figure"><span id="fig:Tree"></span>
+<img src="images/SLinRClassification/Tree.png" alt="Decision Tree" width="674" />
+<p class="caption">
+Figure 2.1: Decision Tree
+</p>
+</div>
+<p>One of those most common R packages is rpart where the part stands for recursive partitioning. There is a good description of how this works in practice in the <a href="https://www.youtube.com/watch?v=6ENTbK3yQUQ">Introduction to Tree Based Methods from ISL</a>.</p>
+<p>The loans dataset contains 11,312 randomly-selected people who were applied for and later received loans from Lending Club, a US-based peer-to-peer lending company.</p>
+<p>You will use a decision tree to try to learn patterns in the outcome of these loans (either repaid or default) based on the requested loan amount and credit score at the time of application.</p>
+<p>First let’s prepare the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Load the loans data and subset to just those randomly selected rows</span>
+loans_full &lt;-<span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;./files/SLinRClassification/loans.csv&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">TRUE</span>)
+loans &lt;-<span class="st"> </span><span class="kw">subset</span>(loans_full, keep <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+<span class="co"># Record default to our variable of interest outcome</span>
+loans<span class="op">$</span>outcome[loans<span class="op">$</span>default<span class="op">==</span><span class="st">&quot;0&quot;</span>] &lt;-<span class="st"> &quot;2&quot;</span>
+loans<span class="op">$</span>outcome[loans<span class="op">$</span>default<span class="op">==</span><span class="st">&quot;1&quot;</span>] &lt;-<span class="st"> &quot;1&quot;</span>
+
+<span class="co"># Convert the column to a factor and provide names for the levels</span>
+loans<span class="op">$</span>outcome &lt;-<span class="st"> </span><span class="kw">factor</span>(loans<span class="op">$</span>outcome)
+<span class="kw">levels</span>(loans<span class="op">$</span>outcome) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;default&quot;</span>, <span class="st">&quot;repaid&quot;</span>)
+
+<span class="co"># Remove the unneccessary columns</span>
+loans &lt;-<span class="st"> </span>loans[<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)]</code></pre></div>
+<p>Next we do the modelling.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the rpart package</span>
+<span class="kw">library</span>(rpart)
+
+<span class="co"># Build a lending model predicting loan outcome versus loan amount and credit score</span>
+loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>loan_amount <span class="op">+</span><span class="st"> </span>credit_score, <span class="dt">data =</span> loans, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">cp =</span> <span class="dv">0</span>))
+
+<span class="co"># Make a prediction for someone with good credit</span>
+<span class="co"># predict(loan_model, good_credit, type = &quot;class&quot;)</span>
+
+<span class="co"># Make a prediction for someone with bad credit</span>
+<span class="co"># predict(loan_model, bad_credit, type = &quot;class&quot;)</span></code></pre></div>
+<p>The structure of classification trees can be depicted visually, which helps to understand how the tree makes its decisions. This might be useful for Transparency reasons.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Examine the loan_model object</span>
+loan_model</code></pre></div>
+<pre><code>## n= 11312 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+##  1) root 11312 5654 repaid (0.4998232 0.5001768)  
+##    2) credit_score=AVERAGE,LOW 9490 4437 default (0.5324552 0.4675448)  
+##      4) credit_score=LOW 1667  631 default (0.6214757 0.3785243) *
+##      5) credit_score=AVERAGE 7823 3806 default (0.5134859 0.4865141)  
+##       10) loan_amount=HIGH 2472 1079 default (0.5635113 0.4364887) *
+##       11) loan_amount=LOW,MEDIUM 5351 2624 repaid (0.4903756 0.5096244)  
+##         22) loan_amount=LOW 1810  874 default (0.5171271 0.4828729) *
+##         23) loan_amount=MEDIUM 3541 1688 repaid (0.4767015 0.5232985) *
+##    3) credit_score=HIGH 1822  601 repaid (0.3298573 0.6701427) *</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the rpart.plot package</span>
+<span class="kw">library</span>(rpart.plot)</code></pre></div>
+<pre><code>## Warning: package &#39;rpart.plot&#39; was built under R version 3.4.4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot the loan_model with default settings</span>
+<span class="kw">rpart.plot</span>(loan_model)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot the loan_model with customized settings</span>
+<span class="kw">rpart.plot</span>(loan_model, <span class="dt">type =</span> <span class="dv">3</span>, <span class="dt">box.palette =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;green&quot;</span>), <span class="dt">fallen.leaves =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-25-2.png" width="672" /></p>
+<p>When choosing between different split options - for instance choosing whether to split on loan amount or credit score - the decision tree will provide a split for both, then look and how homogenous the resulting options are. In the diagram below, even though split B (based on loan amount) produces a very similar group for one partition (14/15 defaulted) it is much more mixed for the other partition (19/32 defaulted). In comparison, split A is more pure, so will be choosen first. It will then proceed to look at the next split which results in the most homogenous/similar partition.</p>
+<div class="figure"><span id="fig:SplitChoice"></span>
+<img src="images/SLinRClassification/SplitChoice.png" alt="Tree Split Choice" width="672" />
+<p class="caption">
+Figure 2.2: Tree Split Choice
+</p>
+</div>
+<p>As the tree begins to grow, it results in smaller and more homogeous partions (below left). An easy option would be to draw a diagonal line (below right) however these requires, in this example, consideration of two different variables, which is not possible with the ‘divide and conquer’ process. A decision tree creates what are called axis parallel splits, which can mean for some patterns in data they can become overly complex.</p>
+<div class="figure">
+<img src="images/SLinRClassification/splits.png" alt="Axis parallel split" width="672" />
+<p class="caption">
+(#fig:Axis Splits)Axis parallel split
+</p>
+</div>
+<p>Decision trees can divide and conquer until it either runs out of features or cases to classify, which can result in large trees which are over-fitted. So we can split out a test set for evaluation - we create a hold out group or set. The sample() function can be used to generate a random sample of rows to include in the training set. Simply supply it the total number of observations and the number needed for training. We use the resulting vector of row IDs to subset the loans into training and testing datasets.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Determine the number of rows for training</span>
+train &lt;-<span class="st"> </span><span class="kw">nrow</span>(loans) <span class="op">*</span><span class="st"> </span>.<span class="dv">75</span>
+
+<span class="co"># Create a random sample of row IDs</span>
+sample_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(loans), train)
+
+<span class="co"># Create the training dataset</span>
+loans_train &lt;-<span class="st"> </span>loans[sample_rows,]
+
+<span class="co"># Create the test dataset</span>
+loans_test &lt;-<span class="st"> </span>loans[<span class="op">-</span>sample_rows,]</code></pre></div>
+<p>So far we have onlt built our model based on a couple of the available variables. Next we can use all of the available applicant data to build a more sophisticated lending model using the random training dataset created previously. Then, we use this model to make predictions on the testing dataset to estimate the performance of the model on future loan applications.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow a tree using all of the available applicant data</span>
+loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">cp =</span> <span class="dv">0</span>))
+
+<span class="co"># Make predictions on the test dataset</span>
+loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+
+<span class="co"># Examine the confusion matrix</span>
+<span class="kw">table</span>(loans_test<span class="op">$</span>pred, loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>##          
+##           default repaid
+##   default     793    647
+##   repaid      625    763</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute the accuracy on the test dataset</span>
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome) </code></pre></div>
+<pre><code>## [1] 0.5502122</code></pre>
+<div id="tending-to-classification-trees" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Tending to classification trees</h3>
+<p>As classification trees can overfit, we may need to prune the trees. One method of achieving this is stopping the growing method early by limiting the tree depth and is known as pre-pruning. e.g. we have a max tree depth of 7 levels or branches. Another option is to set the minimum number of observations that can occur in any one branch, perhaps the tree if stopped if there are few than 10 observations on any one branch. However, trees stopped early may miss some patterns that might have been discovered later.</p>
+<p>An alternative is to post-pruning where a complex, over-fitted tree is built first, then pruned back to reduce the size. After the tree is built we remove nodes or branches that have little impact on the overall accuracy. To do this we can plot the degree of error reduction on the vertical axis against the tree depth (aka complexity) as shown below and look for a ‘dog leg’ or kink in the curve. As the tree grows, each successive branch or node improves the accuracy quite a lot, however later branches or nodes only improve the accuracy by a smaller amount. So we can try and find the point at which the curve flattens.</p>
+<div class="figure">
+<img src="images/SLinRClassification/kinky.png" alt="Dog Leg" width="194" />
+<p class="caption">
+(#fig:Dog Leg)Dog Leg
+</p>
+</div>
+<p>The rpart packages provides this chart and options for pre and post pruning. The pre-pruning is done using the rpart.control function which is then passed to the model as the control. For post pruning, we create the model then use the plotcp(model) to identify the error rate to tree depth trade off, then use the prune(model, cp = n) function to prune the tree, when cp is the complexity parameter.</p>
+<p>In the example below, we apply pre-pruning to our applicant data, first by setting the max tree depth to 6, then by setting the min. number of observations at a node to 500.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow a tree with maxdepth of 6</span>
+loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">maxdepth =</span> <span class="dv">6</span>, <span class="dt">cp =</span> <span class="dv">0</span>))
+
+<span class="co"># Compute the accuracy of the simpler tree</span>
+loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.5876945</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow a tree with minsplit of 500</span>
+loan_model2 &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">minsplit =</span> <span class="dv">500</span>, <span class="dt">cp =</span> <span class="dv">0</span>))
+
+<span class="co"># Compute the accuracy of the simpler tree</span>
+loans_test<span class="op">$</span>pred2 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model2, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred2 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.5986563</code></pre>
+<p>In both these cases, we see the mean accuracy on the test data, despite fitting a simpler tree, is actually higher than the unpruned tree.</p>
+<p>Next we use post-pruning and see that this too improves the predictive accuracy on the test data, despite being a simpler tree.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow an overly complex tree</span>
+loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">cp =</span> <span class="dv">0</span>))
+
+<span class="co"># Compute the accuracy of the unpruned tree</span>
+loans_test<span class="op">$</span>pred1 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred1 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.5502122</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Examine the complexity plot</span>
+<span class="kw">plotcp</span>(loan_model)</code></pre></div>
+<p><img src="SLinRClassification_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Prune the tree</span>
+loan_model_pruned &lt;-<span class="st"> </span><span class="kw">prune</span>(loan_model, <span class="dt">cp =</span> <span class="fl">0.0014</span>)
+
+<span class="co"># Compute the accuracy of the pruned tree</span>
+loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_pruned, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.5993635</code></pre>
+<p>A number of classification trees can be combined together to create a forest of classification trees. Each of the trees is diverse but simple and by combining them together we can help to udnerstand the complexity in the underlying data. But growing different trees requires differing conditions for each tree, otherwise growing 100 trees on the same data would result in 100 identical trees. To do this, we allocate each tree a random subset of data, we do this using the random forest approach. So each tree is give a small random sample which grows a simple tree, and is then combine. This can seem counter intuitive, since we might think havign a single complex tree is more accurate. A bit like an effective team, it is better to have specialised skills. Combining multiple learners together is known as ensemble models, where each tree or model is given a vote on a particular observation. The teamwork-based approach of the random forest may help it find important trends a single tree may miss.</p>
+<p>We use the randomForest package in R and specify the ntree parameter for the size of the forest and mtry is the number of features selected at random for each tree. We can typically use the default number of features which is sqrt(p) where p is the total number of parameters.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the randomForest package</span>
+<span class="kw">library</span>(randomForest)</code></pre></div>
+<pre><code>## randomForest 4.6-12</code></pre>
+<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Build a random forest model, first with default values and second with 500 trees and each tree with sqrt(p) less the outcome var</span>
+loan_model_rf &lt;-<span class="st"> </span><span class="kw">randomForest</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train)
+loan_model_rf2 &lt;-<span class="st"> </span><span class="kw">randomForest</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans, <span class="dt">ntree =</span> <span class="dv">500</span>, <span class="dt">mtry =</span> <span class="kw">round</span>(<span class="kw">sqrt</span>(<span class="kw">ncol</span>(loans)<span class="op">-</span><span class="dv">1</span>)))
+
+<span class="co"># Compute the accuracy of the random forest</span>
+loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_rf, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+loans_test<span class="op">$</span>pred2 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_rf2, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+<span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.580976</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(loans_test<span class="op">$</span>pred2 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
+<pre><code>## [1] 0.9031117</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="querying-data-with-transact-sql.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["BI-Notes.pdf", "BI-Notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

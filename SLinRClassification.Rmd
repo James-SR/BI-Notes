@@ -1,4 +1,4 @@
-# Querying Data with Transact-SQL
+# Supervised Learning In R Classification
 ***
 Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Classification' by Brett Lantz.
 

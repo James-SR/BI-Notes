@@ -1,4 +1,4 @@
-# Querying Data with Transact-SQL
+# Supervised Learning In R Classification
 ***
 Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Classification' by Brett Lantz.
 
@@ -1095,8 +1095,8 @@ table(loans_test$pred, loans_test$outcome)
 ```
 ##          
 ##           default repaid
-##   default     795    624
-##   repaid      653    756
+##   default     788    614
+##   repaid      621    805
 ```
 
 ```r
@@ -1105,7 +1105,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5484441
+## [1] 0.5632956
 ```
 
 ### Tending to classification trees
@@ -1134,7 +1134,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5852192
+## [1] 0.5933522
 ```
 
 ```r
@@ -1147,7 +1147,7 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5937058
+## [1] 0.6011315
 ```
 
 In both these cases, we see the mean accuracy on the test data, despite fitting a simpler tree, is actually higher than the unpruned tree.
@@ -1165,7 +1165,7 @@ mean(loans_test$pred1 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5484441
+## [1] 0.5632956
 ```
 
 ```r
@@ -1185,7 +1185,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.596181
+## [1] 0.6067893
 ```
 
 A number of classification trees can be combined together to create a forest of classification trees.  Each of the trees is diverse but simple and by combining them together we can help to udnerstand the complexity in the underlying data.  But growing different trees requires differing conditions for each tree, otherwise growing 100 trees on the same data would result in 100 identical trees.  To do this, we allocate each tree a random subset of data, we do this using the random forest approach.  So each tree is give a small random sample which grows a simple tree, and is then combine.  This can seem counter intuitive, since we might think havign a single complex tree is more accurate.  A bit like an effective team, it is better to have specialised skills.  Combining multiple learners together is known as ensemble models, where each tree or model is given a vote on a particular observation.  The teamwork-based approach of the random forest may help it find important trends a single tree may miss.
@@ -1218,7 +1218,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5901697
+## [1] 0.6028996
 ```
 
 ```r
@@ -1226,6 +1226,6 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.9009901
+## [1] 0.9080622
 ```
 
