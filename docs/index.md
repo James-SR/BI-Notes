@@ -1,7 +1,7 @@
 --- 
 title: "BI Notes"
 author: "James Solomon-Rounce"
-date: "2018-03-16"
+date: "2018-03-23"
 site: bookdown::bookdown_site 
 documentclass: book
 bibliography: [book.bib]

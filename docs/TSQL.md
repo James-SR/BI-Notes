@@ -4511,7 +4511,7 @@ SELECT * FROM dbo.ErrorLog;
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-150)5 records
+Table: (\#tab:unnamed-chunk-150)Displaying records 1 - 10
 
 ErrorLogID   ErrorTime             UserName    ErrorNumber   ErrorSeverity   ErrorState  ErrorProcedure    ErrorLine  ErrorMessage                      
 -----------  --------------------  ---------  ------------  --------------  -----------  ---------------  ----------  ----------------------------------
@@ -4520,6 +4520,11 @@ ErrorLogID   ErrorTime             UserName    ErrorNumber   ErrorSeverity   Err
 3            2018-03-16 13:27:24   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
 4            2018-03-16 13:27:33   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
 5            2018-03-16 13:27:50   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+6            2018-03-23 04:03:28   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+7            2018-03-23 04:08:49   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+8            2018-03-23 04:20:56   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+9            2018-03-23 04:21:37   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
+10           2018-03-23 04:22:19   dbo                8134              16            1  NA                        2  Divide by zero error encountered. 
 
 </div>
 
