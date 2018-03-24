@@ -8,6 +8,83 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 
 
 **_Other useful links_**
+
 * []()
 
 ## What is Regression?
+
+In this course we are interested in predicting numerical outcomes (rather than discreet) from a set of input variables.  Classification on the other hand is the task of making discreet predictions.  WE can break down the modelling process in to two camps:
+
+* Scientific mindset - we try to understand causal mechanisms 
+* Engineering mindset - we try to accuratley predict
+
+Machine Learning is more in line with the Engineering mindset.
+
+In the first task, the goal is to predict the rate of female unemployment from the observed rate of male unemployment. The outcome is female_unemployment, and the input is male_unemployment.
+
+```{r}
+# Loand the unemployment data
+unemployment <- readRDS("./files/SLinRRegression/unemployment.rds")
+
+# unemployment is loaded in the workspace
+summary(unemployment)
+
+# Define a formula to express female_unemployment as a function of male_unemployment
+fmla <- as.formula("female_unemployment ~ male_unemployment")
+
+# Print it
+fmla
+
+# Use the formula to fit a model: unemployment_model
+unemployment_model <- lm(formula = fmla, data = unemployment)
+
+# Print it
+unemployment_model
+```
+
+We can see the relationship is positive - female unemployment increases as male unemployment does.  We can then use some diagnostics on the model.  There are different ways and packages to achieve this.
+
+```{r}
+# broom and sigr are already loaded in your workspace
+# Print unemployment_model
+unemployment_model
+
+# Call summary() on unemployment_model to get more details
+summary(unemployment_model)
+
+# Call glance() on unemployment_model to see the details in a tidier form
+broom::glance(unemployment_model)
+
+# Call wrapFTest() on unemployment_model to see the most relevant details
+sigr::wrapFTest(unemployment_model)
+```
+
+In the next section we use the unemployment model unemployment_model to make predictions from the unemployment data, and compare predicted female unemployment rates to the actual observed female unemployment rates on the training data, unemployment. You will also use your model to predict on the new data in newrates.
+
+```{r}
+newrates <- data.frame(male_unemployment = 5)
+
+# Predict female unemployment in the unemployment data set
+unemployment$prediction <-  predict(unemployment_model, unemployment)
+
+# load the ggplot2 package
+library(ggplot2)
+
+# Make a plot to compare predictions to actual (prediction on x axis). 
+ggplot(unemployment, aes(x = prediction, y = female_unemployment)) + 
+  geom_point() +
+  geom_abline(color = "blue")
+
+# Predict female unemployment rate when male unemployment is 5%
+pred <- predict(unemployment_model, newrates)
+# Print it
+pred
+```
+
+Next we will look at a model of blood pressure as a function of age and weight.
+
+```{r}
+# Load the blood data
+bloodpressure <- readRDS("./files/SLinRRegression/bloodpressure.rds")
+```
+

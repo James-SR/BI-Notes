@@ -10,6 +10,7 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 * [Part 4 - Classification Trees](./files/SLinRClassification/chapter3.pdf)
 
 **_Other useful links_**
+
 * [Introduction to Tree Based Methods from ISL](https://www.youtube.com/watch?v=6ENTbK3yQUQ)
 
 ## k-Nearest Neighbors (kNN)
