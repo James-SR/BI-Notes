@@ -86,5 +86,41 @@ Next we will look at a model of blood pressure as a function of age and weight.
 ```{r}
 # Load the blood data
 bloodpressure <- readRDS("./files/SLinRRegression/bloodpressure.rds")
+
+# bloodpressure is in the workspace
+summary(bloodpressure)
+
+# Create the formula and print it
+fmla <- as.formula("blood_pressure ~ age + weight")
+fmla
+
+# Fit the model: bloodpressure_model
+bloodpressure_model <- lm(fmla, bloodpressure)
+
+# Print bloodpressure_model and call summary() 
+bloodpressure_model
+summary(bloodpressure_model)
 ```
+
+Both variables are positive suggesting that increases in them also lead to increases in blood pressure.
+
+Next we can use the model to make preditions.
+
+```{r}
+# predict blood pressure using bloodpressure_model :prediction
+bloodpressure$prediction <- predict(bloodpressure_model, bloodpressure)
+
+# plot the results
+ggplot(bloodpressure, aes(x = prediction, y = blood_pressure)) + 
+    geom_point() +
+    geom_abline(color = "blue")
+```
+
+** Key Points **
+
+* Linear models are easy to fit and can be less prone to overfitting.  
+* They are also generally easier to understand
+* However they cannot express complex relationships in the data
+* In addition we can get collinearity with some variables e.g. weight increases with age
+
 
