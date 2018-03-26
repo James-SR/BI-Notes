@@ -5,6 +5,7 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 **_Course Handouts_**
 
 * [Part 1 - What is Regression?](./files/SLinRRegression/chapter1.pdf)
+* [Part 2 - Training and Evaluating Regression Models] (./files/SLinRRegression/chapter2.pdf)
 
 
 **_Other useful links_**
@@ -45,7 +46,6 @@ unemployment_model
 We can see the relationship is positive - female unemployment increases as male unemployment does.  We can then use some diagnostics on the model.  There are different ways and packages to achieve this.
 
 ```{r}
-# broom and sigr are already loaded in your workspace
 # Print unemployment_model
 unemployment_model
 
@@ -123,4 +123,112 @@ ggplot(bloodpressure, aes(x = prediction, y = blood_pressure)) +
 * However they cannot express complex relationships in the data
 * In addition we can get collinearity with some variables e.g. weight increases with age
 
+## Training and Evaluating Regression Models
 
+A model with a good fit will have its points close to the line.  Models which don't fit well will have points which systemtically don't fit welland are all over the place. This may mean you are missing variables in your model.  A residual plot can help understand if there are any systematic errors, we are typically looking for a random cloud of residuals rather than anything which may resemble a trend.  We can also use a Gain Curve Plot
+
+```{r}
+summary(unemployment)
+
+# Make predictions from the model
+unemployment$predictions <- predict(unemployment_model, unemployment)
+
+# Plot predictions (on x-axis) versus the female_unemployment rates
+ggplot(unemployment, aes(x = predictions, y = female_unemployment)) + 
+  geom_point() + 
+  geom_abline()
+
+# Calculate residuals
+unemployment$residuals <- unemployment$female_unemployment - unemployment$predictions
+
+# Predictions (on x-axis) versus the actuals with residuals
+ggplot(unemployment, aes(x = predictions, y = female_unemployment)) + geom_point() +
+  geom_pointrange(aes(ymin = 0, ymax = residuals)) + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  ggtitle("actuals vs. linear model prediction with residual")
+
+# Fill in the blanks to plot predictions (on x-axis) versus the residuals
+ggplot(unemployment, aes(x = predictions, y = residuals)) + 
+  geom_pointrange(aes(ymin = 0, ymax = residuals)) + 
+  geom_hline(yintercept = 0, linetype = 3) + 
+  ggtitle("residuals vs. linear model prediction")
+```
+
+We can also plot a gain curve using the WVPlots package.  The syntax is:
+
+> GainCurvePlot(frame, xvar, truthvar, title)
+
+where
+
+* frame is a data frame
+* xvar and truthvar are strings naming the prediction and actual outcome columns of frame
+* title is the title of the plot
+
+```{r}
+library(WVPlots)
+
+# Plot the Gain Curve
+GainCurvePlot(unemployment, "predictions", "female_unemployment", "Unemployment model")
+```
+
+A relative gini coefficient close to one shows that the model correctly sorts high unemployment situations from lower ones.
+
+Another way to evaluate our model is to use the RMSE. You want RMSE to be small. One heuristic is to compare the RMSE to the standard deviation of the outcome. With a good model, the RMSE should be smaller.
+
+```{r}
+# For convenience put the residuals in the variable res
+res <- unemployment$residuals
+
+# Calculate RMSE, assign it to the variable rmse and print it
+(rmse <- sqrt(mean(res^2)))
+
+# Calculate the standard deviation of female_unemployment and print it
+(sd_unemployment <- sd(unemployment$female_unemployment))
+
+# Calculate it as a fraction < 1 is good
+rmse / sd_unemployment
+
+```
+
+An RMSE much smaller than the outcome's standard deviation suggests a model that predicts well.
+
+Another way of evaluating a model is R squared. We can calculate this as the 1 - RSS / TSS RSS = Residual Sum of Squares TSS is Total Sum of Squares.
+
+```{r R2, echo = FALSE, fig.cap='R Squared'}
+knitr::include_graphics("images/SLinRRegression/R2.png")
+```
+
+Most packages or regression functions come with built in R squared metrics, the summary will print it out or we can use the glance() function from broom.  Here we calculate them manually.
+
+```{r}
+# Calculate mean female_unemployment: fe_mean. Print it
+(fe_mean <- mean(unemployment$female_unemployment))
+
+# Calculate total sum of squares: tss. Print it
+(tss <- sum((unemployment$female_unemployment - fe_mean)^2))
+
+# Calculate residual sum of squares: rss. Print it
+(rss <- sum((unemployment$residuals)^2))
+
+# Calculate R-squared: rsq. Print it. Is it a good fit?
+(rsq <- 1 - (rss/tss))
+
+# Get R-squared from glance. Print it
+(rsq_glance <- broom::glance(unemployment_model)$r.squared)
+```
+
+Correlation or rho shows the strength of the linear relationship between two variables.
+
+```{r}
+# Get the correlation between the prediction and true outcome: rho and print it
+(rho <- cor(unemployment$predictions, unemployment$female_unemployment))
+rho
+
+# Square rho: rho2 and print it
+(rho2 <- rho ^ 2)
+
+# Get R-squared from glance and print it
+(rsq_glance <- broom::glance(unemployment_model)$r.squared)
+```
+
+So far we have only looked at how well our data fits the observed variables, without new data.  A better way of evaluating our model is to split out data in to a training and test set of data, then see how well the model predicts to the test data, having built the model on the train data.  WE want our RMSE on the test data to be similar to the RMSE on the train data, if it is much lower than we may have overfitted our model.  If the number of observations is too small to do a split, we can use cross validation to acheive a similar result. 
