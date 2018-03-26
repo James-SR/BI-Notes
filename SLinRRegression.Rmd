@@ -24,7 +24,7 @@ Machine Learning is more in line with the Engineering mindset.
 In the first task, the goal is to predict the rate of female unemployment from the observed rate of male unemployment. The outcome is female_unemployment, and the input is male_unemployment.
 
 ```{r}
-# Loand the unemployment data
+# Load the unemployment data
 unemployment <- readRDS("./files/SLinRRegression/unemployment.rds")
 
 # unemployment is loaded in the workspace
@@ -232,3 +232,88 @@ rho
 ```
 
 So far we have only looked at how well our data fits the observed variables, without new data.  A better way of evaluating our model is to split out data in to a training and test set of data, then see how well the model predicts to the test data, having built the model on the train data.  WE want our RMSE on the test data to be similar to the RMSE on the train data, if it is much lower than we may have overfitted our model.  If the number of observations is too small to do a split, we can use cross validation to acheive a similar result. 
+
+In the following code we will split mpg into a training set mpg_train (75% of the data) and a test set mpg_test (25% of the data). One way to do this is to generate a column of uniform random numbers between 0 and 1, using the function runif().  There other ways, such as sample (see Supervised LEarning In R - Classification notes, do search for 0.75).  
+
+If using run if, we do:
+
+* Generate a vector of uniform random numbers: gp = runif(N).
+* dframe[gp < X,] will be about the right size.
+* dframe[gp >= X,] will be the complement.
+
+```{r}
+# Load the mpg data
+mpg <- ggplot2::mpg
+
+# take a look at the data
+summary(mpg)
+dim(mpg)
+
+# Use nrow to get the number of rows in mpg (N) and print it
+(N <- nrow(mpg))
+N
+
+# Calculate how many rows 75% of N should be and print it
+# Hint: use round() to get an integer
+(target <- round(N * 0.75))
+target
+
+# Create the vector of N uniform random variables: gp
+gp <- runif(N)
+
+# Use gp to create the training set: mpg_train (75% of data) and mpg_test (25% of data)
+mpg_train <- mpg[gp < 0.75, ]
+mpg_test <- mpg[gp >= 0.75, ]
+
+# Use nrow() to examine mpg_train and mpg_test
+nrow(mpg_train)
+nrow(mpg_test)
+
+```
+
+It is likely our target number of rows will slightly different than what is sampled, but they should be close enough.
+
+Next we use these datasets to create models for prediction.
+
+```{r}
+# mpg_train is in the workspace
+summary(mpg_train)
+
+# Create a formula to express cty as a function of hwy: fmla and print it.
+(fmla <- as.formula("cty ~ hwy"))
+
+# Now use lm() to build a model mpg_model from mpg_train that predicts cty from hwy 
+mpg_model <- lm(fmla, data = mpg_train)
+
+# Use summary() to examine the model
+summary(mpg_model)
+```
+
+Next we will test the model mpg_model on the test data, mpg_test.  We will use two functions rather than calculate the rmse and r_squared manually:
+
+* Metrics::rmse(predcol, ycol)
+* tsensembler::r_squared(r_squared(y, y_hat)
+
+```{r}
+
+# predict cty from hwy for the training set
+mpg_train$pred <- predict(mpg_model, mpg_train)
+
+# predict cty from hwy for the test set
+mpg_test$pred <- predict(mpg_model, mpg_test)
+
+# Evaluate the rmse on both training and test data and print them
+(rmse_train <- Metrics::rmse(mpg_train$pred, mpg_train$cty))
+(rmse_test <-  Metrics::rmse(mpg_test$pred, mpg_test$cty))
+
+
+# Evaluate the r-squared on both training and test data.and print them
+(rsq_train <- tsensembler::r_squared(mpg_train$pred, mpg_train$cty))
+(rsq_test <- tsensembler::r_squared(mpg_test$pred, mpg_test$cty))
+
+# Plot the predictions (on the x-axis) against the outcome (cty) on the test data
+ggplot(mpg_test, aes(x = pred, y = cty)) + 
+  geom_point() + 
+  geom_abline()
+```
+
