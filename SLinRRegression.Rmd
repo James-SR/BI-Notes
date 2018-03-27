@@ -5,12 +5,12 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 **_Course Handouts_**
 
 * [Part 1 - What is Regression?](./files/SLinRRegression/chapter1.pdf)
-* [Part 2 - Training and Evaluating Regression Models] (./files/SLinRRegression/chapter2.pdf)
-
+* [Part 2 - Training and Evaluating Regression Models] (./files/SLinRRegression/chapter2.pdf) 
+* [Part 3 - Issues to Consider] (./files/SLinRRegression/chapter3.pdf) 
 
 **_Other useful links_**
 
-* []()
+* [The Basics of Encoding Categorical Data for Predictive Models](http://appliedpredictivemodeling.com/blog/2013/10/23/the-basics-of-encoding-categorical-data-for-predictive-models)
 
 ## What is Regression?
 
@@ -317,3 +317,115 @@ ggplot(mpg_test, aes(x = pred, y = cty)) +
   geom_abline()
 ```
 
+There are a number of ways to create cross fold validation - the caret package being one of the most flexible.  Here we use the vtreat package and KWayCrossValidation().  We first create our CV plan.
+
+```{r}
+# Load the package vtreat
+library(vtreat)
+
+# Get the number of rows in mpg
+nRows <- nrow(mpg)
+
+# Implement the 5-fold cross-fold plan with vtreat
+splitPlan <- kWayCrossValidation(nRows = nRows, nSplits = 5, dframe = NULL, y = NULL)
+
+# Examine the split plan
+str(splitPlan)
+```
+
+Next we iterate through our training plan, creating a new model for each split or fold.
+
+```{r}
+# mpg is in the workspace
+summary(mpg)
+
+# splitPlan is in the workspace
+str(splitPlan)
+
+# Run the 5-fold cross validation plan from splitPlan
+k <- 5 # Number of folds
+mpg$pred.cv <- 0 
+for(i in 1:k) {
+  split <- splitPlan[[i]]
+  model <- lm(cty ~ hwy, data = mpg[split$train,])
+  mpg$pred.cv[split$app] <- predict(model, newdata = mpg[split$app,])
+}
+
+# Predict from a full model
+mpg$pred <- predict(lm(cty ~ hwy, data = mpg))
+
+# Get the rmse of the full model's predictions
+Metrics::rmse(mpg$pred, mpg$cty)
+
+# Get the rmse of the cross-validation predictions
+Metrics::rmse(mpg$pred.cv, mpg$cty)
+```
+
+This has now calculated the models out of sample error using cross validation.  CV validates the modelling process, not whether the model is a good one or not.  Here we we the full model RMSE is very similar to the CV RMSE suggesting we are not over fitting the data. 
+
+## Issues to Consider
+
+When using categorical variables, n - 1 variables are created and coded as dummy vars (0 or 1), one one variable is left out as the reference model.  This is usually referred to as dummy variable creation or one hot encoding.  So our model then compares how the presence of one variable (one categorical var or response) affects the outcome, ceteris parabus, against the baseline cateogrical variable or response. This is best done where the number of variables is quite small, to avoid overfitting.
+
+Some functions/models do this one hot or dummy variable creation automatically 'under the hood' whereas others need more pre-procesing prior to modelling. For some approaches (tree models) we can leave them as nominal e.g. 1,2 and 3.  BUT this won't work where the data/calculations are geometric, such as linear regression (geometric), PCA and some clustering methods (eigen space calculations).  More information is available in [The Basics of Encoding Categorical Data for Predictive Models](http://appliedpredictivemodeling.com/blog/2013/10/23/the-basics-of-encoding-categorical-data-for-predictive-models)
+
+```{r}
+# Load the data from Sleuth and modify for the purposes of demostration
+library(Sleuth3)
+flowers <- print(case0901)
+flowers$Time[flowers$Time==1] <- "Late"
+flowers$Time[flowers$Time==2] <- "Early"
+
+# Call str on flowers to see the types of each column
+str(flowers)
+
+# Use unique() to see how many possible values Time takes
+unique(flowers$Time)
+
+# Build a formula to express Flowers as a function of Intensity and Time: fmla. Print it
+(fmla <- as.formula("Flowers ~ Intensity + Time"))
+
+# Use fmla and model.matrix to see how the data is represented for modeling
+mmat <- model.matrix(fmla, flowers)
+
+# Examine the first 20 lines of flowers
+head(flowers, n = 20)
+
+# Examine the first 20 lines of mmat
+head(mmat, n = 20)
+```
+
+Next we will fit a linear model to the flowers data, to predict Flowers as a function of Time and Intensity.
+
+```{r}
+# flowers in is the workspace
+str(flowers)
+
+# fmla is in the workspace
+fmla
+
+# Fit a model to predict Flowers from Intensity and Time : flower_model
+flower_model <- lm(fmla, data = flowers)
+
+# Use summary on mmat to remind yourself of its structure
+summary(mmat)
+
+# Use summary to examine flower_model 
+summary(flower_model)
+
+# Predict the number of flowers on each plant
+flowers$predictions <- predict(flower_model, data = flowers)
+
+# Plot predictions vs actual flowers (predictions on x-axis)
+ggplot(flowers, aes(x = predictions, y = Flowers)) + 
+  geom_point() +
+  geom_abline(color = "blue") 
+```
+
+### Interactions
+
+In linear models we assume that the variables affect the model linearly and additively.  But sometimes this is not the case - with interactions variables, wehn combinded together, can be more than the sum of their parts. If for instance, the effect one one variable is dependent on the level of some other variable, we say their is an interaction.  The simultaneous effect on the outcome variable is no longer additive.  If we want to model this in R we have different options
+
+* Interaction - Colon(:) e.g. y ~ a:b
+* Main effects and interaction - Asterisk(*) e.g. y ~ a * b which is the same as y ~ a + b + a:b
+* The product of two variables - I function (I) e.g. y ~ I(a*b)
