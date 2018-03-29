@@ -496,3 +496,76 @@ Sometimes better models are achieved by transforming the output rather than pred
 3. pred <- exp(logpred)  
 
 As the error is relative to the size of the outcome, we should use the root mean squared relative error to compare two models with one not being log transformed and one being log transformed.  We do this by dividing the mean error / variable in quetion (log or non-log).
+
+The next code section uses some toy data to demostrate how we make calculations for relative error.
+
+```{r}
+# Load the demostration data
+fdata <- read.csv("./files/SLinRRegression/fdata.csv")
+str(fdata)
+
+library(dplyr)
+
+# fdata is in the workspace
+summary(fdata)
+
+# Examine the data: generate the summaries for the groups large and small:
+fdata %>% 
+    group_by(label) %>%     # group by small/large purchases
+    summarize(min  = min(y),   # min of y
+              mean = mean(y),   # mean of y
+              max  = max(y))   # max of y
+
+# Fill in the blanks to add error columns
+fdata2 <- fdata %>% 
+         group_by(label) %>%       # group by label
+           mutate(residual = pred - y,  # Residual
+                  relerr   = residual / y)  # Relative error
+
+# Compare the rmse and rmse.rel of the large and small groups:
+fdata2 %>% 
+  group_by(label) %>% 
+  summarize(rmse     = sqrt(mean(residual^2)),   # RMSE
+            rmse.rel = sqrt(mean(relerr^2)))   # Root mean squared relative error
+            
+# Plot the predictions for both groups of purchases
+ggplot(fdata2, aes(x = pred, y = y, color = label)) + 
+  geom_point() + 
+  geom_abline() + 
+  facet_wrap(~ label, ncol = 1, scales = "free") + 
+  ggtitle("Outcome vs prediction")
+```
+
+From this example how a model with larger RMSE might still be better as can be observed using the chart, if relative errors are more important than absolute errors as the relative error is much smaller for large purchases using the table.
+
+The follwoing code uses data loaded which records subjects' incomes in 2005, as well as the results of several aptitude tests taken by the subjects in 1981. The data is split into training and test sets. The code demostrates building a model of log(income) from the inputs, and then convert log(income) back into income.
+
+When you transform the output before modeling, you have to 'reverse transform' the resulting predictions after applying the model.
+
+```{r}
+# Load the unemployment data
+load("./files/SLinRRegression/Income.RData")
+
+# Examine Income2005 in the training set
+summary(incometrain$Income2005)
+
+# Write the formula for log income as a function of the tests and print it
+(fmla.log <- as.formula("log(Income2005) ~  Arith + Word + Parag + Math + AFQT"))
+
+# Fit the linear model
+model.log <-  lm(fmla.log, data = incometrain)
+
+# Make predictions on income_test
+incometest$logpred <- predict(model.log, incometest)
+summary(incometest$logpred)
+
+# Convert the predictions to monetary units
+incometest$pred.income <- exp(incometest$logpred)
+summary(incometest$pred.income)
+
+#  Plot predicted income (x axis) vs income
+ggplot(incometest, aes(x = pred.income, y = Income2005)) + 
+  geom_point() + 
+  geom_abline(color = "blue")
+```
+
