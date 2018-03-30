@@ -540,7 +540,7 @@ From this example how a model with larger RMSE might still be better as can be o
 
 The follwoing code uses data loaded which records subjects' incomes in 2005, as well as the results of several aptitude tests taken by the subjects in 1981. The data is split into training and test sets. The code demostrates building a model of log(income) from the inputs, and then convert log(income) back into income.
 
-When you transform the output before modeling, you have to 'reverse transform' the resulting predictions after applying the model.
+When you transform the output before modeling, you have to 'reverse transform' the resulting predictions after applying the model.  
 
 ```{r}
 # Load the unemployment data
@@ -569,3 +569,110 @@ ggplot(incometest, aes(x = pred.income, y = Income2005)) +
   geom_abline(color = "blue")
 ```
 
+Next we show that log-transforming a monetary output before modeling improves mean relative error (but increases RMSE) compared to modeling the monetary output directly. We compare two models, the log transmormed model from before to an absolute (i.e. not transformed) model called model.abs.  
+
+```{r}
+library(tidyr) # for gather commands
+
+# Write our model formula
+(fmla.abs <- as.formula("Income2005 ~ Arith + Word + Parag + Math + AFQT"))
+
+# Built the model
+model.abs <- lm(formula = fmla.abs, data = incometrain)
+
+# Add predictions to the test set
+income_test <- incometest %>%
+  mutate(pred.absmodel = predict(model.abs, incometest),        # predictions from model.abs
+         pred.logmodel = exp(predict(model.log, incometest)))   # predictions from model.log
+
+# Gather the predictions and calculate residuals and relative error
+income_long <- incometest %>% 
+  gather(key = modeltype, value = pred, pred.absmodel, pred.logmodel) %>%
+  mutate(residual = pred - Income2005,   # residuals
+         relerr   = residual / Income2005)   # relative error
+
+# Calculate RMSE and relative RMSE and compare
+income_long %>% 
+  group_by(modeltype) %>%      # group by modeltype
+  summarize(rmse     = sqrt(mean(residual^2)),    # RMSE
+            rmse.rel = sqrt(mean(relerr^2)))    # Root mean squared relative error
+```
+
+Modeling log(income) can reduce the relative error of the fit, at the cost of increased RMSE. Which tradeoff to make depends on the goals of the project.
+
+### Transforming Input variables
+
+So far we've looked at transforming the output variables, but there are instance where we might want to transform the input variables.  Usually, this is because you have some domain knowledge about the subject which suggests this is the case.  You often want to transform monetary values as we say before.  We might also want to create power relationships in our variables.  If we do this and we don't know which power is best, based on domain knowledge, we might try various powers then see which yields the lowest prediction error and out of sample/CV error.
+
+In the next section of code we will build a model to predict price from a measure of the house's size (surface area). 
+
+Because ^ is also a symbol to express interactions, we use the function I() to treat the expression x^2 “as is”: that is, as the square of x rather than the interaction of x with itself.
+
+```{r}
+# Load the house price data
+houseprice <- readRDS("./files/SLinRRegression/houseprice.rds")
+
+# explore the data
+summary(houseprice)
+
+# Create the formula for price as a function of squared size
+(fmla_sqr <- as.formula("price ~ I(size^2)"))
+
+# Fit a model of price as a function of squared size (use fmla_sqr)
+model_sqr <- lm(fmla_sqr, data = houseprice)
+
+# Fit a model of price as a linear function of size
+model_lin <- lm(price ~ size, data = houseprice)
+
+# Make predictions and compare
+houseprice %>% 
+    mutate(pred_lin = predict(model_lin),       # predictions from linear model
+           pred_sqr = predict(model_sqr)) %>%   # predictions from quadratic model 
+    gather(key = modeltype, value = pred, pred_lin, pred_sqr) %>% # gather the predictions
+    ggplot(aes(x = size)) + 
+       geom_point(aes(y = price)) +                   # actual prices
+       geom_line(aes(y = pred, color = modeltype)) + # the predictions
+       scale_color_brewer(palette = "Dark2")
+```
+
+As it appears that the quadratic model better fits the house price data, we will next confirm whether this is the case when using out of sample data.  As the data is small, we will use cross-validation.  We will also compare the results from a linear model.
+
+```{r}
+# houseprice is in the workspace
+summary(houseprice)
+
+# fmla_sqr is in the workspace
+fmla_sqr
+
+# Create a splitting plan for 3-fold cross validation
+set.seed(34245)  # set the seed for reproducibility
+splitPlan <- kWayCrossValidation(nRows = nrow(houseprice), nSplits = 3, dframe = NULL, y = NULL)
+
+# Sample code: get cross-val predictions for price ~ size
+houseprice$pred_lin <- 0  # initialize the prediction vector
+for(i in 1:3) {
+  split <- splitPlan[[i]]
+  model_lin <- lm(price ~ size, data = houseprice[split$train,])
+  houseprice$pred_lin[split$app] <- predict(model_lin, newdata = houseprice[split$app,])
+}
+
+# Get cross-val predictions for price as a function of size^2 (use fmla_sqr)
+houseprice$pred_sqr <- 0 # initialize the prediction vector
+for(i in 1:3) {
+  split <- splitPlan[[i]]
+  model_sqr <- lm(fmla_sqr, data = houseprice[split$train, ])
+  houseprice$pred_sqr[split$app] <- predict(model_sqr, newdata = houseprice[split$app, ])
+}
+
+# Gather the predictions and calculate the residuals
+houseprice_long <- houseprice %>%
+  gather(key = modeltype, value = pred, pred_lin, pred_sqr) %>%
+  mutate(residuals = pred - price)
+
+# Compare the cross-validated RMSE for the two models
+houseprice_long %>% 
+  group_by(modeltype) %>% # group by modeltype
+  summarize(rmse = sqrt(mean(residuals^2)))
+```
+
+## Dealing with Non-Linear Responses
