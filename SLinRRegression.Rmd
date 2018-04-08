@@ -676,3 +676,65 @@ houseprice_long %>%
 ```
 
 ## Dealing with Non-Linear Responses
+
+First we will look at predicting the probability that an event occurs, based on a binary response yes/no.  To do this we will use a logistic regression, so that the probabilities are in the 0 to 1 range.  This builds a log-odds model which is simply a log transformed ratio that the probability occurs to the probability that it does not - 
+
+* for the model we have - glm(formula, data, family = binomial) 
+* for the prediction we have - predict(model, newdata = test, type = "response")
+
+When assessing accuracy we can use a deviance calculation (pseudo R squared) or a chi-squared test.  We can also use a Gain Curve or ROC curce.
+
+We will estimate the probability that a sparrow survives a severe winter storm, based on physical characteristics of the sparrow. The dataset sparrow is loaded into your workspace. The outcome to be predicted is status.
+
+```{r}
+# Load the sparrow data
+sparrow <- readRDS("./files/SLinRRegression/sparrow.rds")
+
+# Take a look at the data
+head(sparrow) 
+
+# sparrow is in the workspace
+summary(sparrow)
+
+# Create the survived column
+sparrow$survived <- sparrow$status == "Survived"
+
+# Create the formula
+(fmla <- as.formula("survived ~ total_length + weight + humerus"))
+
+# Fit the logistic regression model
+sparrow_model <- glm(fmla, data = sparrow, family = binomial)
+
+# Call summary
+summary(sparrow_model)
+
+# Call glance
+(perf <- broom::glance(sparrow_model))
+
+# Calculate pseudo-R-squared
+(pseudoR2 <- (1 - (perf$deviance / perf$null.deviance)))
+```
+
+So our pseudo R squared so far is quite low at 0.36.  Next we will predict with the model and show a gain curve.  The gain curve show be as close to the ideal (the 'wizzard curve' or green line) as we can get.
+
+```{r}
+# sparrow is in the workspace
+summary(sparrow)
+
+# sparrow_model is in the workspace
+summary(sparrow_model)
+
+# Make predictions
+sparrow$pred <- predict(sparrow_model, type = "response")
+
+# Look at gain curve
+GainCurvePlot(sparrow, "pred", "survived", "sparrow survival model")
+```
+
+From the gain curve that the model follows the wizard curve for about the first 30% of the data, identifying about 45% of the surviving sparrows with only a few false positives.
+
+### Count data with poisson and quasipoisson regression
+
+Predicting counts is a non linear problem because counts are restricted to being non negative and integers.  To predict counts we do poisson or quasipoisson regression.  It is a generalised linear model (GLM) in so much as it assumes the inputs are additive and linear with respect to the log of the outcome, we use family = "poisson" or "quasipoisson". We can use such models for things like predicting the number of website hits, the actual predict model we not predict an integer, but a rate per day.  In poisson regression it is assumed the mean = variance, if this is not the case, we should use quasipoisson.  More technically we could say that the event we are counting is Poisson distributed: the average count per unit is the same variance of the count, the same meaning that the mean and the variance should be of a similar order of magnitude.  When the variance is much larger than the mean, the Poisson assumption doesn't apply and we should use quasipoisson.  
+
+NOTE: If the counts we are trying to predict are very large, regular regression may be appropriate method also.
