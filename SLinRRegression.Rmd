@@ -7,6 +7,7 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 * [Part 1 - What is Regression?](./files/SLinRRegression/chapter1.pdf)
 * [Part 2 - Training and Evaluating Regression Models] (./files/SLinRRegression/chapter2.pdf) 
 * [Part 3 - Issues to Consider] (./files/SLinRRegression/chapter3.pdf) 
+* [Part 4 - Dealing with Non-Linear Responses] (./files/SLinRRegression/chapter4.pdf)
 
 **_Other useful links_**
 
@@ -738,3 +739,104 @@ From the gain curve that the model follows the wizard curve for about the first 
 Predicting counts is a non linear problem because counts are restricted to being non negative and integers.  To predict counts we do poisson or quasipoisson regression.  It is a generalised linear model (GLM) in so much as it assumes the inputs are additive and linear with respect to the log of the outcome, we use family = "poisson" or "quasipoisson". We can use such models for things like predicting the number of website hits, the actual predict model we not predict an integer, but a rate per day.  In poisson regression it is assumed the mean = variance, if this is not the case, we should use quasipoisson.  More technically we could say that the event we are counting is Poisson distributed: the average count per unit is the same variance of the count, the same meaning that the mean and the variance should be of a similar order of magnitude.  When the variance is much larger than the mean, the Poisson assumption doesn't apply and we should use quasipoisson.  
 
 NOTE: If the counts we are trying to predict are very large, regular regression may be appropriate method also.
+
+In this exercise we will build a model to predict the number of bikes rented in an hour as a function of the weather, the type of day (holiday, working day, or weekend), and the time of day. You will train the model on data from the month of July.
+
+The data frame has the columns:
+
+* cnt: the number of bikes rented in that hour (the outcome)  
+* hr: the hour of the day (0-23, as a factor)  
+* holiday: TRUE/FALSE  
+* workingday: TRUE if neither a holiday nor a weekend, else FALSE  
+* weathersit: categorical, "Clear to partly cloudy"/"Light Precipitation"/"Misty"  
+* temp: normalized temperature in Celsius  
+* atemp: normalized "feeling" temperature in Celsius  
+* hum: normalized humidity  
+* windspeed: normalized windspeed  
+* instant: the time index -- number of hours since beginning of data set (not a variable)  
+* mnth and yr: month and year indices (not variables)  
+
+We fit a quasipoisson model as the mean and variance are quite different, as calculated below.  As with a logistic model, you hope for a pseudo-R2 near to 1.
+
+```{r}
+# Load the bikes data
+load("./files/SLinRRegression/Bikes.RData")
+outcome <- "cnt"
+vars <- names(bikesJuly)[1:8]
+
+str(bikesJuly)
+
+# The outcome column
+outcome 
+
+# The inputs to use
+vars 
+
+# Create the formula string for bikes rented as a function of the inputs
+(fmla <- paste(outcome, "~", paste(vars, collapse = " + ")))
+
+# Calculate the mean and variance of the outcome
+(mean_bikes <- mean(bikesJuly$cnt))
+(var_bikes <- var(bikesJuly$cnt))
+
+# Fit the model
+bike_model <- glm(fmla, data = bikesJuly, family = quasipoisson)
+
+# Call glance
+(perf <- glance(bike_model))
+
+# Calculate pseudo-R-squared
+(pseudoR2 <- (1 - (perf$deviance / perf$null.deviance)))
+
+```
+
+Next we will use the model you built in the previous exercise to make predictions for the month of August. The data set bikesAugust has the same columns as bikesJuly.  You must specify type = "response" with predict() when predicting counts from a glm poisson or quasipoisson model.
+
+```{r}
+# bike_model is in the workspace
+summary(bike_model)
+
+# Make predictions on August data
+bikesAugust$pred  <- predict(bike_model, type = "response", newdata = bikesAugust)
+
+# Calculate the RMSE
+bikesAugust %>% 
+  mutate(residual = pred - cnt) %>%
+  summarize(rmse  = sqrt(mean(residual^2)))
+
+# Plot predictions vs cnt (pred on x-axis)
+ggplot(bikesAugust, aes(x = pred, y = cnt)) +
+  geom_point() + 
+  geom_abline(color = "darkblue")
+```
+
+As the bike rental data is time series data, you might be interested in how the model performs as a function of time. Next we will compare the predictions and actual rentals on an hourly basis, for the first 14 days of August.
+
+To create the plot we use the function tidyr::gather() to consolidate the predicted and actual values from bikesAugust in a single column.
+
+```{r}
+library(tidyr)
+
+# Plot predictions and cnt by date/time
+bikesAugust %>% 
+  # set start to 0, convert unit to days
+  mutate(instant = (instant - min(instant))/24) %>%  
+  # gather cnt and pred into a value column
+  gather(key = valuetype, value = value, cnt, pred) %>%
+  filter(instant < 14) %>% # restric to first 14 days
+  # plot value by instant
+  ggplot(aes(x = instant, y = value, color = valuetype, linetype = valuetype)) + 
+  geom_point() + 
+  geom_line() + 
+  scale_x_continuous("Day", breaks = 0:14, labels = 0:14) + 
+  scale_color_brewer(palette = "Dark2") + 
+  ggtitle("Predicted August bike rentals, Quasipoisson model")
+```
+
+Using the chart it appears that this model mostly identifies the slow and busy hours of the day, although it often underestimates peak demand.
+
+### Generalised Additive Model (GAM)
+
+GAM can be used to automatically learn input variable transformations.  In GAM, it depends on unknown smoothed functions of the input variables.  A GAM learns what best fits the data e.g. quadratic, cubic and so on.  We use the mgcv package for GAM models, which has similar functions at the GLM models we saw previously, including a family variable where gaussian (default) is used for regular regression, binomial for probabilities and poisson/quasipoisson for counts.  GAMS are prone to overfitting, so are best used on large sets of data.  If we want to model the data as a non-linear relationship we use the s notation e.g. anx ~ s(hassles) - this is best done with 10 or more unique values, since a spline function is fitted, so not good for categorical data. 
+
+NOTE: GAM is useful for when you don't have the domain knowledge to determine the best model type so is used as a proxy of the 'best model' in the absence of this knowledge.
