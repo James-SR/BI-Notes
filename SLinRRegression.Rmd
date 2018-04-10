@@ -840,3 +840,81 @@ Using the chart it appears that this model mostly identifies the slow and busy h
 GAM can be used to automatically learn input variable transformations.  In GAM, it depends on unknown smoothed functions of the input variables.  A GAM learns what best fits the data e.g. quadratic, cubic and so on.  We use the mgcv package for GAM models, which has similar functions at the GLM models we saw previously, including a family variable where gaussian (default) is used for regular regression, binomial for probabilities and poisson/quasipoisson for counts.  GAMS are prone to overfitting, so are best used on large sets of data.  If we want to model the data as a non-linear relationship we use the s notation e.g. anx ~ s(hassles) - this is best done with 10 or more unique values, since a spline function is fitted, so not good for categorical data. 
 
 NOTE: GAM is useful for when you don't have the domain knowledge to determine the best model type so is used as a proxy of the 'best model' in the absence of this knowledge.
+
+If you do have categorical variables, you can still use them in GAM, but you don't specify the s function for those, e.g. if diet and sex are categorical, but age and BMI are continous, we would have:
+
+> Wtloss ~ Diet + Sex + s(Age) + s(BMI)
+
+Next we will model the average leaf weight on a soybean plant as a function of time (after planting). As you will see, the soybean plant doesn't grow at a steady rate, but rather has a "growth spurt" that eventually tapers off. Hence, leaf weight is not well described by a linear model.
+
+```{r}
+# Load the Soybean data
+load("./files/SLinRRegression/Soybean.RData")
+
+# soybean_train is in the workspace
+summary(soybean_train)
+
+# Plot weight vs Time (Time on x axis)
+ggplot(soybean_train, aes(x = Time, y = weight)) + 
+  geom_point()
+
+# Load the package mgcv
+library(mgcv)
+
+# Create the gam/non-linear formula 
+(fmla.gam <- as.formula("weight ~ s(Time)"))
+
+# Create the linear formula 
+(fmla.lin <- as.formula("weight ~ Time"))
+
+# Fit the GAM Model
+model.gam <- gam(fmla.gam, family = gaussian, data = soybean_train)
+
+# Create the linear formula 
+model.lin <- lm(formula = fmla.lin, data = soybean_train)
+
+# Call summary() on model.lin and look for R-squared
+summary(model.lin)
+
+# Call summary() on model.gam and look for R-squared
+summary(model.gam)
+
+# Call plot() on model.gam
+plot(model.gam)
+```
+
+So we see that the non-linear GAM model fits the data better, with a higher R squared measurement than the linear model.
+
+Next we will predict with both the linear and gam model.  As GAM models return a matrix for predictions, we use as.numeric to convert the output.
+
+```{r}
+# soybean_test is in the workspace
+summary(soybean_test)
+
+# Get predictions from linear model
+soybean_test$pred.lin <- predict(model.lin, newdata = soybean_test)
+
+# Get predictions from gam model
+soybean_test$pred.gam <- as.numeric(predict(model.gam, newdata = soybean_test))
+
+# Gather the predictions into a "long" dataset
+soybean_long <- soybean_test %>%
+  gather(key = modeltype, value = pred, pred.lin, pred.gam)
+
+# Calculate the rmse
+soybean_long %>%
+  mutate(residual = weight - pred) %>%     # residuals
+  group_by(modeltype) %>%                  # group by modeltype
+  summarize(rmse = sqrt(mean(residual^2))) # calculate the RMSE
+
+# Compare the predictions against actual weights on the test data
+soybean_long %>%
+  ggplot(aes(x = Time)) +                          # the column for the x axis
+  geom_point(aes(y = weight)) +                    # the y-column for the scatterplot
+  geom_point(aes(y = pred, color = modeltype)) +   # the y-column for the point-and-line plot
+  geom_line(aes(y = pred, color = modeltype, linetype = modeltype)) + # the y-column for the point-and-line plot
+  scale_color_brewer(palette = "Dark2")
+  
+```
+
+Oberving the plot we can see that the GAM learns the non-linear growth function of the soybean plants, including the fact that weight is never negative, whereas the linear model intercepts below 0 i.e. a negative size.
