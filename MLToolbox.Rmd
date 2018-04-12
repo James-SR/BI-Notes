@@ -1,0 +1,117 @@
+# Machine Learning Toolbox
+***
+Notes taken during/inspired by the DataCamp course 'Machine Learning Toolbox' by Zachary Deane-Mayer and Max Kuhn.
+
+**_Course Handouts_**
+
+* [Part 1 - Regression models: fitting them and evaluating their performance](./files/MLToolbox/ch1-pdf-slides.pdf)
+* [Part 2 - Classification models: fitting them and evaluating their performance] () 
+* [Part 3 - Tuning model parameters to improve performance] () 
+* [Part 4 - Preprocessing your data] ()
+* [Part 5 - Selecting models: a case study in churn prediction] ()
+
+**_Other useful links_**
+
+* [Max Kuhn: Applied Predictive Modeling NYC Talk](https://www.youtube.com/watch?v=dB-JHhEJvQA)
+* [Data Chat - Interview With Max Kuhn](https://www.youtube.com/watch?v=YVMlyOh_eyk)
+* [The caret package website](https://topepo.github.io/caret/)
+
+## 
+
+CAret has been developed by Max for over 10 years.  It automates supervised machine learning (aka predictive modelling) is ML when you have a target variable or something specific you want to predict like species and churn, these could be classification or regression.  We then use metrics to evaluate how accuratley our models predict on new data.  
+
+For linear regression we will use RMSE as our evaluation metric.  Typically this is done on our training (in-sample) data, however this can be too optomistic and lead to over-fitting.  It is better to calculate this out-of-sample using caret.
+
+Next we will calculate in-sample RMSE for the diamonds dataset from ggplot2.
+
+```{r}
+# Load the data
+diamonds <- ggplot2::diamonds
+
+# Fit lm model: model
+model <- lm(price ~ ., diamonds)
+
+# Predict on full data: p
+p <- predict(model, diamonds)
+
+# Compute errors: error
+error <- p - diamonds$price
+
+# Calculate in-sample RMSE
+sqrt(mean(error ^ 2))
+```
+
+The course focuses on predictive accuracy, that is to say does the model perform well When presented with new data.  The best way to answer this is to test the model on new data using test data.  This mimics the real world, where you do not actually know the outcome.  We simulate this with a test/train split.
+
+One way you can take a train/test split of a dataset is to order the dataset randomly, then divide it into the two sets. This ensures that the training set and test set are both random samples and that any biases in the ordering of the dataset (e.g. if it had originally been ordered by price or size) are not retained in the samples we take for training and testing your models. You can think of this like shuffling a brand new deck of playing cards before dealing hands.
+
+```{r}
+# Set seed
+set.seed(42)
+
+# Shuffle row indices: rows
+rows <- sample(nrow(diamonds))
+
+# Randomly order data
+diamonds <- diamonds[rows,]
+```
+
+Now that your dataset is randomly ordered, you can split the first 80% of it into a training set, and the last 20% into a test set. You can do this by choosing a split point approximately 80% of the way through your data.
+
+```{r}
+# Determine row to split on: split
+split <- round(nrow(diamonds) * .80)
+
+# Create train
+train <- diamonds[1:split, ]
+
+# Create test
+test <- diamonds[(split + 1):nrow(diamonds), ]
+```
+
+Now that you have a randomly split training set and test set, you can use the lm() function as you did in the first exercise to fit a model to your training set, rather than the entire dataset. Recall that you can use the formula interface to the linear regression function to fit a model with a specified target variable using all other variables in the dataset as predictors:
+
+> mod <- lm(y ~ ., training_data)
+
+You can use the predict() function to make predictions from that model on new data. The new dataset must have all of the columns from the training data, but they can be in a different order with different values. Here, rather than re-predicting on the training set, you can predict on the test set, which you did not use for training the model. This will allow you to determine the out-of-sample error for the model in the next exercise:
+
+> p <- predict(model, new_data)
+
+```{r}
+# Fit lm model on train: model
+model <- lm(price ~ ., train)
+
+# Predict on test: p
+p <- predict(model,test)
+```
+
+Now that you have predictions on the test set, you can use these predictions to calculate an error metric (in this case RMSE) on the test set and see how the model performs out-of-sample, rather than in-sample as you did in the first exercise. You first do this by calculating the errors between the predicted diamond prices and the actual diamond prices by subtracting the predictions from the actual values.
+
+```{r}
+# Compute errors: error
+error <- (p - test$price)
+
+# Calculate RMSE
+sqrt(mean(error^2))
+```
+
+### Cross-validation
+
+Using a simple text:train split can be tricky, particularly if there are some outliers in one of the two datasets.  A better approach is to use multiple test sets and average out of sample error.  One way of achieving this is cross-validation where we use folds, 10 folds would mean we split our data in to ten sections with a single observation only occuring once.  Cross validation is only used to calculate error metrics (out of sample), we then start again using on the full data.  With 10 folds, we therefore have 11 models to fit - the 10 re-sampled models plus the final model.  An alterntive which is available in caret is the bootstrap, but in practice this yields similar results to cross-validation.
+
+caret package makes this very easy to do:
+
+> model <- train(y ~ ., my_data)
+
+caret supports many types of cross-validation, and you can specify which type of cross-validation and the number of cross-validation folds with the trainControl() function, which you pass to the trControl argument in train():
+
+> model <- train(
+  y ~ ., my_data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = TRUE
+  )
+)
+
+It's important to note that you pass the method for modeling to the main train() function and the method for cross-validation to the trainControl() function.
