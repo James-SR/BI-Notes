@@ -16,7 +16,7 @@ Notes taken during/inspired by the DataCamp course 'Machine Learning Toolbox' by
 * [Data Chat - Interview With Max Kuhn](https://www.youtube.com/watch?v=YVMlyOh_eyk)
 * [The caret package website](https://topepo.github.io/caret/)
 
-## 
+## Regression models: fitting them and evaluating their performance
 
 CAret has been developed by Max for over 10 years.  It automates supervised machine learning (aka predictive modelling) is ML when you have a target variable or something specific you want to predict like species and churn, these could be classification or regression.  We then use metrics to evaluate how accuratley our models predict on new data.  
 
@@ -115,3 +115,82 @@ caret supports many types of cross-validation, and you can specify which type of
 )
 
 It's important to note that you pass the method for modeling to the main train() function and the method for cross-validation to the trainControl() function.
+
+```{r}
+
+library(caret)
+
+# Fit lm model using 10-fold CV: model
+model <- train(
+  price ~ ., diamonds,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = TRUE
+  )
+)
+
+# Print model to console
+print(model)
+```
+
+Next we use a different dataset - Boston house prices - then use a 5 fold cross validation in the trainControl.
+
+```{r}
+
+Boston <- MASS::Boston
+
+# Fit lm model using 5-fold CV: model
+model <- train(
+  medv ~ ., Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 5,
+    verboseIter = TRUE
+  )
+)
+
+# Print model to console
+print(model)
+```
+
+You can do more than just one iteration of cross-validation. Repeated cross-validation gives you a better estimate of the test-set error. You can also repeat the entire cross-validation procedure. This takes longer, but gives you many more out-of-sample datasets to look at and much more precise assessments of how well the model performs.
+
+One of the awesome things about the train() function in caret is how easy it is to run very different models or methods of cross-validation just by tweaking a few simple arguments to the function call. For example, you could repeat your entire cross-validation procedure 5 times for greater confidence in your estimates of the model's out-of-sample accuracy
+
+```{r}
+# Fit lm model using 5 x 5-fold CV: model
+model <- train(
+  medv ~ ., Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 5,
+    repeats = 5, verboseIter = TRUE
+  )
+)
+
+# Print model to console
+print(model)
+```
+
+Finally, the model you fit with the train() function has the exact same predict() interface as the linear regression models you fit earlier in this chapter.
+
+After fitting a model with train(), you can simply call predict() with new data, e.g:
+
+```{r}
+# Predict on full Boston dataset and display just the first 20 items
+head (predict (model, Boston), n = 20)
+```
+
+## Classification models: fitting them and evaluating their performance
+
+In classification models you are trying to predict a categorical target e.g. whether a customer is satisfied or not.  It it still a form of supervised learning and we can use a train/test split to evaluate performance.  In this sectgion we will use the Sonar dataset which contains charecteristics of a sonar signal for objects that are either rocks or mines.  
+
+The variables explain some part of the signal, then the class oe either Rock or Mine - the data below shows the first 7 variables and the class, for a random sample of 10 rows.  As the dataset is very small, we use a 40% test split.
+
+```{r}
+library(mlbench)
+data(Sonar)
+Sonar[sample(1:nrow(Sonar), 10, replace=FALSE), c(1:7, 61)]
+```
+
