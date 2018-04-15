@@ -186,7 +186,7 @@ head (predict (model, Boston), n = 20)
 
 In classification models you are trying to predict a categorical target e.g. whether a customer is satisfied or not.  It it still a form of supervised learning and we can use a train/test split to evaluate performance.  In this sectgion we will use the Sonar dataset which contains charecteristics of a sonar signal for objects that are either rocks or mines.  
 
-The variables explain some part of the signal, then the class oe either Rock or Mine - the data below shows the first 7 variables and the class, for a random sample of 10 rows.  As the dataset is very small, we use a 40% test split.
+The variables explain some part of the signal, then the class of either Rock or Mine - the data below shows the first 7 variables and the class, for a random sample of 10 rows.  As the dataset is very small, we use a 40% test split.
 
 ```{r}
 library(mlbench)
@@ -194,3 +194,79 @@ data(Sonar)
 Sonar[sample(1:nrow(Sonar), 10, replace=FALSE), c(1:7, 61)]
 ```
 
+TO mkae our 60/40 split we do the following.
+
+```{r}
+# Shuffle row indices: rows
+rows <- sample(nrow(Sonar))
+
+# Randomly order data: Sonar
+Sonar <- Sonar[rows, ]
+
+# Identify row to split on: split
+split <- round(nrow(Sonar) * 0.6)
+
+# Create train
+train <- Sonar[1:split, ]
+
+# Create test
+test <- Sonar[(split + 1):nrow(Sonar), ]
+```
+
+Now you can fit a logistic regression model to your training set using the glm() function. glm() is a more advanced version of lm() that allows for more varied types of regression models, aside from plain vanilla ordinary least squares regression.
+
+Don't worry about warnings like glm.fit: algorithm did not converge or glm.fit: fitted probabilities numerically 0 or 1 occurred. These are common on smaller datasets and usually don't cause any issues. They typically mean your dataset is perfectly seperable, which can cause problems for the math behind the model, but R's glm() function is almost always robust enough to handle this case with no problems.
+
+```{r}
+# Fit glm model: model
+model <- glm(formula = Class ~ ., family = "binomial", data = train)
+
+# Predict on test: p
+p <- predict(model, test, type = "response")
+```
+
+### Confusion Matrix
+
+A confusion Matrix is a table of the predicted results vs the actual results.  It is called a Confusion Matrix as it explains how confused the model is between the two classes and highlights instances where one class is confused for the other.  The items on the main diagonal are the cases where the model is correct. 
+
+```{r Confusion Matrix, echo = FALSE, fig.cap='Confusion Matrix'}
+knitr::include_graphics("images/MLToolbox/Confusion.png")
+```
+
+You could make such a contingency table with the table() function in base R, but confusionMatrix() in caret yields a lot of useful ancillary statistics in addition to the base rates in the table. 
+
+```{r}
+# Calculate class probabilities: p_class
+p_class <- ifelse(p > .5, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test$Class)
+```
+
+We see that the No Information rate is around 52%, that is just predicting the dominant class all the time, mines.  Our accuracy so far is below this which suggests that using a dummy model that always predicts mines is more accurate than the current model.  The other values such as sensitivity and specificity give more elements of the confusion matrix:
+
+* Specificity - true negative rate  
+* Sensitivity - true positive rate
+
+Setting our threshold rate - currently 50% - is an exercise in deciding what is more important and depends on the cost-benefit analysis of the problem at hand.  Do we want to flag more non-mines as mines, or do we want to be more accurate in our prediction but potentially miss some mines?
+
+Now what happens if we apply a 90% threshold to our model?
+
+```{r}
+# Apply threshold of 0.9: p_class
+p_class <- ifelse(p > .9, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test$Class)
+```
+Or at 10%
+
+```{r}
+# Apply threshold of 0.10: p_class
+p_class <- ifelse(p > .1, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test$Class)
+```
+
+### The ROC Curve
