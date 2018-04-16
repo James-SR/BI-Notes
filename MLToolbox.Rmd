@@ -17,6 +17,7 @@ Notes taken during/inspired by the DataCamp course 'Machine Learning Toolbox' by
 * [The caret package website](https://topepo.github.io/caret/)
 * [Bagging graphical explanation](https://www.youtube.com/watch?v=2Mg8QD0F1dQ)
 * [Boosting graphical explanation](https://www.youtube.com/watch?v=GM3CDQfQ4sw)
+* [Gradient Boosting in Practice: a deep dive into xgboost](https://www.youtube.com/watch?v=s3VmuVPfu0s)
 
 ## Regression models: fitting them and evaluating their performance
 
@@ -340,4 +341,16 @@ With random forests we fit a different tree to each bootstrap sample of the data
 
 Note - boosting is similar to bagging, in that we take a random 'bag' of data and fit a model.  However we fit the models iteratively with boosting, with subsequent models fitted to those observations which were not previously fitted as well.  When we draw another sample or bag, we weight the probability of observation selection based on how well the previous model fitted those observations, if they were poorly fitted, the new model is more likely to sample those and therefore more likely to accuratley predict them.  We then re-inputt all the TRAIN data to our two models and see which observations were then, based on this two model ensemble, not predicted as well.  When then try to build a new model in which these previously under-predicted observations are better predicted, then build the ensemble again and iterate as neccessary.
 
-Random forests take bagging a step further, by randomly sampling the columns (variables) at each split and helps to yield more accurate models.
+Random forests take bagging a step further, by randomly sampling the columns (variables) at each split and helps to yield more accurate models.  It does this to try and de-correlate the errors in different bootstrap samples i.e. different models.  You make errors everywhere, but they have different origins/models.
+
+Bagging can therefore be run in parallel, since each bag or draw is independent of the others.  In Boosting, this is not possible, since subsequent draws are dependent on previous draws/models.
+
+ISR notes:
+
+"While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct B regression trees using B bootstrapped training sets, and average the resulting predictions. These trees are grown deep, and are not pruned. Hence each individual tree has high variance, but low bias. Averaging these B trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure." (pg 317)
+
+And
+
+"Boosting does not involve bootstrap sampling; instead each  tree is fit on a modified version of the original data set...Unlike fitting a single large decision tree to the data, which amounts to fitting the data hard and potentially overfitting, the boosting approach instead learns slowly. Given the current model, we fit a decision tree to the residuals from the model. That is, we fit a tree using the current residuals, rather than the outcome Y , as the response. We then add this new decision tree into the fitted function in order to update the residuals. Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter d in the algorithm."
+
+So bagging tends to produce large (deep) trees with high variance, where as boosting produces shallow trees with high bias.
