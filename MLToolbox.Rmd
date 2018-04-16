@@ -15,6 +15,8 @@ Notes taken during/inspired by the DataCamp course 'Machine Learning Toolbox' by
 * [Max Kuhn: Applied Predictive Modeling NYC Talk](https://www.youtube.com/watch?v=dB-JHhEJvQA)
 * [Data Chat - Interview With Max Kuhn](https://www.youtube.com/watch?v=YVMlyOh_eyk)
 * [The caret package website](https://topepo.github.io/caret/)
+* [Bagging graphical explanation](https://www.youtube.com/watch?v=2Mg8QD0F1dQ)
+* [Boosting graphical explanation](https://www.youtube.com/watch?v=GM3CDQfQ4sw)
 
 ## Regression models: fitting them and evaluating their performance
 
@@ -270,3 +272,72 @@ confusionMatrix(p_class, test$Class)
 ```
 
 ### The ROC Curve
+
+Rather than manually calculating the true positive and true negative rate for many hundreds of different models - at carying classification cut offs as we previously did - we can plot a ROC (Receiver Operator Charecteristic) curve automatically for every possible threshold.  Originally the ROC curve was designed to look at the trade off with different thresholds when trying to differentiate between radar signals of flocks of birds vs planes.
+
+The ROC curve plots the false positive rate (X Axis) vs the true positive rate (Y axis) with each point representing a different threshold.
+
+There are a number of different ways of calculating ROC curves, one we will use here is the caTools package and calculates the AUC or Area under the curve.
+
+```{r}
+library(caTools)
+
+# Predict on test: p
+p <- predict(model, test, type = "response")
+
+# Make ROC curve
+colAUC(p, test$Class, plotROC = TRUE)
+```
+
+Whne looking at the ROC curve, a line close to the diagonal would be considered bad as it is following something not far off random predictions.  Perfection seperation would produce a box, with a single point at 1, 0 or the top left hand corner which would be a 100% true positive rate and a 0% false positive rate.
+
+The AUC for the 'perfect' model is 1.  For the random model it is 0.5.  The AUC statistics is a single number accuracy measure, it summarises the performance of the model across all possible classification thresholds.  Most models are in the 0.5 to 1 range, some bad models can be in the 0.4 range.  We can think of them as an exam grade e.g.
+
+* A = 0.9  
+* B = 0.8  
+* C = 0.7  
+* ...  
+* F = 0.5  
+
+0.8 or above is good, some models in the 0.7 range are useful.  The caret package will calculate the AUC for us.
+
+You can use the trainControl() function in caret to use AUC (instead of acccuracy), to tune the parameters of your models. The twoClassSummary() convenience function allows you to do this easily.
+
+When using twoClassSummary(), be sure to always include the argument classProbs = TRUE or your model will throw an error. You cannot calculate AUC with just class predictions. You need to have class probabilities as well.
+
+```{r}
+# Create trainControl object: myControl
+myControl <- trainControl(
+  method = "cv",
+  number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verboseIter = TRUE
+)
+```
+
+Now that you have a custom trainControl object, it's easy to fit caret models that use AUC rather than accuracy to tune and evaluate the model. You can just pass your custom trainControl object to the train() function via the trControl argument, e.g.:
+
+> train(<standard arguments here>, trControl = myControl)
+
+This syntax gives you a convenient way to store a lot of custom modeling parameters and then use them across multiple different calls to train()
+
+```{r}
+# Train glm with custom trainControl: model
+model <- train(Class ~ ., data = Sonar, 
+                 method = "glm", 
+                 trControl = myControl)
+
+# Print model to console
+model
+```
+
+### Tuning model parameters to improve performance
+
+Next we will look at random forests as these are robust against over-fitting.  They can yield accurate, non-linear models without much additional work.  However, unlinke linear models they have so called hyperparameters to tune and they have to be manually specified by the data scientist as inputs in to the model.  These parameters can vary from dataset to dataset, the defaults can be ok, but often need adjusting.  
+
+With random forests we fit a different tree to each bootstrap sample of the data, called bagging - we can think of this as draw a random 'bag' of observations, at random with replacement, from the original TRAIN dataset many times - to which we think fit a tree on this subset of data.  This effectivly creates multiple train/test splits on the TRAIN data and trains a different model, so we end up with an ensemble of different models.  
+
+Note - boosting is similar to bagging, in that we take a random 'bag' of data and fit a model.  However we fit the models iteratively with boosting, with subsequent models fitted to those observations which were not previously fitted as well.  When we draw another sample or bag, we weight the probability of observation selection based on how well the previous model fitted those observations, if they were poorly fitted, the new model is more likely to sample those and therefore more likely to accuratley predict them.  We then re-inputt all the TRAIN data to our two models and see which observations were then, based on this two model ensemble, not predicted as well.  When then try to build a new model in which these previously under-predicted observations are better predicted, then build the ensemble again and iterate as neccessary.
+
+Random forests take bagging a step further, by randomly sampling the columns (variables) at each split and helps to yield more accurate models.
