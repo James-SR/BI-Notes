@@ -354,3 +354,79 @@ And
 "Boosting does not involve bootstrap sampling; instead each  tree is fit on a modified version of the original data set...Unlike fitting a single large decision tree to the data, which amounts to fitting the data hard and potentially overfitting, the boosting approach instead learns slowly. Given the current model, we fit a decision tree to the residuals from the model. That is, we fit a tree using the current residuals, rather than the outcome Y , as the response. We then add this new decision tree into the fitted function in order to update the residuals. Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter d in the algorithm."
 
 So bagging tends to produce large (deep) trees with high variance, where as boosting produces shallow trees with high bias.
+
+Fitting a random forest model is exactly the same as fitting a generalized linear regression model, as you did in the previous chapter. You simply change the method argument in the train function to be "ranger". The ranger package is a rewrite of R's classic randomForest package and fits models much faster, but gives almost exactly the same results. 
+
+```{r}
+# Load the wine data
+wine <- readRDS("./files/MLToolbox/wine_100.rds")
+
+# Fit random forest: model
+model <- train(
+  quality ~.,
+  tuneLength = 1,
+  data = wine, method = "ranger",
+  trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE)
+)
+
+# Print model to console
+model
+```
+
+A difference between random forests and linear models is that random forests require tuning, this is done using "hyperparameters" and is done before fitting the model.  One such variable is _mtry_ which is the number of randomly selected variables used in each split.  It is not always possible to know which is better for your data in advance.  But caret can help to automate the selection of these parameters using something called _grid search_.  It will select the appropriate hyperparameters based on out-of-sample error.
+
+Random forest models have a primary tuning parameter of mtry, which controls how many variables are exposed to the splitting search routine at each split. For example, suppose that a tree has a total of 10 splits and mtry = 2. This means that there are 10 samples of 2 predictors each time a split is evaluated.
+
+We will use a larger tuning grid this time, but stick to the defaults provided by the train() function. We try a tuneLength of 3, rather than 1, to explore some more potential models, and plot the resulting model using the plot function.
+
+```{r}
+# Fit random forest: model
+model <- train(
+  quality ~.,
+  tuneLength = 3,
+  data = wine, method = "ranger",
+  trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE)
+)
+
+# Print model to console
+model
+
+# Plot model
+plot(model)
+```
+
+We can pass our own custom tuning grids as a data frame to the train control argument.  This is the most fleixble approach, however it can take a lot longer to train the model and can considerably increase run time.
+
+You can provide any number of values for mtry, from 2 up to the number of columns in the dataset. In practice, there are diminishing returns for much larger values of mtry, so we will use a custom tuning grid that explores 2 simple models (mtry = 2 and mtry = 3) as well as one more complicated model (mtry = 7).
+
+```{r}
+# Add the tune grid options - note ranger requires a . prior to tuning parameters, other models/packages may not: 
+tgrid <- expand.grid(
+  .mtry = c(2, 3, 7),
+  .splitrule = "extratrees"
+)
+
+# Fit random forest: model
+model <- train(
+  quality ~.,
+  tuneGrid = tgrid,
+  data = wine, method = "ranger",
+  trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE)
+)
+
+# Print model to console
+model
+
+# Plot model
+plot(model)
+```
+
+### Introducing glmnet
+
+This is similar to GLM models but has built in model selection.  It linear models better deal with collinearity, which is correlation amungst the predictors in a model and can help reduce overfitting for models with small data.  There are two main forms - lasso and ridge regression.  Both of these methods shrink the coefficents towards zero and can also be useful for very large datasets also.  
+
+* Ridge - penalises absolute magnitude coefficients (l2 norm)
+* Lasso - penalises non-zero coefficients (l1 norm)
+
+The amount that we penalise the coefficients depends on our tuning parameter.  We can use cross-validation to help in the selection of the tuning parameter.  At very high values of the tuning parameter (lambda), we penalise the indivdual variables so much they effectively have a value of zero.  At very low levels, we penalise the variables so little that they approach their linear (least squared) equivalents. In both instances, we try to end up with parsimonous models.  We can fit lasso and ridge together using glmnet using the alpha paramater - 0 is pure lasso, 1 is pure ridge.
+
