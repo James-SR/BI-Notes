@@ -425,8 +425,129 @@ plot(model)
 
 This is similar to GLM models but has built in model selection.  It linear models better deal with collinearity, which is correlation amungst the predictors in a model and can help reduce overfitting for models with small data.  There are two main forms - lasso and ridge regression.  Both of these methods shrink the coefficents towards zero and can also be useful for very large datasets also.  
 
-* Ridge - penalises absolute magnitude coefficients (l2 norm)
 * Lasso - penalises non-zero coefficients (l1 norm)
+* Ridge - penalises absolute magnitude coefficients (l2 norm)
 
-The amount that we penalise the coefficients depends on our tuning parameter.  We can use cross-validation to help in the selection of the tuning parameter.  At very high values of the tuning parameter (lambda), we penalise the indivdual variables so much they effectively have a value of zero.  At very low levels, we penalise the variables so little that they approach their linear (least squared) equivalents. In both instances, we try to end up with parsimonous models.  We can fit lasso and ridge together using glmnet using the alpha paramater - 0 is pure lasso, 1 is pure ridge.
+The amount that we penalise the coefficients depends on our tuning parameter.  We can use cross-validation to help in the selection of the tuning parameter.  At very high values of the tuning parameter (lambda), we penalise the indivdual variables so much they effectively have a value of zero.  At very low levels, we penalise the variables so little that they approach their linear (least squared) equivalents. In both instances, we try to end up with parsimonous models.  We can fit lasso and ridge together using glmnet using the alpha paramater - 1 is pure lasso, 0 is pure ridge.
+
+The dataset used comes has nearly as many columns as rows.  This is a simulated dataset based on the "don't overfit" competition on Kaggle a number of years ago.  Classification problems are a little more complicated than regression problems because you have to provide a custom summaryFunction to the train() function to use the AUC metric to rank your models. Start by making a custom trainControl. Be sure to set classProbs = TRUE, otherwise the twoClassSummary for summaryFunction will break.
+
+```{r}
+# Create custom trainControl: myControl
+myControl <- trainControl(
+  method = "cv", number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verboseIter = TRUE
+)
+```
+
+glmnet is capable of fitting two different kinds of penalized models, controlled by the alpha parameter:
+
+Ridge regression (or alpha = 0)
+Lasso regression (or alpha = 1)
+
+We now fit a glmnet model to the "don't overfit" dataset using the defaults provided by the caret package.
+
+```{r}
+overfit <- read.csv("./files/MLToolbox/overfit.csv")
+
+# Fit glmnet model: model
+model <- train(
+  y ~., overfit,
+  method = "glmnet",
+  trControl = myControl
+)
+
+# Print model to console
+model
+
+# Print maximum ROC statistic
+max(model[["results"]])
+```
+
+glmnet model have two tuning paramets, alpha (ridge to lasso) and lambda (size of the penalty). However for a single alpha value, glmnet will fit all values of lambda simultaneously.  We are fitting a number of different models in effect, then see which fits the best.  We could try for instance two values of alpha - 0 and 1 - then have a wide range of lambdas which we can fit using the seqeunce function.  
+
+We use a custom tuning grid as the default tuning grid is very small and there are many more potential glmnet models we may want to explore.
+
+As previously mentioned, the glmnet model actually fits many models at once (one of the great things about the package). You can exploit this by passing a large number of lambda values, which control the amount of penalization in the model. train() is smart enough to only fit one model per alpha value and pass all of the lambda values at once for simultaneous fitting.
+
+A good tuning grid for glmnet models is:
+
+> expand.grid(alpha = 0:1,
+  lambda = seq(0.0001, 1, length = 100))
+
+This grid explores a large number of lambda values (100, in fact), from a very small one to a very large one. (You could increase the maximum lambda to 10, but in this exercise 1 is a good upper bound.)
+
+If you want to explore fewer models, you can use a shorter lambda sequence. For example, lambda = seq(0.0001, 1, length = 10) would fit 10 models per value of alpha.
+
+You also look at the two forms of penalized models with this tuneGrid: ridge regression and lasso regression. alpha = 0 is pure ridge regression, and alpha = 1 is pure lasso regression. You can fit a mixture of the two models (i.e. an elastic net) using an alpha between 0 and 1. For example, alpha = .05 would be 95% ridge regression and 5% lasso regression.
+
+In this problem you'll just explore the 2 extremes - pure ridge and pure lasso regression - for the purpose of illustrating their differences.
+
+```{r}
+# Train glmnet with custom trainControl and tuning: model
+model <- train(
+  y ~., overfit,
+  tuneGrid = expand.grid(alpha = 0:1,
+  lambda = seq(0.0001, 1, length = 20)),
+  method = "glmnet",
+  trControl = myControl
+)
+
+# Print model to console
+model
+
+# Print maximum ROC statistic
+max(model[["results"]][["ROC"]])
+```
+
+## Preprocessing your data
+
+Real world data has missing values and often models don't know what to missing data.  Models can exclude cases where values are missing and it can lead to bias.  A better approach is to use median imputation.
+
+In this section we use a version of the Wisconsin Breast Cancer dataset. This dataset presents a classic binary classification problem: 50% of the samples are benign, 50% are malignant, and the challenge is to identify which are which.
+
+This dataset is interesting because many of the predictors contain missing values and most rows of the dataset have at least one missing value. This presents a modeling challenge, because most machine learning algorithms cannot handle missing values out of the box. For example, your first instinct might be to fit a logistic regression model to this data, but prior to doing this you need a strategy for handling the NAs.
+
+Fortunately, the train() function in caret contains an argument called preProcess, which allows you to specify that median imputation should be used to fill in the missing values. In previous chapters, you created models with the train() function using formulas such as y ~ .. An alternative way is to specify the x and y arguments to train(), where x is an object with samples in rows and features in columns and y is a numeric or factor vector containing the outcomes. Said differently, x is a matrix or data frame that contains the whole dataset you'd use for the data argument to the lm() call, for example, but excludes the response variable column; y is a vector that contains just the response variable column.
+
+For this exercise, the argument x to train() is loaded in your workspace as breast_cancer_x and y as breast_cancer_y.
+
+```{r}
+# Load the breast cancer data - loads two datasets x to train as breast_cancer_x and y as breast_cancer_y.
+load("./files/MLToolbox/BreastCancer.RData")
+
+# Apply median imputation: model
+model <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = "medianImpute"
+)
+
+# Print model to console
+model
+```
+
+There are some problems with median imputation, particularly if there is systematic bias and the data is missing not at random.  In effect this means if there is a pattern in missing values, median imputation can miss this.  For instance, we often find that higher income individuals are less likely to report their household income in survey data.  Note that tree based models tend to be more robust to missing not at random case. An alternative to median imputation is knn imputation, it imputes based on "similar" non missing rows based on some defined variables which we define.  KNN is not always better than median imputation, so it is worthwhile trying both knn and median imputation and keep the one which gives the most accurate model.
+
+While this is a lot more complicated to implement in practice than simple median imputation, it is very easy to explore in caret using the preProcess argument to train(). You can simply use preProcess = "knnImpute" to change the method of imputation used prior to model fitting.
+
+```{r}
+library("RANN") # installed from dev verison on github
+
+# Apply KNN imputation: model2
+model2 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = "knnImpute"
+)
+
+# Print model to console
+model2
+```
+
+
 
