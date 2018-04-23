@@ -549,5 +549,103 @@ model2 <- train(
 model2
 ```
 
+All of the preprocessing steps in the train() function happen in the training set of each cross-validation fold, so the error metrics reported include the effects of the preprocessing.
 
+This includes the imputation method used (e.g. knnImputate or medianImpute). This is useful because it allows you to compare different methods of imputation and choose the one that performs the best out-of-sample.
 
+We can use resamples to get resampled results of the models, then use dotplot to look at the results.
+
+```{r}
+# Create a set of resampling results from the dataset for each model
+resamples <- resamples(x = list(median_model = model, knn_model = model2))
+
+# Plot the results
+dotplot(resamples, metric = "ROC")
+
+```
+
+### Mutiple pre-processing steps
+
+The preProcess command has mutiple options, and different options can be chained together e.g. medin imputation, centre and scale your data, then fit a GLM model.  One set of preprocessing functions that is particularly useful for fitting regression models is standardization: centering and scaling. You first center by subtracting the mean of each column from each value in that column, then you scale by dividing by the standard deviation.
+
+Standardization transforms your data such that for each column, the mean is 0 and the standard deviation is 1. This makes it easier for regression models to find a good solution.
+
+Note that the order of operations matters e.g. centre and scaling should happen after median imputation, PCA should happen after this.
+
+```{r}
+# Fit glm with median imputation: model1
+model1 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = "medianImpute"
+)
+
+# Print model1
+model1
+
+# Fit glm with median imputation and standardization: model2
+model2 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = c("medianImpute", "center", "scale")
+)
+
+# Print model2
+model2
+
+# Create a set of resampling results from the dataset for each model
+resamples <- resamples(x = list(median_model = model, Median_and_standardized = model2))
+
+# Plot the results
+dotplot(resamples, metric = "ROC")
+```
+
+### Handling low-Information Predictors
+
+Some variables in our dataset may contain very little information e.g. variables that are constant or close to constant.  Constant models can cause problems, as a CV fold may end up with one when performing a split.  It can be hard to work out what has gone wrong with such a model, as the results are often meaningless, as the metrics can be missing.
+
+To remove constant value columns, we can use the "zv" or zero variance option or "nzv" to remove the nearly constant columns in the preProcess step.  Removing such columns/variables reduces model-fitting time without reducing model accuracy.
+
+caret contains a utility function called nearZeroVar() for removing such variables to save time during modeling.
+
+nearZeroVar() takes in data x, then looks at the ratio of the most common value to the second most common value, freqCut, and the percentage of distinct values out of the number of total samples, uniqueCut. By default, caret uses freqCut = 19 and uniqueCut = 10, which is fairly conservative. I like to be a little more aggressive and use freqCut = 2 and uniqueCut = 20 when calling nearZeroVar().
+
+We will use the blood-brain dataset. This is a biochemical dataset in which the task is to predict the following value for a set of biochemical compounds:
+
+> log((concentration of compound in brain) /
+       (concentration of compound in blood))
+
+This gives a quantitative metric of the compound's ability to cross the blood-brain barrier, and is useful for understanding the biological properties of that barrier.
+
+One interesting aspect of this dataset is that it contains many variables and many of these variables have extemely low variances. This means that there is very little information in these variables because they mostly consist of a single value (e.g. zero).
+
+```{r}
+# Load the blood brain dataset
+load("./files/MLToolbox/BloodBrain.RData")
+
+# Identify near zero variance predictors: remove_cols
+remove_cols <- nearZeroVar(bloodbrain_x, names = TRUE, 
+                           freqCut = 2, uniqueCut = 20)
+
+# Get all column names from bloodbrain_x: all_cols
+all_cols <- names(bloodbrain_x)
+
+# Remove from data: bloodbrain_x_small
+bloodbrain_x_small <- bloodbrain_x[ , setdiff(all_cols, remove_cols)]
+```
+
+Note you can either do this by hand, prior to modeling, using the nearZeroVar() function as shown above.  Or this can also be done using the preProcess argument equal to "nzv".  Doing it by hand using nerZeroVar() gives more fine grained control however.
+
+Next we can can fit a glm model to it using the train() function. This model will run faster than using the full dataset and will yield very similar predictive accuracy.
+
+```{r}
+# Fit model on reduced data: model
+model <- train(x = bloodbrain_x_small, y = bloodbrain_y, method = "glm")
+
+# Print model to console
+model
+```
+
+### Principle Components Analysis (PCA)
