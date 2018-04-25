@@ -965,11 +965,11 @@ loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span clas
 <span class="kw">table</span>(loans_test<span class="op">$</span>pred, loans_test<span class="op">$</span>outcome)</code></pre></div>
 <pre><code>##          
 ##           default repaid
-##   default     822    644
-##   repaid      615    747</code></pre>
+##   default     805    625
+##   repaid      622    776</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute the accuracy on the test dataset</span>
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome) </code></pre></div>
-<pre><code>## [1] 0.5548091</code></pre>
+<pre><code>## [1] 0.5590523</code></pre>
 <div id="tending-to-classification-trees" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Tending to classification trees</h3>
 <p>As classification trees can overfit, we may need to prune the trees. One method of achieving this is stopping the growing method early by limiting the tree depth and is known as pre-pruning. e.g. we have a max tree depth of 7 levels or branches. Another option is to set the minimum number of observations that can occur in any one branch, perhaps the tree if stopped if there are few than 10 observations on any one branch. However, trees stopped early may miss some patterns that might have been discovered later.</p>
@@ -988,14 +988,14 @@ loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <
 <span class="co"># Compute the accuracy of the simpler tree</span>
 loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.5880481</code></pre>
+<pre><code>## [1] 0.5891089</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow a tree with minsplit of 500</span>
 loan_model2 &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> loans_train, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">minsplit =</span> <span class="dv">500</span>, <span class="dt">cp =</span> <span class="dv">0</span>))
 
 <span class="co"># Compute the accuracy of the simpler tree</span>
 loans_test<span class="op">$</span>pred2 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model2, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred2 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.5933522</code></pre>
+<pre><code>## [1] 0.6011315</code></pre>
 <p>In both these cases, we see the mean accuracy on the test data, despite fitting a simpler tree, is actually higher than the unpruned tree.</p>
 <p>Next we use post-pruning and see that this too improves the predictive accuracy on the test data, despite being a simpler tree.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Grow an overly complex tree</span>
@@ -1004,7 +1004,7 @@ loan_model &lt;-<span class="st"> </span><span class="kw">rpart</span>(outcome <
 <span class="co"># Compute the accuracy of the unpruned tree</span>
 loans_test<span class="op">$</span>pred1 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred1 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.5548091</code></pre>
+<pre><code>## [1] 0.5590523</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Examine the complexity plot</span>
 <span class="kw">plotcp</span>(loan_model)</code></pre></div>
 <p><img src="SLinRClassification_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
@@ -1014,7 +1014,7 @@ loan_model_pruned &lt;-<span class="st"> </span><span class="kw">prune</span>(lo
 <span class="co"># Compute the accuracy of the pruned tree</span>
 loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_pruned, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.5859264</code></pre>
+<pre><code>## [1] 0.6032532</code></pre>
 <p>A number of classification trees can be combined together to create a forest of classification trees. Each of the trees is diverse but simple and by combining them together we can help to udnerstand the complexity in the underlying data. But growing different trees requires differing conditions for each tree, otherwise growing 100 trees on the same data would result in 100 identical trees. To do this, we allocate each tree a random subset of data, we do this using the random forest approach. So each tree is give a small random sample which grows a simple tree, and is then combine. This can seem counter intuitive, since we might think havign a single complex tree is more accurate. A bit like an effective team, it is better to have specialised skills. Combining multiple learners together is known as ensemble models, where each tree or model is given a vote on a particular observation. The teamwork-based approach of the random forest may help it find important trends a single tree may miss.</p>
 <p>We use the randomForest package in R and specify the ntree parameter for the size of the forest and mtry is the number of features selected at random for each tree. We can typically use the default number of features which is sqrt(p) where p is the total number of parameters.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the randomForest package</span>
@@ -1029,9 +1029,9 @@ loan_model_rf2 &lt;-<span class="st"> </span><span class="kw">randomForest</span
 loans_test<span class="op">$</span>pred &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_rf, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 loans_test<span class="op">$</span>pred2 &lt;-<span class="st"> </span><span class="kw">predict</span>(loan_model_rf2, loans_test, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
 <span class="kw">mean</span>(loans_test<span class="op">$</span>pred <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.5880481</code></pre>
+<pre><code>## [1] 0.5894625</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(loans_test<span class="op">$</span>pred2 <span class="op">==</span><span class="st"> </span>loans_test<span class="op">$</span>outcome)</code></pre></div>
-<pre><code>## [1] 0.9048798</code></pre>
+<pre><code>## [1] 0.9045262</code></pre>
 
 </div>
 </div>

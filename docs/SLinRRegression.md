@@ -584,7 +584,7 @@ nrow(mpg_train)
 ```
 
 ```
-## [1] 178
+## [1] 179
 ```
 
 ```r
@@ -592,7 +592,7 @@ nrow(mpg_test)
 ```
 
 ```
-## [1] 56
+## [1] 55
 ```
 
 It is likely our target number of rows will slightly different than what is sampled, but they should be close enough.
@@ -607,24 +607,24 @@ summary(mpg_train)
 
 ```
 ##  manufacturer          model               displ            year     
-##  Length:178         Length:178         Min.   :1.600   Min.   :1999  
+##  Length:179         Length:179         Min.   :1.600   Min.   :1999  
 ##  Class :character   Class :character   1st Qu.:2.400   1st Qu.:1999  
-##  Mode  :character   Mode  :character   Median :3.300   Median :1999  
-##                                        Mean   :3.467   Mean   :2003  
+##  Mode  :character   Mode  :character   Median :3.300   Median :2008  
+##                                        Mean   :3.503   Mean   :2004  
 ##                                        3rd Qu.:4.600   3rd Qu.:2008  
 ##                                        Max.   :7.000   Max.   :2008  
 ##       cyl           trans               drv                 cty       
-##  Min.   :4.000   Length:178         Length:178         Min.   : 9.00  
+##  Min.   :4.000   Length:179         Length:179         Min.   : 9.00  
 ##  1st Qu.:4.000   Class :character   Class :character   1st Qu.:14.00  
-##  Median :6.000   Mode  :character   Mode  :character   Median :17.00  
-##  Mean   :5.904                                         Mean   :17.02  
+##  Median :6.000   Mode  :character   Mode  :character   Median :16.00  
+##  Mean   :5.916                                         Mean   :16.77  
 ##  3rd Qu.:8.000                                         3rd Qu.:19.00  
 ##  Max.   :8.000                                         Max.   :35.00  
 ##       hwy             fl               class          
-##  Min.   :12.00   Length:178         Length:178        
+##  Min.   :12.00   Length:179         Length:179        
 ##  1st Qu.:18.00   Class :character   Class :character  
-##  Median :25.00   Mode  :character   Mode  :character  
-##  Mean   :23.58                                        
+##  Median :24.00   Mode  :character   Mode  :character  
+##  Mean   :23.36                                        
 ##  3rd Qu.:27.00                                        
 ##  Max.   :44.00
 ```
@@ -653,18 +653,18 @@ summary(mpg_model)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -2.9957 -0.6870 -0.0077  0.6216  4.4733 
+## -2.8920 -0.6972 -0.0089  0.6145  4.6014 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  0.71118    0.39277   1.811   0.0719 .  
-## hwy          0.69138    0.01615  42.813   <2e-16 ***
+## (Intercept)  0.68419    0.37366   1.831   0.0688 .  
+## hwy          0.68831    0.01549  44.445   <2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.281 on 176 degrees of freedom
-## Multiple R-squared:  0.9124,	Adjusted R-squared:  0.9119 
-## F-statistic:  1833 on 1 and 176 DF,  p-value: < 2.2e-16
+## Residual standard error: 1.248 on 177 degrees of freedom
+## Multiple R-squared:  0.9178,	Adjusted R-squared:  0.9173 
+## F-statistic:  1975 on 1 and 177 DF,  p-value: < 2.2e-16
 ```
 
 Next we will test the model mpg_model on the test data, mpg_test.  We will use two functions rather than calculate the rmse and r_squared manually:
@@ -685,7 +685,7 @@ mpg_test$pred <- predict(mpg_model, mpg_test)
 ```
 
 ```
-## [1] 1.273458
+## [1] 1.241351
 ```
 
 ```r
@@ -693,7 +693,7 @@ mpg_test$pred <- predict(mpg_model, mpg_test)
 ```
 
 ```
-## [1] 1.169409
+## [1] 1.269702
 ```
 
 ```r
@@ -702,7 +702,7 @@ mpg_test$pred <- predict(mpg_model, mpg_test)
 ```
 
 ```
-## [1] 0.9039807
+## [1] 0.9103956
 ```
 
 ```r
@@ -710,7 +710,7 @@ mpg_test$pred <- predict(mpg_model, mpg_test)
 ```
 
 ```
-## [1] 0.9181344
+## [1] 0.8936488
 ```
 
 ```r
@@ -742,20 +742,20 @@ str(splitPlan)
 ```
 ## List of 5
 ##  $ :List of 2
-##   ..$ train: int [1:188] 2 3 4 5 6 7 8 9 10 11 ...
-##   ..$ app  : int [1:46] 122 151 47 103 75 82 25 174 200 46 ...
+##   ..$ train: int [1:188] 3 4 5 6 7 8 9 10 11 12 ...
+##   ..$ app  : int [1:46] 104 103 158 67 191 21 33 155 53 2 ...
 ##  $ :List of 2
-##   ..$ train: int [1:187] 1 2 3 4 6 7 8 10 11 12 ...
-##   ..$ app  : int [1:47] 115 18 171 192 209 147 57 88 208 129 ...
+##   ..$ train: int [1:187] 1 2 4 5 6 11 13 14 15 16 ...
+##   ..$ app  : int [1:47] 54 8 42 198 20 135 149 97 131 222 ...
+##  $ :List of 2
+##   ..$ train: int [1:187] 1 2 3 5 6 7 8 9 10 11 ...
+##   ..$ app  : int [1:47] 141 188 37 218 164 24 70 115 179 208 ...
+##  $ :List of 2
+##   ..$ train: int [1:187] 1 2 3 4 7 8 9 10 11 12 ...
+##   ..$ app  : int [1:47] 64 108 148 196 111 220 90 165 107 5 ...
 ##  $ :List of 2
 ##   ..$ train: int [1:187] 1 2 3 4 5 6 7 8 9 10 ...
-##   ..$ app  : int [1:47] 164 61 187 11 55 211 125 191 60 127 ...
-##  $ :List of 2
-##   ..$ train: int [1:187] 1 2 3 5 7 8 9 10 11 12 ...
-##   ..$ app  : int [1:47] 58 213 160 157 56 114 14 198 188 31 ...
-##  $ :List of 2
-##   ..$ train: int [1:187] 1 4 5 6 9 11 12 13 14 15 ...
-##   ..$ app  : int [1:47] 2 69 42 74 154 8 205 40 33 101 ...
+##   ..$ app  : int [1:47] 128 74 83 207 174 47 98 145 26 110 ...
 ##  - attr(*, "splitmethod")= chr "kwaycross"
 ```
 
@@ -799,20 +799,20 @@ str(splitPlan)
 ```
 ## List of 5
 ##  $ :List of 2
-##   ..$ train: int [1:188] 2 3 4 5 6 7 8 9 10 11 ...
-##   ..$ app  : int [1:46] 122 151 47 103 75 82 25 174 200 46 ...
+##   ..$ train: int [1:188] 3 4 5 6 7 8 9 10 11 12 ...
+##   ..$ app  : int [1:46] 104 103 158 67 191 21 33 155 53 2 ...
 ##  $ :List of 2
-##   ..$ train: int [1:187] 1 2 3 4 6 7 8 10 11 12 ...
-##   ..$ app  : int [1:47] 115 18 171 192 209 147 57 88 208 129 ...
+##   ..$ train: int [1:187] 1 2 4 5 6 11 13 14 15 16 ...
+##   ..$ app  : int [1:47] 54 8 42 198 20 135 149 97 131 222 ...
+##  $ :List of 2
+##   ..$ train: int [1:187] 1 2 3 5 6 7 8 9 10 11 ...
+##   ..$ app  : int [1:47] 141 188 37 218 164 24 70 115 179 208 ...
+##  $ :List of 2
+##   ..$ train: int [1:187] 1 2 3 4 7 8 9 10 11 12 ...
+##   ..$ app  : int [1:47] 64 108 148 196 111 220 90 165 107 5 ...
 ##  $ :List of 2
 ##   ..$ train: int [1:187] 1 2 3 4 5 6 7 8 9 10 ...
-##   ..$ app  : int [1:47] 164 61 187 11 55 211 125 191 60 127 ...
-##  $ :List of 2
-##   ..$ train: int [1:187] 1 2 3 5 7 8 9 10 11 12 ...
-##   ..$ app  : int [1:47] 58 213 160 157 56 114 14 198 188 31 ...
-##  $ :List of 2
-##   ..$ train: int [1:187] 1 4 5 6 9 11 12 13 14 15 ...
-##   ..$ app  : int [1:47] 2 69 42 74 154 8 205 40 33 101 ...
+##   ..$ app  : int [1:47] 128 74 83 207 174 47 98 145 26 110 ...
 ##  - attr(*, "splitmethod")= chr "kwaycross"
 ```
 
@@ -843,7 +843,7 @@ Metrics::rmse(mpg$pred.cv, mpg$cty)
 ```
 
 ```
-## [1] 1.266766
+## [1] 1.266426
 ```
 
 This has now calculated the models out of sample error using cross validation.  CV validates the modelling process, not whether the model is a good one or not.  Here we we the full model RMSE is very similar to the CV RMSE suggesting we are not over fitting the data. 
@@ -2438,13 +2438,13 @@ treatplan <- designTreatmentsZ(dframe, vars)
 ```
 
 ```
-## [1] "designing treatments Wed Apr 25 04:31:23 2018"
-## [1] "designing treatments Wed Apr 25 04:31:23 2018"
-## [1] " have level statistics Wed Apr 25 04:31:23 2018"
-## [1] "design var color Wed Apr 25 04:31:23 2018"
-## [1] "design var size Wed Apr 25 04:31:23 2018"
-## [1] " scoring treatments Wed Apr 25 04:31:23 2018"
-## [1] "have treatment plan Wed Apr 25 04:31:23 2018"
+## [1] "designing treatments Wed Apr 25 04:41:18 2018"
+## [1] "designing treatments Wed Apr 25 04:41:18 2018"
+## [1] " have level statistics Wed Apr 25 04:41:18 2018"
+## [1] "design var color Wed Apr 25 04:41:18 2018"
+## [1] "design var size Wed Apr 25 04:41:18 2018"
+## [1] " scoring treatments Wed Apr 25 04:41:18 2018"
+## [1] "have treatment plan Wed Apr 25 04:41:18 2018"
 ```
 
 ```r
