@@ -1096,8 +1096,8 @@ table(loans_test$pred, loans_test$outcome)
 ```
 ##          
 ##           default repaid
-##   default     834    637
-##   repaid      551    806
+##   default     822    644
+##   repaid      615    747
 ```
 
 ```r
@@ -1106,7 +1106,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5799151
+## [1] 0.5548091
 ```
 
 ### Tending to classification trees
@@ -1135,7 +1135,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5823904
+## [1] 0.5880481
 ```
 
 ```r
@@ -1148,7 +1148,7 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5813296
+## [1] 0.5933522
 ```
 
 In both these cases, we see the mean accuracy on the test data, despite fitting a simpler tree, is actually higher than the unpruned tree.
@@ -1166,7 +1166,7 @@ mean(loans_test$pred1 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5799151
+## [1] 0.5548091
 ```
 
 ```r
@@ -1186,7 +1186,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5816832
+## [1] 0.5859264
 ```
 
 A number of classification trees can be combined together to create a forest of classification trees.  Each of the trees is diverse but simple and by combining them together we can help to udnerstand the complexity in the underlying data.  But growing different trees requires differing conditions for each tree, otherwise growing 100 trees on the same data would result in 100 identical trees.  To do this, we allocate each tree a random subset of data, we do this using the random forest approach.  So each tree is give a small random sample which grows a simple tree, and is then combine.  This can seem counter intuitive, since we might think havign a single complex tree is more accurate.  A bit like an effective team, it is better to have specialised skills.  Combining multiple learners together is known as ensemble models, where each tree or model is given a vote on a particular observation.  The teamwork-based approach of the random forest may help it find important trends a single tree may miss.
@@ -1219,7 +1219,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5855728
+## [1] 0.5880481
 ```
 
 ```r
@@ -1227,6 +1227,6 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.8949788
+## [1] 0.9048798
 ```
 

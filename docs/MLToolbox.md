@@ -5,10 +5,10 @@ Notes taken during/inspired by the DataCamp course 'Machine Learning Toolbox' by
 **_Course Handouts_**
 
 * [Part 1 - Regression models: fitting them and evaluating their performance](./files/MLToolbox/ch1-pdf-slides.pdf)
-* [Part 2 - Classification models: fitting them and evaluating their performance] () 
-* [Part 3 - Tuning model parameters to improve performance] () 
-* [Part 4 - Preprocessing your data] ()
-* [Part 5 - Selecting models: a case study in churn prediction] ()
+* [Part 2 - Classification models: fitting them and evaluating their performance](./files/MLToolbox/ch2-pdf-slides.pdf) 
+* [Part 3 - Tuning model parameters to improve performance](./files/MLToolbox/ch3-pdf-slides.pdf) 
+* [Part 4 - Preprocessing your data](./files/MLToolbox/ch4-pdf-slides.pdf)
+* [Part 5 - Selecting models: a case study in churn prediction](./files/MLToolbox/ch5-pdf-slides.pdf)
 
 **_Other useful links_**
 
