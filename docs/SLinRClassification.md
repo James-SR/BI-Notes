@@ -10,6 +10,7 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 * [Part 4 - Classification Trees](./files/SLinRClassification/chapter3.pdf)
 
 **_Other useful links_**
+
 * [Introduction to Tree Based Methods from ISL](https://www.youtube.com/watch?v=6ENTbK3yQUQ)
 
 ## k-Nearest Neighbors (kNN)
@@ -597,7 +598,7 @@ ROC <- roc(donors$donated, donors$donation_prob)
 plot(ROC, col = "blue")
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-18-1.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-18-1.png" width="672" />
 
 ```r
 # Calculate the area under the curve (AUC)
@@ -734,7 +735,7 @@ ROC <- roc(donors$donated, rfm_prob)
 plot(ROC, col = "red")
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-21-1.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-21-1.png" width="672" />
 
 ```r
 auc(ROC)
@@ -934,7 +935,7 @@ ROC <- roc(donors$donated, step_prob)
 plot(ROC, col = "red")
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-22-1.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 
 ```r
 auc(ROC)
@@ -951,7 +952,7 @@ It is perhaps useful when we lack subject matter expertise and wish to try and f
 Also known as decisions trees break down data in to a serious of steps or questions (if else) then help to define action.  The goal is to model predictors against an outcome of interest.  If someone is applying for a loan, we can use past data to determine and build a tree that helps to determine how probable it is that new applicant will repay the debt.  
 
 <div class="figure">
-<img src="images/SLinRClassification/Tree.png" alt="Decision Tree" width="1349" />
+<img src="images/SLinRClassification/Tree.png" alt="Decision Tree" width="674" />
 <p class="caption">(\#fig:Tree)Decision Tree</p>
 </div>
 
@@ -1037,26 +1038,26 @@ library(rpart.plot)
 rpart.plot(loan_model)
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-25-1.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 ```r
 # Plot the loan_model with customized settings
 rpart.plot(loan_model, type = 3, box.palette = c("red", "green"), fallen.leaves = TRUE)
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-25-2.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-25-2.png" width="672" />
 
 When choosing between different split options - for instance choosing whether to split on loan amount or credit score - the decision tree will provide a split for both, then look and how homogenous the resulting options are.  In the diagram below, even though split B (based on loan amount) produces a very similar group for one partition (14/15 defaulted) it is much more mixed for the other partition (19/32 defaulted).  In comparison, split A is more pure, so will be choosen first.  It will then proceed to look at the next split which results in the most homogenous/similar partition. 
 
 <div class="figure">
-<img src="images/SLinRClassification/SplitChoice.png" alt="Tree Split Choice" width="1344" />
+<img src="images/SLinRClassification/SplitChoice.png" alt="Tree Split Choice" width="672" />
 <p class="caption">(\#fig:SplitChoice)Tree Split Choice</p>
 </div>
 
 As the tree begins to grow, it results in smaller and more homogeous partions (below left).  An easy option would be to draw a diagonal line (below right) however these requires, in this example, consideration of two different variables, which is not possible with the 'divide and conquer' process.  A decision tree creates what are called axis parallel splits, which can mean for some patterns in data they can become overly complex.
 
 <div class="figure">
-<img src="images/SLinRClassification/splits.png" alt="Axis parallel split" width="1344" />
+<img src="images/SLinRClassification/splits.png" alt="Axis parallel split" width="672" />
 <p class="caption">(\#fig:Axis Splits)Axis parallel split</p>
 </div>
 
@@ -1095,8 +1096,8 @@ table(loans_test$pred, loans_test$outcome)
 ```
 ##          
 ##           default repaid
-##   default     788    614
-##   repaid      621    805
+##   default     834    637
+##   repaid      551    806
 ```
 
 ```r
@@ -1105,7 +1106,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5632956
+## [1] 0.5799151
 ```
 
 ### Tending to classification trees
@@ -1115,7 +1116,7 @@ As classification trees can overfit, we may need to prune the trees.  One method
 An alternative is to post-pruning where a complex, over-fitted tree is built first, then pruned back to reduce the size.  After the tree is built we remove nodes or branches that have little impact on the overall accuracy.  To do this we can plot the degree of error reduction on the vertical axis against the tree depth (aka complexity) as shown below and look for a 'dog leg' or kink in the curve.  As the tree grows, each successive branch or node improves the accuracy quite a lot, however later branches or nodes only improve the accuracy by a smaller amount.  So we can try and find the point at which the curve flattens.
 
 <div class="figure">
-<img src="images/SLinRClassification/kinky.png" alt="Dog Leg" width="389" />
+<img src="images/SLinRClassification/kinky.png" alt="Dog Leg" width="194" />
 <p class="caption">(\#fig:Dog Leg)Dog Leg</p>
 </div>
 
@@ -1134,7 +1135,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5933522
+## [1] 0.5823904
 ```
 
 ```r
@@ -1147,7 +1148,7 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.6011315
+## [1] 0.5813296
 ```
 
 In both these cases, we see the mean accuracy on the test data, despite fitting a simpler tree, is actually higher than the unpruned tree.
@@ -1165,7 +1166,7 @@ mean(loans_test$pred1 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.5632956
+## [1] 0.5799151
 ```
 
 ```r
@@ -1173,7 +1174,7 @@ mean(loans_test$pred1 == loans_test$outcome)
 plotcp(loan_model)
 ```
 
-![](SLinRClassification_files/figure-epub3/unnamed-chunk-29-1.png)<!-- -->
+<img src="SLinRClassification_files/figure-html/unnamed-chunk-29-1.png" width="672" />
 
 ```r
 # Prune the tree
@@ -1185,7 +1186,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.6067893
+## [1] 0.5816832
 ```
 
 A number of classification trees can be combined together to create a forest of classification trees.  Each of the trees is diverse but simple and by combining them together we can help to udnerstand the complexity in the underlying data.  But growing different trees requires differing conditions for each tree, otherwise growing 100 trees on the same data would result in 100 identical trees.  To do this, we allocate each tree a random subset of data, we do this using the random forest approach.  So each tree is give a small random sample which grows a simple tree, and is then combine.  This can seem counter intuitive, since we might think havign a single complex tree is more accurate.  A bit like an effective team, it is better to have specialised skills.  Combining multiple learners together is known as ensemble models, where each tree or model is given a vote on a particular observation.  The teamwork-based approach of the random forest may help it find important trends a single tree may miss.
@@ -1218,7 +1219,7 @@ mean(loans_test$pred == loans_test$outcome)
 ```
 
 ```
-## [1] 0.6028996
+## [1] 0.5855728
 ```
 
 ```r
@@ -1226,6 +1227,6 @@ mean(loans_test$pred2 == loans_test$outcome)
 ```
 
 ```
-## [1] 0.9080622
+## [1] 0.8949788
 ```
 

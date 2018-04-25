@@ -84,7 +84,7 @@ Whilst a SQL statement can look like English, it doesn't neccessarily run from t
 There are a number of different data types in T-SQL as shown below, which are grouped in to a number of different types.  
 
 <div class="figure">
-<img src="images/TSQL/TSQLDataTypes.png" alt="Transact-SQL Data Types" width="1483" />
+<img src="images/TSQL/TSQLDataTypes.png" alt="Transact-SQL Data Types" width="742" />
 <p class="caption">(\#fig:Data Types)Transact-SQL Data Types</p>
 </div>
 
@@ -1796,7 +1796,7 @@ Now we are looking to not just bring back individual rows but perform calculatio
 The functions we will look at are shown below.
 
 <div class="figure">
-<img src="images/TSQL/Functions.png" alt="Transact-SQL Functions" width="1219" />
+<img src="images/TSQL/Functions.png" alt="Transact-SQL Functions" width="610" />
 <p class="caption">(\#fig:Functions)Transact-SQL Functions</p>
 </div>
 
@@ -1890,16 +1890,16 @@ Table: (\#tab:unnamed-chunk-53)Displaying records 1 - 10
 
  YearsSold   MonthsSold   ProductID  Name                       
 ----------  -----------  ----------  ---------------------------
-        16          189         680  HL Road Frame - Black, 58  
-        16          189         706  HL Road Frame - Red, 58    
-        13          152         707  Sport-100 Helmet, Red      
-        13          152         708  Sport-100 Helmet, Black    
-        13          152         709  Mountain Bike Socks, M     
-        13          152         710  Mountain Bike Socks, L     
-        13          152         711  Sport-100 Helmet, Blue     
-        13          152         712  AWC Logo Cap               
-        13          152         713  Long-Sleeve Logo Jersey, S 
-        13          152         714  Long-Sleeve Logo Jersey, M 
+        16          190         680  HL Road Frame - Black, 58  
+        16          190         706  HL Road Frame - Red, 58    
+        13          153         707  Sport-100 Helmet, Red      
+        13          153         708  Sport-100 Helmet, Black    
+        13          153         709  Mountain Bike Socks, M     
+        13          153         710  Mountain Bike Socks, L     
+        13          153         711  Sport-100 Helmet, Blue     
+        13          153         712  AWC Logo Cap               
+        13          153         713  Long-Sleeve Logo Jersey, S 
+        13          153         714  Long-Sleeve Logo Jersey, M 
 
 </div>
 
@@ -5066,7 +5066,7 @@ PIVOT
 So we go from long to wide format as illustrated below.
 
 <div class="figure">
-<img src="images/TSQL/PivotAnswerS4Q5.png" alt="Pivot Answer Section 4 Question 5" width="1252" />
+<img src="images/TSQL/PivotAnswerS4Q5.png" alt="Pivot Answer Section 4 Question 5" width="626" />
 <p class="caption">(\#fig:Pivot Answer)Pivot Answer Section 4 Question 5</p>
 </div>
 
