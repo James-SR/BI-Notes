@@ -10,10 +10,10 @@ Notes taken during/inspired by the DataCamp course 'Supervised Learning In R Cla
 **_Course Handouts_**
 
 * [Part 1 - What is Regression?](./files/SLinRRegression/chapter1.pdf)
-* [Part 2 - Training and Evaluating Regression Models] (./files/SLinRRegression/chapter2.pdf) 
-* [Part 3 - Issues to Consider] (./files/SLinRRegression/chapter3.pdf) 
-* [Part 4 - Dealing with Non-Linear Responses] (./files/SLinRRegression/chapter4.pdf)
-* [Part 5 - Tree-Based Methods] (./files/SLinRRegression/chapter5.pdf)
+* [Part 2 - Training and Evaluating Regression Models](./files/SLinRRegression/chapter2.pdf) 
+* [Part 3 - Issues to Consider](./files/SLinRRegression/chapter3.pdf) 
+* [Part 4 - Dealing with Non-Linear Responses](./files/SLinRRegression/chapter4.pdf)
+* [Part 5 - Tree-Based Methods](./files/SLinRRegression/chapter5.pdf)
 
 **_Other useful links_**
 
