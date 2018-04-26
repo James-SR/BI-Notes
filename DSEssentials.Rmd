@@ -16,3 +16,17 @@ Notes taken during/inspired by the edX course 'Data Science Essentials - Microso
 
 ## Principles of Data Science
 
+The course uses the following definition of data science:
+
+> Data Science is the exploration and quantitative analysis of all available structured and unstructured data to develop understanding, extract knowledge, and formulate actionable results.
+
+We are interested in 'Data Analytical Thinking' which effectivley moves us away from intution to data driven analytical decisions.  Originally data was used to inform decisions, however advances have made analysis to be more real time e.g. prescriptive analytics, and also help consider future trends i.e. predictive analytics.
+
+For instance in a medical sense, we no longer wait for a patient to present themselves, we can take more regular readings such as blood tests, surveys and so on, then identify which patients are more at risk and undertake preventive work.  In a similar way, aircraft manufacturers are building in measurement devices and applications to record data and report it, so that abnormal part behaviour is picked up earlier leading to preventative maintenance.  Equally in fraud detection, we can now look not just at real time transactions which look odd, but anomolies across multiple accounts which may indicate large scale fraud using anomaly detection.
+
+There is some terminology to learn, for instance if we were looking at whether a crime had been predicted by the same person, we might call that a crime series:
+
+* Crime Series = Cluster in ML  
+* Modus Operandi = Subspace in ML  
+
+Whilst the actual method is a bit more detailed, the method used to detect this wasn't far off k-means clustering.
