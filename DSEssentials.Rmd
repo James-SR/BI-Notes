@@ -29,4 +29,26 @@ There is some terminology to learn, for instance if we were looking at whether a
 * Crime Series = Cluster in ML  
 * Modus Operandi = Subspace in ML  
 
-Whilst the actual method is a bit more detailed, the method used to detect this wasn't far off k-means clustering.
+Whilst the actual process is a bit more detailed, but the method used to detect this wasn't far off k-means clustering.
+
+Big Data was originally called this by a pair of Astronomers who also suggested a data pipeline.
+
+```{r Big Data Pipeline, echo = FALSE, fig.cap='Big Data Pipeline'}
+knitr::include_graphics("images/DSEssentials/Pipeline.png")
+```
+
+At the same time, a seperate group were trying to create a representation for the knowledge discovery in databases (KDD) process.
+
+```{r KDD, echo = FALSE, fig.cap='Knowledge Discovery in Databases or KDD'}
+knitr::include_graphics("images/DSEssentials/KDD.png")
+```
+
+So they have the same exact steps, which suggests at some commonality between fields in terms of data and knowledge discovery.  Data Mining is only one part of the process.  CRISP-DM is a similar process, but also includes Business Need and Data Understanding.  As the diagrams indicate, there are backwards flows, indicating we move in an iterative process.
+
+```{r CRISP-DM, echo = FALSE, fig.cap='CRISP-DM'}
+knitr::include_graphics("images/DSEssentials/CRISP-DM.png")
+```
+
+Part of the data preperation process can involve turning things like unstructured text in to something more useable for ML i.e. a vector.  People often thinking the modelling step is where the 'magic' happens, but if the data has been properly prepared, then it will be quite straightforward.
+
+Predictive modelling means machine learning or statistical modelling, it may not mean predicting the future, it can often mean predicting a new case or person outcome that you have not seen before.
