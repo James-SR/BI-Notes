@@ -4,12 +4,16 @@ Notes taken during/inspired by the edX course 'Data Science Essentials - Microso
 
 **_Course Handouts_**
 
-* [Principles of Data Science](../files/DSEssentials/PrinciplesofDataScience.PDF)
 * [Course Setup Guide](../files/DSEssentials/DAT203.1x-Setup-Guide.PDF)
 * [Slides](../files/DSEssentials/Slides)
 * [Handouts](../files/DSEssentials/Handouts) 
 * [Labs](../files/DSEssentials/Labs)
 * [GitHib Repo for course including course materials, slides, labs etc](https://microsoftlearning.github.io/Data-Science-Essentials/)
+
+**_Key Ponts_**
+* [Key Points for Principles of Data Science](../files/DSEssentials/KeyPoints/PrinciplesofDataScience.PDF)
+
+
 
 **_Other useful links_**
 * []()
@@ -52,3 +56,18 @@ knitr::include_graphics("images/DSEssentials/CRISP-DM.png")
 Part of the data preperation process can involve turning things like unstructured text in to something more useable for ML i.e. a vector.  People often thinking the modelling step is where the 'magic' happens, but if the data has been properly prepared, then it will be quite straightforward.
 
 Predictive modelling means machine learning or statistical modelling, it may not mean predicting the future, it can often mean predicting a new case or person outcome that you have not seen before.
+
+### Data Science Technologies
+
+There's a huge range of tools and technologists that you can use as a data scientist; ranging from spreadsheet tools like Microsoft Excel with through to large-scale data processing platforms like Apache Spark.  The course focuses on a core set of tools that you can use to perform most data exploration, cleaning, and modeling tasks - and which you will use in the course labs. These tools are provided in the Microsoft Azure Machine Learning service, which includes:
+
+* A graphical environment called Azure Machine Learning Studio, in which you can create data science experiments and publish machine learning models as web services.  
+* Jupyter Notebooks - an online tool for running custom R or Python code to explore and visualize data.  
+
+Azure Machine Learning (AML) is easy to use and don't require a lot of programming, but they do require understanding of data science and the model building process.  R and Python are widely used tools that are highly interactive with good visualisations, both have good development environments.  Python is more systematic and faster, but R wins in other ways like the range of packages, is faster with graphics and is easier to learn.  
+
+There is a 'stack' within Microsoft Cortana Intelligence, as shown below, the focus of the course is on the Machine Learning and Analytics element.
+
+```{r Stack, echo = FALSE, fig.cap='Microsoft Cortana Stack'}
+knitr::include_graphics("images/DSEssentials/Stack.png")
+```
