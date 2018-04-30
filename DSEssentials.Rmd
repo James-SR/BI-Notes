@@ -74,4 +74,16 @@ knitr::include_graphics("images/DSEssentials/Stack.png")
 
 AML is easy to use and requires a bit of Data Science knowledge so you know what you are doing.  You can quickly deploy your tools to the web or into production.  AS it runs in Azure, it can be scaleable and secure.  They also work with Juypter notebooks.  Azure Machine Learning Studio is the 'studio' in to which we build our work flow.  AML Studio allows you to build a DS workflow using graphical tools, but also allows you to code elements, in SQL, R and Python.  Azure Machine Learning however is a production environment, it is not an interactive development environment.  If you wish to develop, this is best done in an IDE like R Studio.  An IDE has as a more powerful editor and debugger, amungst other things, that AML does not.  You can then, when finished, cut and paste your code in to AML.  An alternative would be to use Juypter, then cut and paste in to AML.  We can use SQL to read data from Azure SQL, a SQL Server, or from an SQL database.  You can also run the Apply SQL Transformation module, which runs SQLite _in line_ with your expriment.  This allows you to then filter and structure your data in a SQL way, if you are more comfortable or exprienced with that.
 
-At the end of a workflow, it is possible to export the resulting file to a csv (using convert to csv), then right click the output port and select 'open in a new newbook' and choose your language/kernel of choice.  The resulting notebook can be used for interactive exploration and will be saved in to the AML workspace.
+At the end of setp or a workflow, it is possible to export the resulting file to a csv (using convert to csv), then right click the output port and select 'open in a new newbook' and choose your language/kernel of choice.  The resulting notebook can be used for interactive exploration and will be saved in to the AML workspace, you can rename the notebook by selecting the title e.g. the 'Run result 6-8-2016 ...' next to the Jupyter logo in the image shown below.
+
+```{r Jupyter, echo = FALSE, fig.cap='Rename Jupyter Notebook'}
+knitr::include_graphics("images/DSEssentials/Jupyter.png")
+```
+
+It is possible to use built in functions inside AML to do things like create the test/train split, with parameters for the fraction of the data to use for the test split and set the seed.  In the same fashion, we can add a random forest classification (decision tree) model to our experiment in AML and set things like the depth and the number of trees as illistrated below.
+
+```{r RF in AMLS, echo = FALSE, fig.cap='Setting Random Forest Hyperparameters in AML Studio'}
+knitr::include_graphics("images/DSEssentials/RandomForest.png")
+```
+
+LAB - start at Using Custom Code in Azure ML (page 11)
