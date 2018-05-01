@@ -86,4 +86,10 @@ It is possible to use built in functions inside AML to do things like create the
 knitr::include_graphics("images/DSEssentials/RandomForest.png")
 ```
 
-LAB - start at Using Custom Code in Azure ML (page 11)
+### LAB One
+
+The first lab introduces AML Studio and asks for a basic model to be built for Credit Scoring.  The assessment asks for the true positive and negative counts, as shown in the 'Evaluate Model' output confusion matrix shown below.
+
+```{r Lab 1 in AMLS, echo = FALSE, fig.cap='Lab 1 Evaluate Model Visualisation'}
+knitr::include_graphics("images/DSEssentials/Lab1.png")
+```
