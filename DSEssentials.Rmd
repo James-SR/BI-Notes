@@ -93,3 +93,22 @@ The first lab introduces AML Studio and asks for a basic model to be built for C
 ```{r Lab 1 in AMLS, echo = FALSE, fig.cap='Lab 1 Evaluate Model Visualisation'}
 knitr::include_graphics("images/DSEssentials/Lab1.png")
 ```
+
+## Probability for Data Science
+
+Both statistics and probability is a large part of data science.  Understanding probability helps you determine the distribution of random variables in your data, create random samples for analysis, and perform experiments with your data to test hypotheses.
+
+One of the key ideas is that a random variable assigns a numerical value to each possible outcome of a random expirment - it's value depends on chance.  For instance  the colour of a chosen car at random is not a random variable, but a number assigned to that colour is.  The number element is the critical part - the weather is not random, but the numeric value in millimeters of rain is.  Such numbers can be discreet or continous.
+
+An example of a discreet random variable is a roll of a die - it has to take a value of 1 to 6.  The probabilities will sum to 1 - for each outcome there is a probability (1/8 or 0.18) - combine these become the probability mass function for this random variable. So we have:
+
+* X: random variable, the value on the die when you roll it.  
+* x: an outcome, either x1, x2, x3, x4,…,xn.  
+* P(X=x) the probability that X will have outcome x. The probabilities must sum to 1.  
+
+```{r Discreet Random Var, echo = FALSE, fig.cap='Discrete Random Variables: Roll of a Die'}
+knitr::include_graphics("images/DSEssentials/Discreet.png")
+```
+  
+The PMF defines the probability of an outcome - for a a large number of discreet outcomes, we could end up with a large number of possible outcomes.  So we use some shortcuts - mean and spread or variance, which is the mean of squared differences from the mean).  We can also use a chart e.g. a histogram to see the distribution.  
+  
