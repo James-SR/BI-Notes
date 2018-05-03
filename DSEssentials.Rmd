@@ -110,5 +110,27 @@ An example of a discreet random variable is a roll of a die - it has to take a v
 knitr::include_graphics("images/DSEssentials/Discreet.png")
 ```
   
-The PMF defines the probability of an outcome - for a a large number of discreet outcomes, we could end up with a large number of possible outcomes.  So we use some shortcuts - mean and spread or variance, which is the mean of squared differences from the mean).  We can also use a chart e.g. a histogram to see the distribution.  
-  
+The PMF defines the probability of an outcome - for a a large number of discreet outcomes, we could end up with a large number of possible outcomes.  So we use some shortcuts - mean and spread or variance, which is the mean of squared differences from the mean).  We can also use a chart e.g. a histogram to see the distribution.  We usually square the variance to put it in to units that make sense - the standard deviation.  
+
+We should think about probability distributions.  One is the Bernoulli distribution, which is best thought of as a coin flip - values can be 0 or 1.  We might say our outcome variable is x and if x = 1 then the probability is p, if x = 0 then the probability is 1 - p.
+
+> _X_ ~ Bernoulli(_p_)
+
+The binomial distribution builds on this, it is in effect repeated Bernoulli trials, each with the same probability of success.  This can be thought of as drawing/sampling mutiple people from the population to see what proportion have health insurance.  If the total population with health insurance is 89%, then we choose 10 people at random, what is the probability that the first 3 will have insurance and the next 7 will not:
+
+> P(YYYNNNNNNN) = (0.89)^3 * (0.11)^7 = 1.37 * 10^-7
+
+
+This is for a single option, howevever if we wanted to know what the probability is of any 3 being yes, we would have to add the probability together for each time we have 3! (factorial) options, there are 10! total options, and 7! options for the nos.  So to calculate we have
+
+> 10! / 3! * 7! = 120 options
+
+So our answer becomes 
+
+> P(x = 3 or that 3 out of 10 have health insturance) = (1.37 * 10^-7) * 120 = 0.00001648 or 1.648 * 10^-5
+
+Or more generally, our binomial distribution becomes:
+
+```{r Binomial, echo = FALSE, fig.cap='Binomial Distribution Formula'}
+knitr::include_graphics("images/DSEssentials/binomial.png")
+```
