@@ -14,6 +14,7 @@ Survey weights result from a complex sampling design.  They may be to compensate
 # First let's load the things we will need
 library(dplyr)
 library(ggplot2)
+library(survey)
 
 ce <- read.csv("./files/SurveyDataInR/ce.csv")
 
@@ -31,6 +32,124 @@ ggplot(data = ce, mapping = aes(x = FINLWT21)) +
 ```
 
 If using a more complex sample design, we can use the Survey package in R by Thomas Lumley. Using this, we create our survey object using the svydesign command, where id = specifies the stages of the survey design e.g. id = ~1 would be a simpl random sample design or id = ~county + personid would be a clustered sample by county followed by person.  Since there is a finite number of people that we sample from, we specify this as fpc = ~ N1 + N2 which is number of counties (N1) followed by the number of people (N2).
+
+Now we look at the Academic Performance Index (API) dataset from the survey package.
+
+```{r}
+# Load the data
+data(api)
+
+# Look at the apisrs dataset
+glimpse(apisrs)
+head(apisrs)
+
+# Specify a simple random sampling for apisrs
+apisrs_design <- svydesign(data = apisrs, weights = ~pw, fpc = ~fpc, id = ~1)
+
+# Produce a summary of the design
+summary(apisrs_design)
+
+```
+
+Often we use stratification as a way to improve the accuracy of the data.  There is a similar dataset called apistrat that we explire here.  The schools are stratified based on the school type stype where E = Elementary, M = Middle, and H = High School. For each school type, a simple random sample of schools was taken.
+
+```{r}
+# Glimpse the data
+glimpse(apistrat)
+
+# Summarize strata sample sizes
+apistrat %>%
+  count(stype)
+
+# Specify the design
+apistrat_design <- svydesign(data = apistrat, weights = ~pw, fpc = ~fpc, id = ~1, strata = ~stype)
+
+# Look at the summary information stored in the design object
+summary(apistrat_design)
+```
+
+In other instances, we may have a cluster design to help reduce cost, here we use the dataset apiclus2.  The schools were clustered based on school districts, dnum. Within a sampled school district, 5 schools were randomly selected for the sample. The schools are denoted by snum. The number of districts is given by fpc1 and the number of schools in the sampled districts is given by fpc2.
+
+```{r}
+# Glimpse the data
+glimpse(apiclus2)
+
+# Specify the design
+apiclus_design <- svydesign(id = ~dnum + snum, data = apiclus2, weights = ~pw, fpc = ~fpc1 + fpc2)
+
+#Look at the summary information stored in the design object
+summary(apiclus_design)
+```
+
+An observation's survey weight tells us how many population units that observation represents. The weights are constructed based on the sampling design. Let's compare the weights for the three samples of the api dataset. For example, in simple random sampling, each unit has an equal chance of being sampled, so each observation gets an equal survey weight. Whereas, for stratified and cluster sampling, units have an unequal chance of being sampled and that is reflected in the survey weight.
+
+```{r}
+# Construct histogram of pw for SRS
+ggplot(data = apisrs,
+       mapping = aes(x = pw)) + 
+    geom_histogram()
+
+# Construct histogram of pw for stratificaiton
+ggplot(data = apistrat,
+       mapping = aes(x = pw)) + 
+    geom_histogram()
+
+# Construct histogram of pw for clustered design
+ggplot(data = apiclus2,
+       mapping = aes(x = pw)) + 
+    geom_histogram()
+
+```
+
+### Analysing Weighted Data
+
+Data often comes with multiple levels of survey design elements and associated weights.  For instance, the NHANES data or National Health and Nutrition Examination Survey, has a 5 stage process (somtimes referred to as 4) as follows:
+
+* Stage 0: The U.S. is stratified by geography and proportion of minority populations
+* Stage 1: Within strata, counties are randomly selected
+* Stage 2: Within counties, city blocks are randomly selected
+* Stage 3: Within city blocks, households randomly selected
+* Stage 4: Within households, people randomly selected
+
+In the NHANES data, we therefore have strata of counties, followed by 3 levels of clustering.  The two important design variables in NHANESraw are SDMVSTRA, which contains the strata assignment for each unit, and SDMVPSU, which contains the cluster id within a given stratum.  It is common practice to just name the top level of clustering.  The variable we use is then county, which is variable SDMVPSU, which has 3 values 1-3 representing the 1 to 3 counties samplied within each strata.  As the cluster ids are within each strata, we use the nest = TRUE argument.  
+
+Minority populations are more liekly to be sampled, so to account for this we need to weight the data.  The raw weight in the dataset is 2009 to 2012 - four years.  The weight variable in the dataset - WTMEC2YR is for two years.  So we first need to divide each weight by two, to give a single year's weight.
+
+```{r}
+# Load the data
+library(NHANES)
+data(NHANESraw)
+
+# Create a single year's weight
+NHANESraw <- mutate(NHANESraw, WTMEC4YR = WTMEC2YR/2)
+
+#Create table of average survey weights by race
+tab_weights <- NHANESraw %>%
+  group_by(Race1) %>%
+  summarize(avg_wt = mean(WTMEC4YR))
+
+#Print the table
+tab_weights
+```
+
+Next we can specify our survey design element, then count the number of clusters in our design and finally the sample size in each cluster.  The n_distinct() command counts the number of unique values, we use this command to determine the total number of clusters in NHANESraw.  For the sample size, we just use the count function.
+
+```{r}
+# Specify the NHANES design
+NHANES_design <- svydesign(data = NHANESraw, strata = ~SDMVSTRA, id = ~SDMVPSU, nest = TRUE, weights = ~WTMEC4YR)
+
+# Print summary of design
+summary(NHANES_design)
+
+# Number of clusters
+NHANESraw %>%
+  summarize(n_clusters = n_distinct(SDMVSTRA, SDMVPSU))
+
+# Sample sizes in clusters
+NHANESraw %>%
+  count(SDMVSTRA, SDMVPSU)
+```
+
 
 ## Exploring categorical data
 
