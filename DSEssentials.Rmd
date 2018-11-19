@@ -134,3 +134,5 @@ Or more generally, our binomial distribution becomes:
 ```{r Binomial, echo = FALSE, fig.cap='Binomial Distribution Formula'}
 knitr::include_graphics("images/DSEssentials/binomial.png")
 ```
+
+We could work out the probability for every possible outcome, say for 10 people selected to have health insurance, what proportion are likely to have health insurance (P = x) or we could plot the distribution aka the probability mass function or PMF.

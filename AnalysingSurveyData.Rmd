@@ -1,0 +1,47 @@
+# Analysing Survey Data in R
+***
+Notes taken during/inspired by the Datacamp course 'Analysing Survey Data in R' by Kelly McConville.
+
+**_Course Handouts_**
+
+* [Part 1 - Introduction to survey data](./files/SurveyDataInR/chapter1.pdf)
+
+## Introduction to survey data
+
+Survey weights result from a complex sampling design.  They may be to compensate for non-response, or sometimes they are grossing weights so for instance, our single household may have a weight of 28,000 which would imply that household represents 28,000 households in our larger population.  We typically take n households from a sample s.  If we use standard mean calculations on our dataset, to for instance work out the mean household income, this would result in incorrect values, since the survey data needs to be weighted first.
+
+```{r}
+# First let's load the things we will need
+library(dplyr)
+library(ggplot2)
+
+ce <- read.csv("./files/SurveyDataInR/ce.csv")
+
+head(ce)
+```
+
+The column FINLWT21 is the final weight column, the third household (row) for instance represents 20,208 US households.
+
+We often want to visualise the weights, using a histogram is one way we can achieve this.
+
+```{r}
+# Construct a histogram of the weights
+ggplot(data = ce, mapping = aes(x = FINLWT21)) +
+    geom_histogram()
+```
+
+If using a more complex sample design, we can use the Survey package in R by Thomas Lumley. Using this, we create our survey object using the svydesign command, where id = specifies the stages of the survey design e.g. id = ~1 would be a simpl random sample design or id = ~county + personid would be a clustered sample by county followed by person.  Since there is a finite number of people that we sample from, we specify this as fpc = ~ N1 + N2 which is number of counties (N1) followed by the number of people (N2).
+
+## Exploring categorical data
+
+
+
+
+
+## Exploring quantitative data
+
+
+
+
+
+## Modeling quantitative data
