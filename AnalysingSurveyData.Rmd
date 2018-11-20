@@ -5,6 +5,7 @@ Notes taken during/inspired by the Datacamp course 'Analysing Survey Data in R' 
 **_Course Handouts_**
 
 * [Part 1 - Introduction to survey data](./files/SurveyDataInR/chapter1.pdf)
+* [Part 2 - Exploring categorical data](./files/SurveyDataInR/chapter2.pdf)
 
 ## Introduction to survey data
 
@@ -152,6 +153,78 @@ NHANESraw %>%
 
 
 ## Exploring categorical data
+
+Having now created our survey design for NHANES, we can use this design to correctly analyse our survey data.  The svytable (survey table) command will correctly calculate proportions, using the survey design component.  The NHANES variable, Depressed, gives the self-reported frequency in which a participant felt depressed, it is only recorded for Adults.
+
+```{r}
+# Specify the survey design
+NHANESraw <- mutate(NHANESraw, WTMEC4YR = .5 * WTMEC2YR)
+NHANES_design <- svydesign(data = NHANESraw, strata = ~SDMVSTRA, id = ~SDMVPSU, nest = TRUE, weights = ~WTMEC4YR)
+
+# Determine the levels of Depressed
+levels(NHANESraw$Depressed)
+
+# Construct a frequency table of Depressed
+tab_w <- svytable(~Depressed, design = NHANES_design)
+
+# Determine class of tab_w
+class(tab_w)
+
+# Display tab_w
+tab_w
+```
+
+Next we can represent this visualising, but first we need to create our proportions table:
+
+```{r}
+# Add proportions to table
+tab_w <- tab_w %>%
+  as.data.frame() %>%
+  mutate(Prop = Freq/sum(Freq))
+
+# Create a barplot
+ggplot(data = tab_w, aes(x = Depressed, y = Prop)) + 
+  geom_col() + 
+  coord_flip()
+```
+
+We often want to compare two variables together, for instance, comparing General Health to levels of Depression.  To do so, we create a contingency table. 
+
+```{r}
+# Construct and display our frequency tables
+tab_D <- svytable(~Depressed,
+           design = NHANES_design)
+tab_D
+
+tab_H <- svytable(~HealthGen,
+           design = NHANES_design)
+tab_H
+
+tab_DH <- svytable(~Depressed + HealthGen,
+           design = NHANES_design)
+tab_DH
+```
+
+Next we usually want to answer some quesiton with our data, like "What is the probability that a person in excellent health suffers from depression?" and "Are depression rates lower for healthier people?" which we do so by creating conditional probabilities.
+
+```{r}
+# Add conditional proportions to tab_DH
+tab_DH_cond <- tab_DH %>%
+    as.data.frame() %>%
+    group_by(HealthGen) %>%
+    mutate(n_HealthGen = sum(Freq), Prop_Depressed = Freq/n_HealthGen) %>%
+    ungroup()
+
+# Print tab_DH_cond
+tab_DH_cond
+
+# Create a segmented bar graph of the conditional proportions in tab_DH_cond
+ggplot(data = tab_DH_cond,
+       mapping = aes(x = HealthGen, y = Prop_Depressed, fill = Depressed)) + 
+  geom_col() + 
+  coord_flip() + 
+  scale_y_continuous(labels = scales::percent) # without this the bar chart is a decimal of 0 to 1
+```
 
 
 
