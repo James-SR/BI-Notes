@@ -205,7 +205,7 @@ tab_DH <- svytable(~Depressed + HealthGen,
 tab_DH
 ```
 
-Next we usually want to answer some quesiton with our data, like "What is the probability that a person in excellent health suffers from depression?" and "Are depression rates lower for healthier people?" which we do so by creating conditional probabilities.
+Next we usually want to answer some question with our data, like "What is the probability that a person in excellent health suffers from depression?" and "Are depression rates lower for healthier people?" which we do so by creating conditional probabilities.
 
 ```{r}
 # Add conditional proportions to tab_DH
@@ -224,14 +224,71 @@ ggplot(data = tab_DH_cond,
   geom_col() + 
   coord_flip() + 
   scale_y_continuous(labels = scales::percent) # without this the bar chart is a decimal of 0 to 1
+
 ```
 
+We can also estimate the total counts and interactions between variables, also calculating se.
 
+```{r}
+# Estimate the totals for combos of Depressed and HealthGen
+tab_totals <- svytotal(x = ~interaction(Depressed, HealthGen),
+                     design = NHANES_design,
+                     na.rm = TRUE)
 
+# Print table of totals
+tab_totals
+```
+
+And calculate survey means for the variable
+
+```{r}
+# Estimate the means for combos of Depressed and HealthGen
+tab_means <- svymean(x = ~interaction(Depressed, HealthGen),
+              design = NHANES_design,
+              na.rm = TRUE)
+
+# Print table of means
+tab_means
+```
+
+Here we see that the survey results estimate that 10.4% of people are not depressed and believe their health is excellent.
+
+Next we test whether or not there is an association between depression level and perceived health using a chi squared test. The p-value of the chi squared test tells us how consistent our sample results are with the assumption that depression and perceived health are not related - a high p-value means we should accept the null hypothesis that there is no relationship i.e. the relationship we are seeing is due to chance.
+
+```{r}
+# Run a chi square test between Depressed and HealthGen
+svychisq(~Depressed + HealthGen, 
+    design = NHANES_design, 
+    statistic = "Chisq")
+```
+We have a very small p-value suggesting the two are related.
+
+We can use the knowledge of these steps to look at other situations - here we will look at whether there is a statistical relationship between homeownership and education level.
+
+```{r}
+# Construct a contingency table
+tab <- svytable(~HomeOwn + Education, design = NHANES_design)
+
+# Add conditional proportion of levels of HomeOwn for each educational level
+tab_df <- as.data.frame(tab) %>%
+  group_by(Education) %>%
+  mutate(n_Education = sum(Freq), Prop_HomeOwn = Freq/n_Education) %>%
+  ungroup()
+
+# Create a segmented bar graph
+ggplot(data = tab_df, mapping = aes(x = Education, y = Prop_HomeOwn, fill = HomeOwn)) + 
+  geom_col() + 
+  coord_flip() +
+   scale_y_continuous(labels = scales::percent) # without this the bar chart is a decimal of 0 to 1
+
+# Run a chi square test
+svychisq(~HomeOwn + Education, design = NHANES_design, statistic = "Chisq")
+```
 
 
 ## Exploring quantitative data
 
+nb
 
 
 
