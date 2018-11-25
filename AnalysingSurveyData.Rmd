@@ -288,9 +288,78 @@ svychisq(~HomeOwn + Education, design = NHANES_design, statistic = "Chisq")
 
 ## Exploring quantitative data
 
-nb
+Survey data is observational and not experimental, so we can't conclude causation, however survey data can be useful to explore relationships and possible avenues of enquiry.  The survey package comes with a number of functions that can help us explore data, which considering the survey design.
 
+We can use the data to see how much sleep people get and whether it varies by gender.  First, we need to filter out the under 16s as they are not asked this question, this is done using the variable SleepHrsNight which is only asked to the over 16s.  Then we use the svyby which is similar to the groupby command from dplyr and will give us a two way table.
 
+```{r}
+# Compute the survey-weighted mean
+svymean(x = ~SleepHrsNight, 
+        design = NHANES_design,
+        na.rm = TRUE)
+
+# Compute the survey-weighted mean by Gender
+svyby(formula = ~SleepHrsNight, 
+    by = ~Gender, 
+    design = NHANES_design, 
+    FUN = svymean, 
+    na.rm = TRUE, 
+    keep.names = FALSE)
+```
+
+We might also be interested in the distribution of this variable, by looking at the lowest 1%, the median and so on.  We can use the svyquantile to calculate these values.  We can then look at the median value for both men and women
+
+```{r}
+# Compute the survey-weighted quantiles
+svyquantile(x = ~SleepHrsNight, 
+            design = NHANES_design, 
+            na.rm = TRUE, 
+            quantiles = c(0.01, 0.25, 0.5, 0.75, .99))
+
+# Compute the survey-weighted quantiles by Gender
+svyby(formula = ~SleepHrsNight, 
+      by = ~Gender, 
+      design = NHANES_design, 
+      FUN = svyquantile, 
+      na.rm = TRUE, 
+      quantiles = 0.5, 
+      keep.rows = FALSE, 
+      keep.var = FALSE)
+```
+
+We can also graph this data - first we create our table which we then use to create a plot.
+
+```{r}
+# Compute the survey-weighted mean by Gender
+out <- svyby(formula = ~SleepHrsNight, 
+             by = ~Gender, 
+             design = NHANES_design, 
+             FUN = svymean, 
+             na.rm = TRUE, 
+             keep.names = FALSE)
+             
+# Construct a bar plot of average sleep by gender
+ggplot(data = out, mapping = aes(x = Gender, y = SleepHrsNight)) +
+  geom_col() + 
+  labs(y = "Average Nightly Sleep")
+```
+
+We might be interested in adding error bars to our chart.  This is achieved by first creating the upper and lower bounds, then adding them to the plot.
+
+```{r}
+# Add lower and upper columns to out
+out_col <- mutate(out, 
+                  lower = SleepHrsNight - 2*se, 
+                  upper = SleepHrsNight + 2*se)
+
+# Construct a bar plot of average sleep by gender with error bars
+ggplot(data = out_col, 
+       mapping = aes(x = Gender, y = SleepHrsNight, 
+                     ymin = lower, ymax = upper)) +
+  geom_col(fill = "gold") +
+  labs(y = "Average Nightly Sleep") +
+  geom_errorbar(width = 0.7)
+```
 
 
 ## Modeling quantitative data
