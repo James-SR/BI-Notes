@@ -6,6 +6,7 @@ Notes taken during/inspired by the Datacamp course 'Analysing Survey Data in R' 
 
 * [Part 1 - Introduction to survey data](./files/SurveyDataInR/chapter1.pdf)
 * [Part 2 - Exploring categorical data](./files/SurveyDataInR/chapter2.pdf)
+* [Part 3 - Exploring quantitative data](./files/SurveyDataInR/chapter3.pdf)
 
 ## Introduction to survey data
 
@@ -361,5 +362,64 @@ ggplot(data = out_col,
   geom_errorbar(width = 0.7)
 ```
 
+We may want to represent our data as a histogram. Here we map sleep hours and the weight.
+
+```{r}
+# Create a histogram with a set binwidth
+ggplot(data = NHANESraw,
+       mapping = aes(x = SleepHrsNight, weight = WTMEC4YR)) + 
+  geom_histogram(binwidth = 1,
+                 color = "white") +
+  labs(x = "Hours of Sleep")
+```
+
+Or we may want to represent the data as density plot.  As there are some missing values in our data and density plots are probabilities, we need to do some data wrangling first.
+
+```{r}
+# Density plot of sleep faceted by gender
+NHANESraw %>%
+    filter(!is.na(SleepHrsNight), !is.na(Gender)) %>%
+    group_by(Gender) %>%
+    mutate(WTMEC4YR_std = WTMEC4YR/sum(WTMEC4YR)) %>%
+    ggplot(mapping = aes(x = SleepHrsNight, weight = WTMEC4YR_std)) + 
+        geom_density(bw = 0.6,  fill = "gold") +
+        labs(x = "Hours of Sleep") + 
+        facet_wrap(~Gender, labeller = "label_both")
+```
+
+Now we might want to calculate a t-test statistic, to see whether our data is due to chance or some underlying relationship.  To take account of our survey design, we use the svyttest() function.
+
+```{r}
+# Run a survey-weighted t-test
+svyttest(formula = SleepHrsNight ~ Gender, design = NHANES_design)
+```
+
+Next, let's look at another example, whether or not the total cholesterol varies, on average, between physically active and inactive Americans.  
+
+First we calculate survey mean.
+
+```{r}
+# Find means of total cholesterol by whether or not active 
+out <- svyby(formula = ~TotChol,
+           by = ~PhysActive, 
+           design = NHANES_design,
+           FUN = svymean, 
+           na.rm = TRUE, 
+           keep.names = FALSE)
+```
+
+Next we create a bar chart.
+
+```{r}
+ggplot(data = out, mapping = aes(x = PhysActive, y = TotChol)) +
+  geom_col()
+```
+
+Then calculate the survey t-test.
+
+```{r}
+# Run a survey-weighted t-test
+svyttest(formula = TotChol ~ PhysActive, design = NHANES_design)
+```
 
 ## Modeling quantitative data
