@@ -7,6 +7,7 @@ Notes taken during/inspired by the Datacamp course 'Analysing Survey Data in R' 
 * [Part 1 - Introduction to survey data](./files/SurveyDataInR/chapter1.pdf)
 * [Part 2 - Exploring categorical data](./files/SurveyDataInR/chapter2.pdf)
 * [Part 3 - Exploring quantitative data](./files/SurveyDataInR/chapter3.pdf)
+* [Part 4 - Modeling quantitative data](./files/SurveyDataInR/chapter4.pdf)
 
 ## Introduction to survey data
 
@@ -423,3 +424,109 @@ svyttest(formula = TotChol ~ PhysActive, design = NHANES_design)
 ```
 
 ## Modeling quantitative data
+
+When we want to plot two quantitive variables we can use a scatterplot.  We should also be mindful to take account of the survey design, including weighting, so that we not only show who has responded, but what wider population they represent.
+
+First we filter the data to only include the over 20s.  Then we create a scatterplot without the weight variable first.
+
+```{r}
+# Create dataset with only 20 year olds
+NHANES20 <- filter(NHANESraw, Age == 20)
+
+# Construct scatter plot
+ggplot(data = NHANES20, 
+       mapping = aes(x = Height, y = Weight)) + 
+    geom_point(alpha = 0.3) + 
+    guides(size = FALSE)
+
+```
+
+Next we create a plot which does take into account our weight variable.
+
+```{r}
+# Construct bubble plot
+ggplot(data = NHANES20, 
+       mapping = aes(x = Height, y = Weight, size = WTMEC4YR)) + 
+    geom_point(alpha = 0.3) + 
+    guides(size = FALSE)
+```
+
+Another way to present the density rather than bubble size is to use the colour saturation.  
+
+```{r}
+# Construct a scatter plot
+ggplot(data = NHANES20, 
+       mapping = aes(x = Height, y = Weight, color = WTMEC4YR)) +
+    geom_point(alpha = 0.3) + 
+    guides(color = FALSE)
+```
+
+Or yet another way is to set the alpha value dependent on the weight variable.
+
+```{r}
+# Construct a scatter plot
+ggplot(data = NHANES20, 
+       mapping = aes(x = Height, y = Weight, alpha = WTMEC4YR)) +
+    geom_point(alpha = 0.3) + 
+    guides(alpha = FALSE)
+```
+
+We may be interested in plotting the results witn the presence of another variable, for instance, Gender.  This can be achieved as follows.
+
+```{r}
+# Add gender to plot
+ggplot(data = NHANES20,
+       mapping = aes(x = Height, y = Weight, size = WTMEC4YR, color = Gender)) + 
+    geom_point(alpha = 0.3) + 
+    guides(size = FALSE)
+```
+
+Or we can use alpha (transparency) to represent weight rather than bubble size.
+
+```{r}
+# Add gender to plot
+ggplot(data = NHANES20,
+       mapping = aes(x = Height, y = Weight, alpha = WTMEC4YR, color = Gender)) + 
+    geom_point(alpha = 0.3) + 
+    guides(alpha = FALSE)
+```
+
+We can also add a line of best first using the geom_smooth command.
+
+```{r}
+# Bubble plot with linear of best fit
+ggplot(data = NHANESraw, mapping = aes(x = Height, y = Weight, size = WTMEC4YR)) + 
+  geom_point(alpha = 0.1) + 
+  guides(size = FALSE) + 
+  geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR))
+```
+
+Here the trend is not really linear, so we can adapt the smoothing line to better represent the data, in this instance we can use polynomial curve lines - an orange for quadratic (power of 2) and a red one for cubic (power of 3).
+
+```{r}
+# Add quadratic curve and cubic curve
+ggplot(data = NHANESraw, mapping = aes(x = Height, y = Weight, size = WTMEC4YR)) + 
+  geom_point(alpha = 0.1) + 
+  guides(size = FALSE) + 
+  geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR)) +
+  geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR), formula = y ~ poly(x,2), color = "orange") +
+  geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR), formula = y ~ poly(x,3), color = "red")
+```
+
+If we want to compare how the trend lines differ by gender, both with and without the survey weights, this can be acheived using two sets of lines of best fit being dashed to show the unweighted data.  Notice the results for females are different when weighted, the results for males are more similar.
+
+```{r}
+# Add non-survey-weighted trend lines to bubble plot
+ggplot(data = NHANES20, mapping = aes(x = Height, y = Weight, size = WTMEC4YR, color = Gender)) + 
+  geom_point(alpha = 0.1) + 
+  guides(size = FALSE) + 
+  geom_smooth(method = "lm", se = FALSE, linetype = 2)
+
+# Add survey-weighted trend lines
+ggplot(data = NHANES20, mapping = aes(x = Height, y = Weight, size = WTMEC4YR, color = Gender)) + 
+  geom_point(alpha = 0.1) + 
+  guides(size = FALSE) + 
+  geom_smooth(method = "lm", se = FALSE, linetype = 2) + 
+  geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR))
+```
+
