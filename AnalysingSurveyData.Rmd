@@ -530,3 +530,62 @@ ggplot(data = NHANES20, mapping = aes(x = Height, y = Weight, size = WTMEC4YR, c
   geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR))
 ```
 
+We often want to understand the coefficients of a regression line, such as those previously plotted.  This can be done usign the glm function.
+
+```{r}
+# Subset survey design object to only include 20 year olds
+NHANES20_design <- subset(NHANES_design, Age == 20)
+
+# Build a linear regression model
+mod <- svyglm(Weight ~ Height, design = NHANES20_design)
+
+# Print summary of the model
+summary(mod)
+```
+
+The null hypothesis, which the coefficients are testing, is that there is no linear relationship between the variables, with the alternative hypothesis being that there is a linear relationship with the variables we have modelled.  The slope t-value is 6.072 with a very small and significant p-value.
+
+As we saw previously, the slopes of the regression line varied depending on whether the gender was male or female.  We can incorporate this into our model, but note that the variable should be coded as a dummy var.  In addition, the t-test statistic now indicates whether that variable should be included in our model given the other variables listed in our model i.e. having controlled for the other variables.  
+
+```{r}
+# Build a linear regression model same slope
+mod1 <- svyglm(Weight ~ Height + Gender, design = NHANES20_design)
+
+# Print summary of the same slope model
+summary(mod1)
+```
+
+We also saw that the intercepts varied, not just the slopes, when looking at gender.  We can model this using interaction terms (*).
+
+```{r}
+# Build a linear regression model different slopes
+mod2 <- svyglm(Weight ~ Height * Gender, design = NHANES20_design)
+
+# Print summary of the different slopes model
+summary(mod2)
+```
+
+The second model where the slopes vary seems to have a statistically significant t value for the slope co-efficient, but in our first model the intercept only co-efficient was not statistically significant.
+
+Finally, let's look at a different example.  Here we build a model to predict, BPSysAve, a person's systolic blood pressure reading, using BPDiaAve, a person's diastolic blood pressure reading and Diabetes, whether or not they were diagnosed with diabetes.  We produce a scatterplot, then create a simple model, then a more complex model where the slopes vary.
+
+```{r}
+# Plot BPDiaAve and BPSysAve by Diabetes and include trend lines
+tidyr::drop_na(NHANESraw, Diabetes) %>%
+ggplot(mapping = aes(x = BPDiaAve, y = BPSysAve, size = WTMEC4YR, color = Diabetes)) + 
+    geom_point(alpha = 0.2) + 
+    guides(size = FALSE) + 
+    geom_smooth(method = "lm", se = FALSE, mapping = aes(weight = WTMEC4YR))
+
+# Build simple linear regression model
+mod1 <- svyglm(BPSysAve ~ BPDiaAve, design = NHANES_design)
+
+# Build model with different slopes
+mod2 <- svyglm(BPSysAve ~ BPDiaAve * Diabetes, design = NHANES_design)
+
+# Summarize models
+summary(mod1)
+summary(mod2)
+```
+
+Note - we should probably drop those values where the BPDiaAve appears to be 0, since this could be a missing value.
